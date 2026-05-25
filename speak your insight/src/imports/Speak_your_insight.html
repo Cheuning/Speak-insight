@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Speak your insight</title>
+  <style>
+    :root {
+      --bg: #f7f8f5;
+      --surface: #ffffff;
+      --surface-soft: #f0f3ef;
+      --text: #222824;
+      --muted: #737c75;
+      --line: #e1e5df;
+      --accent: #2f6f5e;
+      --accent-weak: #dfece7;
+      --danger: #b84f4f;
+      --shadow: 0 18px 45px rgba(36, 44, 39, 0.08);
+      --radius: 22px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app {
+      width: min(100%, 780px);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 24px 16px 124px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .title-block h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 760;
+      letter-spacing: 0;
+    }
+
+    .title-block p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 38px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--muted);
+      border: 1px solid var(--line);
+      white-space: nowrap;
+      box-shadow: 0 8px 24px rgba(34, 40, 36, 0.04);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .auth-button {
+      min-height: 38px;
+      padding: 0 13px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 720;
+      white-space: nowrap;
+      box-shadow: 0 8px 24px rgba(47, 111, 94, 0.16);
+    }
+
+    .auth-button.signed-in {
+      background: var(--surface-soft);
+      color: var(--text);
+      box-shadow: none;
+    }
+
+    .auth-user {
+      max-width: 190px;
+      color: var(--muted);
+      font-size: 13px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #9aa49c;
+    }
+
+    .status-pill.recording .status-dot {
+      background: var(--danger);
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.35; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.12); }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .live-card {
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .card-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 720;
+    }
+
+    .timer {
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+      font-weight: 720;
+    }
+
+    .transcript-box {
+      min-height: 112px;
+      padding: 16px;
+      border-radius: 18px;
+      background: var(--surface-soft);
+      color: var(--text);
+      line-height: 1.65;
+      white-space: pre-wrap;
+    }
+
+    .transcript-box.empty {
+      color: var(--muted);
+    }
+
+    .interim {
+      color: var(--muted);
+    }
+
+    .notice {
+      display: none;
+      margin-top: 12px;
+      color: #786a3b;
+      background: #fff8dc;
+      border: 1px solid #efe1aa;
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .notice.visible {
+      display: block;
+    }
+
+    .calendar-card {
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+
+    .calendar-controls {
+      display: grid;
+      grid-template-columns: 44px 1fr 44px;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .icon-button {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--text);
+      background: var(--surface-soft);
+    }
+
+    .icon-button:hover {
+      background: var(--accent-weak);
+    }
+
+    .period-label {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 760;
+      letter-spacing: 0;
+    }
+
+    .view-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      padding: 4px;
+      margin-bottom: 14px;
+      border-radius: 999px;
+      background: var(--surface-soft);
+    }
+
+    .view-toggle button {
+      min-height: 38px;
+      border-radius: 999px;
+      color: var(--muted);
+      background: transparent;
+      font-weight: 700;
+    }
+
+    .view-toggle button.active {
+      color: var(--accent);
+      background: var(--surface);
+      box-shadow: 0 4px 16px rgba(34, 40, 36, 0.08);
+    }
+
+    .weekdays,
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .weekdays {
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 720;
+      text-align: center;
+    }
+
+    .day-cell {
+      position: relative;
+      min-height: 58px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      border-radius: 18px;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid transparent;
+    }
+
+    .day-cell.muted {
+      color: #a8afa9;
+    }
+
+    .day-cell.today {
+      border-color: var(--accent-weak);
+    }
+
+    .day-cell.selected {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .day-number {
+      font-weight: 720;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .record-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .day-cell.selected .record-dot {
+      background: #fff;
+    }
+
+    .records-card {
+      padding: 18px;
+    }
+
+    .records-meta {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .records-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .empty-state {
+      padding: 26px 10px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.55;
+    }
+
+    .record-item {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fbfcfa;
+    }
+
+    .record-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .record-meta-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .sync-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 0 9px;
+      border-radius: 999px;
+      background: var(--surface-soft);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 720;
+    }
+
+    .sync-badge.pending {
+      background: #fff8dc;
+      color: #786a3b;
+    }
+
+    .sync-badge.synced {
+      background: var(--accent-weak);
+      color: var(--accent);
+    }
+
+    .sync-badge.error {
+      background: #f8eeee;
+      color: var(--danger);
+    }
+
+    .record-editor {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .record-title-input,
+    .record-textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      color: var(--text);
+      outline: none;
+    }
+
+    .record-title-input {
+      min-height: 44px;
+      padding: 0 13px;
+      font-size: 16px;
+      font-weight: 760;
+    }
+
+    .record-textarea {
+      min-height: 112px;
+      padding: 12px 13px;
+      line-height: 1.6;
+      resize: vertical;
+    }
+
+    .record-title-input:focus,
+    .record-textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-weak);
+    }
+
+    .record-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+
+    .save-button {
+      min-height: 38px;
+      padding: 0 14px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--accent);
+      font-weight: 720;
+    }
+
+    .delete-button {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--danger);
+      background: #f8eeee;
+    }
+
+    .record-item audio {
+      width: 100%;
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      width: min(calc(100% - 28px), 720px);
+      height: 78px;
+      display: grid;
+      grid-template-columns: 1fr 112px 1fr;
+      align-items: center;
+      padding: 10px 18px;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 48px rgba(32, 39, 35, 0.15);
+      backdrop-filter: blur(14px);
+      z-index: 10;
+    }
+
+    .nav-item {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--muted);
+      background: transparent;
+      font-weight: 700;
+    }
+
+    .mic-wrap {
+      display: grid;
+      place-items: center;
+      transform: translateY(-24px);
+    }
+
+    .mic-button {
+      width: 88px;
+      height: 88px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--accent);
+      box-shadow: 0 18px 36px rgba(47, 111, 94, 0.28);
+      transition: transform 0.18s ease, background 0.18s ease;
+    }
+
+    .mic-button:hover {
+      transform: translateY(-1px);
+    }
+
+    .mic-button.recording {
+      background: var(--danger);
+    }
+
+    .mic-button svg,
+    .icon-button svg,
+    .delete-button svg,
+    .nav-item svg {
+      width: 22px;
+      height: 22px;
+      stroke-width: 2.2;
+    }
+
+    .mic-button svg {
+      width: 34px;
+      height: 34px;
+    }
+
+    @media (max-width: 540px) {
+      .app {
+        padding: 18px 12px 124px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .status-pill {
+        width: auto;
+        justify-content: center;
+      }
+
+      .top-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .day-cell {
+        min-height: 48px;
+        border-radius: 14px;
+      }
+
+      .bottom-nav {
+        bottom: 12px;
+        grid-template-columns: 1fr 96px 1fr;
+        padding-inline: 12px;
+      }
+
+      .mic-button {
+        width: 78px;
+        height: 78px;
+      }
+
+      .nav-item span {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="title-block">
+        <h1>Speak your insight</h1>
+        <p>오늘의 생각과 경험을 빠르게 남기세요.</p>
+      </div>
+      <div class="top-actions">
+        <button class="auth-button" id="authButton" type="button">Google 로그인</button>
+        <span class="auth-user" id="authUser"></span>
+        <div class="status-pill" id="statusPill" aria-live="polite">
+          <span class="status-dot"></span>
+          <span id="statusText">대기 중</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="card live-card" aria-labelledby="liveTitle">
+      <div class="card-header">
+        <h2 class="card-title" id="liveTitle">실시간 텍스트</h2>
+        <span class="timer" id="timer">00:00</span>
+      </div>
+      <div class="transcript-box empty" id="transcriptBox">마이크 버튼을 누르면 녹음과 음성 인식이 함께 시작됩니다.</div>
+      <div class="notice" id="speechNotice">이 브라우저에서는 음성 텍스트 변환이 지원되지 않습니다. 녹음 기능만 작동합니다.</div>
+      <div class="notice" id="micNotice">마이크 권한이 필요합니다. 브라우저에서 권한을 허용한 뒤 다시 시도해 주세요.</div>
+    </section>
+
+    <section class="card calendar-card" aria-labelledby="calendarTitle">
+      <div class="card-header">
+        <h2 class="card-title" id="calendarTitle">캘린더</h2>
+      </div>
+      <div class="calendar-controls">
+        <button class="icon-button" id="prevPeriod" type="button" aria-label="이전 기간">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <div class="period-label" id="periodLabel"></div>
+        <button class="icon-button" id="nextPeriod" type="button" aria-label="다음 기간">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+      <div class="view-toggle" role="tablist" aria-label="캘린더 보기">
+        <button id="monthView" class="active" type="button" role="tab" aria-selected="true">월</button>
+        <button id="weekView" type="button" role="tab" aria-selected="false">주</button>
+      </div>
+      <div class="weekdays" aria-hidden="true">
+        <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </section>
+
+    <section class="card records-card" aria-labelledby="recordsTitle">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title" id="recordsTitle">선택한 날짜의 기록</h2>
+          <div class="records-meta" id="recordsMeta"></div>
+        </div>
+      </div>
+      <div class="records-list" id="recordsList"></div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="하단 내비게이션">
+    <button class="nav-item" type="button" id="todayButton">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 2v4M16 2v4M3 10h18"/><rect x="3" y="4" width="18" height="18" rx="2"/></svg>
+      <span>오늘</span>
+    </button>
+    <div class="mic-wrap">
+      <button class="mic-button" id="micButton" type="button" aria-label="녹음 시작">
+        <svg id="micIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3M8 22h8"/>
+        </svg>
+      </button>
+    </div>
+    <button class="nav-item" type="button" id="calendarButton">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5V4a2 2 0 0 1 2-2h12v20H6a2 2 0 0 1-2-2.5Z"/><path d="M8 6h6M8 10h8M8 14h5"/></svg>
+      <span>기록</span>
+    </button>
+  </nav>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+    import {
+      getAuth,
+      GoogleAuthProvider,
+      getRedirectResult,
+      onAuthStateChanged,
+      signInWithPopup,
+      signInWithRedirect,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+    import {
+      collection,
+      deleteDoc,
+      doc,
+      getDocs,
+      getFirestore,
+      orderBy,
+      query,
+      setDoc
+    } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBomhHy0gZzv-kgTVWXBtRh9jU_6qUp7xo",
+      authDomain: "speak-your-insight.firebaseapp.com",
+      projectId: "speak-your-insight",
+      storageBucket: "speak-your-insight.firebasestorage.app",
+      messagingSenderId: "893962604099",
+      appId: "1:893962604099:web:77af3dce1e287a8300cef6"
+    };
+
+    const firebaseApp = initializeApp(firebaseConfig);
+    const auth = getAuth(firebaseApp);
+    const provider = new GoogleAuthProvider();
+    const firestore = getFirestore(firebaseApp);
+
+    const DB_NAME = "voice-journal-db";
+    const DB_VERSION = 1;
+    const STORE_NAME = "records";
+    const DEFAULT_RECORD_TITLE = "Speak your insight";
+    const SYNC_LOCAL_ONLY = "local";
+    const SYNC_PENDING = "pending";
+    const SYNC_SYNCED = "synced";
+    const SYNC_ERROR = "error";
+
+    const $ = (selector) => document.querySelector(selector);
+    const calendarGrid = $("#calendarGrid");
+    const periodLabel = $("#periodLabel");
+    const recordsList = $("#recordsList");
+    const recordsMeta = $("#recordsMeta");
+    const transcriptBox = $("#transcriptBox");
+    const speechNotice = $("#speechNotice");
+    const micNotice = $("#micNotice");
+    const timer = $("#timer");
+    const statusPill = $("#statusPill");
+    const statusText = $("#statusText");
+    const micButton = $("#micButton");
+    const micIcon = $("#micIcon");
+    const authButton = $("#authButton");
+    const authUser = $("#authUser");
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const speechSupported = Boolean(SpeechRecognition);
+
+    let db;
+    let records = [];
+    let selectedDate = startOfDay(new Date());
+    let viewDate = startOfDay(new Date());
+    let calendarMode = "month";
+    let mediaRecorder;
+    let activeStream;
+    let audioChunks = [];
+    let isRecording = false;
+    let recordingStart = 0;
+    let timerId;
+    let recognition;
+    let finalTranscript = "";
+    let interimTranscript = "";
+    let textOnlyRecording = false;
+
+    const cloudSync = {
+      isConfigured: true,
+      currentUser: null,
+      async upsertTextRecord(record) {
+        if (!this.currentUser) return { skipped: true, reason: "not-signed-in" };
+
+        await setDoc(
+          doc(firestore, "users", this.currentUser.uid, "records", record.id),
+          {
+            ...record,
+            userId: this.currentUser.uid
+          },
+          { merge: true }
+        );
+
+        return { synced: true };
+      },
+      async deleteTextRecord(id) {
+        if (!this.currentUser) return { skipped: true, reason: "not-signed-in" };
+
+        await deleteDoc(doc(firestore, "users", this.currentUser.uid, "records", id));
+        return { deleted: true };
+      },
+      async fetchTextRecords() {
+        if (!this.currentUser) return [];
+
+        const snapshot = await getDocs(query(
+          collection(firestore, "users", this.currentUser.uid, "records"),
+          orderBy("createdAt", "desc")
+        ));
+
+        return snapshot.docs.map((snapshotDoc) => ({
+          id: snapshotDoc.id,
+          ...snapshotDoc.data()
+        }));
+      }
+    };
+
+    function openDatabase() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+        request.onupgradeneeded = () => {
+          const database = request.result;
+          if (!database.objectStoreNames.contains(STORE_NAME)) {
+            const store = database.createObjectStore(STORE_NAME, { keyPath: "id" });
+            store.createIndex("date", "date", { unique: false });
+            store.createIndex("createdAt", "createdAt", { unique: false });
+          }
+        };
+
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function getAllRecords() {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, "readonly");
+        const request = tx.objectStore(STORE_NAME).getAll();
+        request.onsuccess = () => resolve((request.result || []).map(normalizeRecord));
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function saveRecord(record) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, "readwrite");
+        const request = tx.objectStore(STORE_NAME).put(normalizeRecord(record));
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function deleteRecord(id) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, "readwrite");
+        const request = tx.objectStore(STORE_NAME).delete(id);
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    async function saveRecordAndSync(record) {
+      const status = cloudSync.isConfigured && cloudSync.currentUser ? SYNC_PENDING : SYNC_LOCAL_ONLY;
+      const localRecord = normalizeRecord({
+        ...record,
+        updatedAt: Date.now(),
+        syncStatus: status,
+        lastSyncError: ""
+      });
+
+      await saveRecord(localRecord);
+      await refreshRecords();
+      await syncRecordToCloud(localRecord);
+    }
+
+    async function deleteRecordEverywhere(record) {
+      await deleteRecord(record.id);
+
+      if (cloudSync.isConfigured && cloudSync.currentUser) {
+        try {
+          await cloudSync.deleteTextRecord(record.id);
+        } catch (error) {
+          console.warn("Cloud delete failed", error);
+        }
+      }
+
+      await refreshRecords();
+    }
+
+    async function syncRecordToCloud(record) {
+      if (!cloudSync.isConfigured || !cloudSync.currentUser) return;
+
+      try {
+        await cloudSync.upsertTextRecord(toCloudTextRecord(record));
+        await saveRecord({
+          ...record,
+          syncStatus: SYNC_SYNCED,
+          lastSyncError: ""
+        });
+        await refreshRecords();
+      } catch (error) {
+        await saveRecord({
+          ...record,
+          syncStatus: SYNC_ERROR,
+          lastSyncError: error.message || "Cloud sync failed"
+        });
+        await refreshRecords();
+      }
+    }
+
+    async function syncPendingRecords() {
+      if (!cloudSync.isConfigured || !cloudSync.currentUser) return;
+
+      const pendingRecords = (await getAllRecords()).filter((record) => (
+        record.syncStatus === SYNC_PENDING || record.syncStatus === SYNC_ERROR || record.syncStatus === SYNC_LOCAL_ONLY
+      ));
+
+      for (const record of pendingRecords) {
+        await syncRecordToCloud({
+          ...record,
+          syncStatus: SYNC_PENDING
+        });
+      }
+    }
+
+    async function mergeCloudTextRecords() {
+      if (!cloudSync.isConfigured || !cloudSync.currentUser) return;
+
+      const cloudRecords = await cloudSync.fetchTextRecords();
+      const localRecords = await getAllRecords();
+      const localById = new Map(localRecords.map((record) => [record.id, record]));
+
+      for (const cloudRecord of cloudRecords) {
+        const localRecord = localById.get(cloudRecord.id);
+        if (localRecord && localRecord.updatedAt > cloudRecord.updatedAt) continue;
+
+        await saveRecord({
+          ...localRecord,
+          ...cloudRecord,
+          audioBlob: localRecord ? localRecord.audioBlob : null,
+          hasLocalAudio: Boolean(localRecord && localRecord.audioBlob),
+          syncStatus: SYNC_SYNCED,
+          lastSyncError: ""
+        });
+      }
+
+      await refreshRecords();
+    }
+
+    function startOfDay(date) {
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    }
+
+    function toDateKey(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function formatKoreanDate(date) {
+      return new Intl.DateTimeFormat("ko-KR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        weekday: "short"
+      }).format(date);
+    }
+
+    function formatTime(timestamp) {
+      return new Intl.DateTimeFormat("ko-KR", {
+        hour: "2-digit",
+        minute: "2-digit"
+      }).format(new Date(timestamp));
+    }
+
+    function formatDuration(seconds) {
+      const total = Math.max(0, Math.round(seconds || 0));
+      const mins = String(Math.floor(total / 60)).padStart(2, "0");
+      const secs = String(total % 60).padStart(2, "0");
+      return `${mins}:${secs}`;
+    }
+
+    function createId() {
+      if (crypto.randomUUID) return crypto.randomUUID();
+      return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    }
+
+    function normalizeRecord(record) {
+      const createdAt = record.createdAt || Date.now();
+      return {
+        id: record.id || createId(),
+        title: record.title || DEFAULT_RECORD_TITLE,
+        date: record.date || toDateKey(new Date(createdAt)),
+        createdAt,
+        updatedAt: record.updatedAt || createdAt,
+        audioBlob: record.audioBlob || null,
+        transcript: record.transcript || "",
+        duration: record.duration || 0,
+        hasLocalAudio: Boolean(record.audioBlob || record.hasLocalAudio),
+        syncStatus: record.syncStatus || SYNC_LOCAL_ONLY,
+        lastSyncError: record.lastSyncError || ""
+      };
+    }
+
+    function toCloudTextRecord(record) {
+      const normalized = normalizeRecord(record);
+      return {
+        id: normalized.id,
+        date: normalized.date,
+        createdAt: normalized.createdAt,
+        updatedAt: normalized.updatedAt,
+        title: normalized.title,
+        transcript: normalized.transcript,
+        duration: normalized.duration
+      };
+    }
+
+    function getSyncLabel(status) {
+      if (status === SYNC_SYNCED) return "동기화됨";
+      if (status === SYNC_PENDING) return "동기화 대기";
+      if (status === SYNC_ERROR) return "동기화 오류";
+      return "이 기기에만 저장";
+    }
+
+    function getSupportedAudioMimeType() {
+      if (!("MediaRecorder" in window) || !MediaRecorder.isTypeSupported) return "";
+
+      const candidates = [
+        "audio/webm;codecs=opus",
+        "audio/webm",
+        "audio/mp4;codecs=mp4a.40.2",
+        "audio/mp4",
+        "audio/aac"
+      ];
+
+      return candidates.find((type) => MediaRecorder.isTypeSupported(type)) || "";
+    }
+
+    function cleanupActiveStream() {
+      if (!activeStream) return;
+      activeStream.getTracks().forEach((track) => track.stop());
+      activeStream = null;
+    }
+
+    function showMicMessage(message, status = "녹음 오류") {
+      micNotice.textContent = message;
+      micNotice.classList.add("visible");
+      setStatus(status, false);
+    }
+
+    function updateAuthUi(user) {
+      if (user) {
+        authButton.textContent = "로그아웃";
+        authButton.classList.add("signed-in");
+        authUser.textContent = user.email || "Google 계정";
+        return;
+      }
+
+      authButton.textContent = "Google 로그인";
+      authButton.classList.remove("signed-in");
+      authUser.textContent = "";
+    }
+
+    async function handleAuthClick() {
+      if (cloudSync.currentUser) {
+        await signOut(auth);
+        return;
+      }
+
+      try {
+        await signInWithPopup(auth, provider);
+      } catch (error) {
+        if (error.code === "auth/popup-blocked" || error.code === "auth/operation-not-supported-in-this-environment") {
+          await signInWithRedirect(auth, provider);
+          return;
+        }
+
+        console.error(error);
+        setStatus("로그인 오류", false);
+      }
+    }
+
+    function setupAuthSync() {
+      getRedirectResult(auth).catch((error) => {
+        console.warn("Redirect login result failed", error);
+      });
+
+      onAuthStateChanged(auth, async (user) => {
+        cloudSync.currentUser = user;
+        updateAuthUi(user);
+
+        if (!user || !db) {
+          setStatus("대기 중", false);
+          return;
+        }
+
+        setStatus("동기화 중", false);
+        try {
+          await mergeCloudTextRecords();
+          await syncPendingRecords();
+          setStatus("동기화됨", false);
+        } catch (error) {
+          console.error(error);
+          setStatus("동기화 오류", false);
+        }
+      });
+    }
+
+    function renderAll() {
+      renderCalendar();
+      renderRecords();
+    }
+
+    function renderCalendar() {
+      const recordDates = new Set(records.map((record) => record.date));
+      const todayKey = toDateKey(new Date());
+      const selectedKey = toDateKey(selectedDate);
+      const days = calendarMode === "month" ? getMonthDays(viewDate) : getWeekDays(viewDate);
+
+      calendarGrid.innerHTML = "";
+      periodLabel.textContent = calendarMode === "month"
+        ? `${viewDate.getFullYear()}년 ${viewDate.getMonth() + 1}월`
+        : getWeekLabel(days);
+
+      days.forEach((date) => {
+        const dateKey = toDateKey(date);
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "day-cell";
+        button.setAttribute("aria-label", `${formatKoreanDate(date)} 선택`);
+
+        if (calendarMode === "month" && date.getMonth() !== viewDate.getMonth()) {
+          button.classList.add("muted");
+        }
+        if (dateKey === todayKey) button.classList.add("today");
+        if (dateKey === selectedKey) button.classList.add("selected");
+
+        const number = document.createElement("span");
+        number.className = "day-number";
+        number.textContent = date.getDate();
+        button.appendChild(number);
+
+        if (recordDates.has(dateKey)) {
+          const dot = document.createElement("span");
+          dot.className = "record-dot";
+          dot.setAttribute("aria-hidden", "true");
+          button.appendChild(dot);
+        }
+
+        button.addEventListener("click", () => {
+          selectedDate = startOfDay(date);
+          viewDate = startOfDay(date);
+          renderAll();
+        });
+
+        calendarGrid.appendChild(button);
+      });
+    }
+
+    function getMonthDays(date) {
+      const first = new Date(date.getFullYear(), date.getMonth(), 1);
+      const start = new Date(first);
+      start.setDate(first.getDate() - first.getDay());
+      return Array.from({ length: 42 }, (_, index) => {
+        const day = new Date(start);
+        day.setDate(start.getDate() + index);
+        return day;
+      });
+    }
+
+    function getWeekDays(date) {
+      const start = startOfDay(date);
+      start.setDate(start.getDate() - start.getDay());
+      return Array.from({ length: 7 }, (_, index) => {
+        const day = new Date(start);
+        day.setDate(start.getDate() + index);
+        return day;
+      });
+    }
+
+    function getWeekLabel(days) {
+      const first = days[0];
+      const last = days[days.length - 1];
+      if (first.getMonth() === last.getMonth()) {
+        return `${first.getFullYear()}년 ${first.getMonth() + 1}월 ${first.getDate()}-${last.getDate()}일`;
+      }
+      return `${first.getMonth() + 1}월 ${first.getDate()}일 - ${last.getMonth() + 1}월 ${last.getDate()}일`;
+    }
+
+    function renderRecords() {
+      const dateKey = toDateKey(selectedDate);
+      const dayRecords = records
+        .filter((record) => record.date === dateKey)
+        .sort((a, b) => b.createdAt - a.createdAt);
+
+      recordsMeta.textContent = `${formatKoreanDate(selectedDate)} · ${dayRecords.length}개`;
+      recordsList.innerHTML = "";
+
+      if (!dayRecords.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+        empty.textContent = "아직 저장된 음성 기록이 없습니다.";
+        recordsList.appendChild(empty);
+        return;
+      }
+
+      dayRecords.forEach((record) => {
+        const item = document.createElement("article");
+        item.className = "record-item";
+
+        const top = document.createElement("div");
+        top.className = "record-top";
+
+        const metaGroup = document.createElement("div");
+        metaGroup.className = "record-meta-group";
+
+        const meta = document.createElement("span");
+        meta.textContent = `${formatTime(record.createdAt)} · ${formatDuration(record.duration)}`;
+        metaGroup.appendChild(meta);
+
+        const syncBadge = document.createElement("span");
+        syncBadge.className = `sync-badge ${record.syncStatus || SYNC_LOCAL_ONLY}`;
+        syncBadge.textContent = getSyncLabel(record.syncStatus);
+        metaGroup.appendChild(syncBadge);
+
+        top.appendChild(metaGroup);
+
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "delete-button";
+        remove.setAttribute("aria-label", "기록 삭제");
+        remove.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M8 6V4h8v2M10 11v6M14 11v6M6 6l1 16h10l1-16"/></svg>';
+        remove.addEventListener("click", async () => {
+          await deleteRecordEverywhere(record);
+        });
+        top.appendChild(remove);
+        item.appendChild(top);
+
+        const editor = document.createElement("div");
+        editor.className = "record-editor";
+
+        const titleInput = document.createElement("input");
+        titleInput.className = "record-title-input";
+        titleInput.type = "text";
+        titleInput.value = record.title || DEFAULT_RECORD_TITLE;
+        titleInput.placeholder = "기록 제목";
+        titleInput.setAttribute("aria-label", "기록 제목");
+        editor.appendChild(titleInput);
+
+        const text = document.createElement("textarea");
+        text.className = "record-textarea";
+        text.value = record.transcript || "";
+        text.placeholder = "텍스트를 수정하거나 직접 입력하세요.";
+        text.setAttribute("aria-label", "변환된 텍스트");
+        editor.appendChild(text);
+
+        const actions = document.createElement("div");
+        actions.className = "record-actions";
+
+        const save = document.createElement("button");
+        save.type = "button";
+        save.className = "save-button";
+        save.textContent = "저장";
+        save.addEventListener("click", async () => {
+          const updatedRecord = {
+            ...record,
+            title: titleInput.value.trim() || DEFAULT_RECORD_TITLE,
+            transcript: text.value.trim(),
+            updatedAt: Date.now()
+          };
+          await saveRecordAndSync(updatedRecord);
+          setStatus("수정됨", false);
+          setTimeout(() => {
+            if (!isRecording) setStatus("대기 중", false);
+          }, 1200);
+        });
+
+        actions.appendChild(save);
+        editor.appendChild(actions);
+        item.appendChild(editor);
+
+        if (record.audioBlob) {
+          const audio = document.createElement("audio");
+          audio.controls = true;
+          audio.src = URL.createObjectURL(record.audioBlob);
+          item.appendChild(audio);
+        }
+
+        recordsList.appendChild(item);
+      });
+    }
+
+    async function refreshRecords() {
+      records = await getAllRecords();
+      renderAll();
+    }
+
+    async function startRecording() {
+      micNotice.classList.remove("visible");
+
+      audioChunks = [];
+      finalTranscript = "";
+      interimTranscript = "";
+      recordingStart = Date.now();
+      textOnlyRecording = false;
+      mediaRecorder = null;
+
+      if (!("MediaRecorder" in window)) {
+        if (!speechSupported) {
+          showMicMessage("이 브라우저에서는 녹음과 음성 텍스트 변환이 모두 지원되지 않습니다.");
+          return;
+        }
+
+        textOnlyRecording = true;
+        isRecording = true;
+        startSpeechRecognition();
+        startTimer();
+        updateTranscript();
+        setRecordingUi(true);
+        setStatus("텍스트 기록 중", true);
+        return;
+      }
+
+      try {
+        activeStream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true
+          }
+        });
+      } catch (error) {
+        try {
+          activeStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        } catch (fallbackError) {
+          if (!speechSupported) {
+            showMicMessage("마이크 권한이 필요합니다. 브라우저에서 권한을 허용한 뒤 다시 시도해 주세요.", "마이크 권한 필요");
+            return;
+          }
+
+          textOnlyRecording = true;
+          isRecording = true;
+          startSpeechRecognition();
+          startTimer();
+          updateTranscript();
+          setRecordingUi(true);
+          setStatus("텍스트 기록 중", true);
+          return;
+        }
+      }
+
+      const mimeType = getSupportedAudioMimeType();
+      try {
+        mediaRecorder = mimeType
+          ? new MediaRecorder(activeStream, { mimeType })
+          : new MediaRecorder(activeStream);
+      } catch (error) {
+        cleanupActiveStream();
+        if (!speechSupported) {
+          showMicMessage("이 브라우저에서는 오디오 녹음 형식이 지원되지 않습니다.");
+          return;
+        }
+
+        textOnlyRecording = true;
+        isRecording = true;
+        startSpeechRecognition();
+        startTimer();
+        updateTranscript();
+        setRecordingUi(true);
+        setStatus("텍스트 기록 중", true);
+        return;
+      }
+
+      mediaRecorder.addEventListener("dataavailable", (event) => {
+        if (event.data.size > 0) audioChunks.push(event.data);
+      });
+      mediaRecorder.addEventListener("error", (event) => {
+        console.error("MediaRecorder error", event.error || event);
+        showMicMessage("녹음 중 오류가 발생했습니다. 텍스트가 인식되었다면 텍스트 기록은 저장할 수 있습니다.");
+      });
+      mediaRecorder.addEventListener("stop", handleRecordingStop);
+      mediaRecorder.start(1000);
+
+      isRecording = true;
+      startSpeechRecognition();
+      startTimer();
+      updateTranscript();
+      setRecordingUi(true);
+      setStatus("녹음 중", true);
+    }
+
+    function stopRecording() {
+      if (!isRecording) return;
+      isRecording = false;
+      stopTimer();
+      setRecordingUi(false);
+      setStatus("저장 중", false);
+
+      if (recognition) {
+        recognition.onend = null;
+        try {
+          recognition.stop();
+        } catch (error) {
+          console.warn("Speech recognition stop failed", error);
+        }
+      }
+
+      if (mediaRecorder && mediaRecorder.state !== "inactive") {
+        if (mediaRecorder.state === "recording" && mediaRecorder.requestData) {
+          try {
+            mediaRecorder.requestData();
+          } catch (error) {
+            console.warn("MediaRecorder requestData failed", error);
+          }
+        }
+        mediaRecorder.stop();
+        return;
+      }
+
+      handleTextOnlyRecordingStop();
+    }
+
+    async function handleRecordingStop() {
+      cleanupActiveStream();
+      const duration = Math.round((Date.now() - recordingStart) / 1000);
+      const audioBlob = new Blob(audioChunks, {
+        type: mediaRecorder && mediaRecorder.mimeType ? mediaRecorder.mimeType : "audio/webm"
+      });
+      await saveCompletedRecording(audioBlob.size > 0 ? audioBlob : null, duration);
+    }
+
+    async function handleTextOnlyRecordingStop() {
+      cleanupActiveStream();
+      const duration = Math.round((Date.now() - recordingStart) / 1000);
+      await saveCompletedRecording(null, duration);
+    }
+
+    async function saveCompletedRecording(audioBlob, duration) {
+      const transcript = `${finalTranscript} ${interimTranscript}`.replace(/\s+/g, " ").trim();
+      const today = startOfDay(new Date());
+
+      if (!audioBlob && !transcript) {
+        setStatus("저장할 내용 없음", false);
+        updateTranscript();
+        setTimeout(() => {
+          if (!isRecording) setStatus("대기 중", false);
+        }, 1400);
+        return;
+      }
+
+      const record = {
+        id: createId(),
+        title: DEFAULT_RECORD_TITLE,
+        date: toDateKey(today),
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        audioBlob,
+        transcript,
+        duration,
+        hasLocalAudio: Boolean(audioBlob),
+        syncStatus: cloudSync.isConfigured && cloudSync.currentUser ? SYNC_PENDING : SYNC_LOCAL_ONLY
+      };
+
+      await saveRecordAndSync(record);
+      selectedDate = today;
+      viewDate = today;
+      setStatus("저장됨", false);
+      setTimeout(() => {
+        if (!isRecording) setStatus("대기 중", false);
+      }, 1400);
+    }
+
+    function startSpeechRecognition() {
+      if (!speechSupported) return;
+
+      recognition = new SpeechRecognition();
+      recognition.lang = "ko-KR";
+      recognition.interimResults = true;
+      recognition.continuous = true;
+
+      recognition.onresult = (event) => {
+        interimTranscript = "";
+        for (let i = event.resultIndex; i < event.results.length; i += 1) {
+          const text = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += `${text} `;
+          } else {
+            interimTranscript += text;
+          }
+        }
+        updateTranscript();
+      };
+
+      recognition.onerror = () => {
+        interimTranscript = "";
+        updateTranscript();
+      };
+
+      recognition.onend = () => {
+        if (isRecording) {
+          try {
+            recognition.start();
+          } catch (error) {
+            // Some browsers briefly reject immediate restarts.
+          }
+        }
+      };
+
+      try {
+        recognition.start();
+      } catch (error) {
+        speechNotice.classList.add("visible");
+      }
+    }
+
+    function updateTranscript() {
+      const finalText = finalTranscript.trim();
+      const interimText = interimTranscript.trim();
+
+      if (!finalText && !interimText) {
+        transcriptBox.classList.add("empty");
+        transcriptBox.textContent = isRecording ? "듣고 있습니다..." : "마이크 버튼을 누르면 녹음과 음성 인식이 함께 시작됩니다.";
+        return;
+      }
+
+      transcriptBox.classList.remove("empty");
+      transcriptBox.innerHTML = "";
+
+      if (finalText) {
+        transcriptBox.append(document.createTextNode(finalText));
+      }
+
+      if (interimText) {
+        if (finalText) transcriptBox.append(document.createTextNode(" "));
+        const interim = document.createElement("span");
+        interim.className = "interim";
+        interim.textContent = interimText;
+        transcriptBox.appendChild(interim);
+      }
+    }
+
+    function startTimer() {
+      updateTimer();
+      timerId = setInterval(updateTimer, 300);
+    }
+
+    function stopTimer() {
+      clearInterval(timerId);
+      updateTimer();
+    }
+
+    function updateTimer() {
+      if (!recordingStart) {
+        timer.textContent = "00:00";
+        return;
+      }
+      timer.textContent = formatDuration((Date.now() - recordingStart) / 1000);
+    }
+
+    function setRecordingUi(recording) {
+      micButton.classList.toggle("recording", recording);
+      micButton.setAttribute("aria-label", recording ? "녹음 종료" : "녹음 시작");
+      micIcon.innerHTML = recording
+        ? '<rect x="7" y="7" width="10" height="10" rx="2"/>'
+        : '<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3M8 22h8"/>';
+    }
+
+    function setStatus(text, recording) {
+      statusText.textContent = text;
+      statusPill.classList.toggle("recording", recording);
+    }
+
+    $("#prevPeriod").addEventListener("click", () => {
+      if (calendarMode === "month") {
+        viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1);
+      } else {
+        viewDate.setDate(viewDate.getDate() - 7);
+      }
+      renderCalendar();
+    });
+
+    $("#nextPeriod").addEventListener("click", () => {
+      if (calendarMode === "month") {
+        viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1);
+      } else {
+        viewDate.setDate(viewDate.getDate() + 7);
+      }
+      renderCalendar();
+    });
+
+    $("#monthView").addEventListener("click", () => {
+      calendarMode = "month";
+      $("#monthView").classList.add("active");
+      $("#weekView").classList.remove("active");
+      $("#monthView").setAttribute("aria-selected", "true");
+      $("#weekView").setAttribute("aria-selected", "false");
+      renderCalendar();
+    });
+
+    $("#weekView").addEventListener("click", () => {
+      calendarMode = "week";
+      $("#weekView").classList.add("active");
+      $("#monthView").classList.remove("active");
+      $("#weekView").setAttribute("aria-selected", "true");
+      $("#monthView").setAttribute("aria-selected", "false");
+      viewDate = selectedDate;
+      renderCalendar();
+    });
+
+    $("#todayButton").addEventListener("click", () => {
+      selectedDate = startOfDay(new Date());
+      viewDate = selectedDate;
+      renderAll();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    $("#calendarButton").addEventListener("click", () => {
+      document.querySelector(".records-card").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    authButton.addEventListener("click", handleAuthClick);
+
+    micButton.addEventListener("click", () => {
+      if (isRecording) {
+        stopRecording();
+      } else {
+        startRecording();
+      }
+    });
+
+    async function init() {
+      if (!("MediaRecorder" in window) && !speechSupported) {
+        micNotice.textContent = "이 브라우저에서는 녹음과 음성 텍스트 변환이 모두 지원되지 않습니다.";
+        micNotice.classList.add("visible");
+        micButton.disabled = true;
+      } else if (!("MediaRecorder" in window)) {
+        micNotice.textContent = "이 브라우저에서는 오디오 저장이 지원되지 않아 텍스트 기록만 작동합니다.";
+        micNotice.classList.add("visible");
+      } else if (!("mediaDevices" in navigator) || !("getUserMedia" in navigator.mediaDevices)) {
+        micNotice.textContent = "이 브라우저에서는 오디오 녹음이 제한될 수 있습니다. 음성 텍스트 변환이 지원되면 텍스트 기록만 작동합니다.";
+        micNotice.classList.add("visible");
+      }
+
+      if (!speechSupported) {
+        speechNotice.classList.add("visible");
+      }
+
+      db = await openDatabase();
+      await refreshRecords();
+      setupAuthSync();
+      await mergeCloudTextRecords();
+      await syncPendingRecords();
+    }
+
+    window.addEventListener("online", () => {
+      syncPendingRecords();
+    });
+
+    init().catch((error) => {
+      console.error(error);
+      setStatus("초기화 오류", false);
+    });
+  </script>
+</body>
+</html>
