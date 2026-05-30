@@ -2655,45 +2655,54 @@
     .timeline-item {
       position: relative;
       display: flex;
-      flex-direction: column;
-      gap: 12px;
-      min-width: 0;
-      max-width: 100%;
-      text-align: left;
-    }
-
-    .timeline-header-row {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
       gap: 12px;
       width: 100%;
+      min-width: 0;
+    }
+
+    .timeline-left {
+      width: 70px;
+      flex-shrink: 0;
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 14px; /* Align vertically with the header box top */
+    }
+
+    .timeline-time-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--muted);
+      font-family: var(--font-hand);
+      line-height: 1.2;
+      text-align: right;
+    }
+
+    .timeline-middle {
+      width: 20px;
+      flex-shrink: 0;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      padding-top: 14px; /* Align vertically with the header box top */
     }
 
     .timeline-dot {
-      position: absolute;
-      left: -22px; /* centered on the 11px timeline line */
-      top: 50%;
-      transform: translateY(-50%);
       width: 9px;
       height: 9px;
       border-radius: 50%;
       background: var(--ink);
       border: 2px solid var(--bg);
       z-index: 5;
+      position: relative;
+      top: 3px; /* Fine-tune dot vertical center alignment with time text */
     }
 
-    .timeline-time-label {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--muted);
-      background: var(--accent-weak);
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-family: var(--font-hand);
-      transform: rotate(-0.5deg);
-      box-shadow: 0 2px 6px rgba(17, 17, 17, 0.02);
+    .timeline-right {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .timeline-content-card {
@@ -2705,17 +2714,28 @@
 
     /* Separate Title Box */
     .timeline-title-box {
-      padding: 12px 18px;
+      padding: 14px 18px;
       background: var(--cal-card, #FFFFFF);
       border: 1.3px solid var(--sketch-line);
       border-radius: 14px 11px 13px 12px / 12px 13px 11px 12px;
       box-shadow: 0 3px 8px rgba(17, 17, 17, 0.025);
       transform: rotate(-0.2deg);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
     .timeline-title-box:hover {
       transform: translateY(-1px) rotate(0.1deg);
       box-shadow: 0 4px 12px rgba(17, 17, 17, 0.05);
+    }
+
+    .timeline-box-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 2px;
     }
 
     .timeline-read-title {
@@ -5092,18 +5112,39 @@
           const item = document.createElement("article");
           item.className = "timeline-item";
 
-          // Timeline Header Row (Dot, Time Label, Controls)
-          const headerRow = document.createElement("div");
-          headerRow.className = "timeline-header-row";
-
-          const dot = document.createElement("div");
-          dot.className = "timeline-dot";
-          headerRow.appendChild(dot);
-
+          // Left Column (Time Label)
+          const leftCol = document.createElement("div");
+          leftCol.className = "timeline-left";
           const timeLabel = document.createElement("span");
           timeLabel.className = "timeline-time-label";
           timeLabel.textContent = formatTime(record.createdAt);
-          headerRow.appendChild(timeLabel);
+          leftCol.appendChild(timeLabel);
+          item.appendChild(leftCol);
+
+          // Middle Column (Dot)
+          const middleCol = document.createElement("div");
+          middleCol.className = "timeline-middle";
+          const dot = document.createElement("div");
+          dot.className = "timeline-dot";
+          middleCol.appendChild(dot);
+          item.appendChild(middleCol);
+
+          // Right Column (Content Cards)
+          const rightCol = document.createElement("div");
+          rightCol.className = "timeline-right";
+
+          // Title Box (with check badge and controls)
+          const titleBox = document.createElement("div");
+          titleBox.className = "timeline-title-box";
+
+          const boxHeader = document.createElement("div");
+          boxHeader.className = "timeline-box-header";
+
+          const checkBadge = document.createElement("div");
+          checkBadge.className = "diary-check-badge";
+          checkBadge.title = `기록 번호 ${startIndex + index + 1}`;
+          checkBadge.textContent = startIndex + index + 1;
+          boxHeader.appendChild(checkBadge);
 
           const controls = document.createElement("div");
           controls.className = "record-controls";
@@ -5128,21 +5169,14 @@
           });
           controls.appendChild(more);
 
-          headerRow.appendChild(controls);
-          item.appendChild(headerRow);
+          boxHeader.appendChild(controls);
+          titleBox.appendChild(boxHeader);
 
-          // Timeline Content Cards
-          const contentCard = document.createElement("div");
-          contentCard.className = "timeline-content-card";
-
-          // Title Box
-          const titleBox = document.createElement("div");
-          titleBox.className = "timeline-title-box";
           const titleText = document.createElement("p");
           titleText.className = "timeline-read-title";
           titleText.textContent = getRecordDisplayTitle(record);
           titleBox.appendChild(titleText);
-          contentCard.appendChild(titleBox);
+          rightCol.appendChild(titleBox);
 
           // Text Box
           const textBox = document.createElement("div");
@@ -5151,9 +5185,9 @@
           readText.className = "timeline-read-text";
           readText.textContent = (record.transcript || "").trim() || "남겨진 내용이 없습니다.";
           textBox.appendChild(readText);
-          contentCard.appendChild(textBox);
+          rightCol.appendChild(textBox);
 
-          item.appendChild(contentCard);
+          item.appendChild(rightCol);
           container.appendChild(item);
         }
       });
