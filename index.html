@@ -335,7 +335,12 @@
       background: transparent;
       color: var(--muted);
       box-shadow: none;
-      overflow: hidden;
+      overflow: visible;
+    }
+
+    .settings-control:has(.cst-select-wrap) {
+      border-bottom: none;
+      height: auto;
     }
 
     .settings-control label {
@@ -633,6 +638,153 @@
     .review-title-container {
       margin-bottom: 18px;
       padding-left: 28px; /* Clear the vertical line at 22px */
+    }
+
+    /* 녹음창 내 상단 날짜 뱃지 (기록할 날짜를 헷갈리지 않게 표시) */
+    .recording-date-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 16px;
+      border: none;
+      border-radius: 20px;
+      background: #000000;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      align-self: flex-start;
+      transform: rotate(-1deg);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    body.theme-dark .recording-date-badge {
+      background: #000000;
+      color: #ffffff;
+      border: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    /* ── CUSTOM MODAL DIALOG ── */
+    .custom-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 17, 17, 0.4);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      animation: modal-fade-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    body.theme-dark .custom-modal {
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .custom-modal[hidden] {
+      display: none !important;
+    }
+
+    @keyframes modal-fade-in {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .custom-modal-content {
+      width: min(90%, 320px);
+      padding: 24px;
+      background: var(--cal-card, #fff);
+      border: 1.5px solid var(--sketch-line);
+      border-radius: 24px 20px 26px 22px / 20px 26px 22px 24px;
+      box-shadow: 0 16px 40px rgba(17, 17, 17, 0.15);
+      animation: modal-scale-in 0.24s cubic-bezier(0.175, 0.885, 0.32, 1.25) forwards;
+      transform-origin: center center;
+    }
+
+    body.theme-dark .custom-modal-content {
+      background: var(--surface-soft);
+      border-color: rgba(255,255,255,0.12);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    @keyframes modal-scale-in {
+      from { transform: scale(0.9) translateY(12px); }
+      to   { transform: scale(1) translateY(0); }
+    }
+
+    .custom-modal-header h3 {
+      margin: 0 0 14px;
+      font-size: 21px;
+      font-weight: 700;
+      color: var(--ink);
+      text-align: center;
+    }
+
+    .custom-modal-body p {
+      margin: 0 0 24px;
+      font-size: 18px;
+      line-height: 1.5;
+      color: var(--text-soft);
+      text-align: center;
+    }
+
+    .custom-modal-body strong {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .custom-modal-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .modal-btn-cancel,
+    .modal-btn-start {
+      flex: 1;
+      height: 44px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.18s, transform 0.15s;
+    }
+
+    .modal-btn-cancel {
+      border: 1.4px dashed var(--sketch-line);
+      border-radius: 16px 12px 17px 14px / 13px 16px 12px 15px;
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .modal-btn-cancel:hover {
+      background: rgba(17,17,17,0.04);
+      color: var(--text);
+    }
+
+    body.theme-dark .modal-btn-cancel:hover {
+      background: rgba(255,255,255,0.06);
+    }
+
+    .modal-btn-start {
+      border: 1.4px solid var(--ink);
+      border-radius: 14px 17px 13px 16px / 16px 13px 15px 12px;
+      background: var(--ink);
+      color: #fff;
+    }
+
+    body.theme-dark .modal-btn-start {
+      background: var(--text-soft);
+      color: var(--notebook);
+      border-color: var(--text-soft);
+    }
+
+    .modal-btn-start:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(17,17,17,0.12);
     }
 
     .recording-actions {
@@ -1236,6 +1388,14 @@
       width: 100%;
     }
 
+    .cst-select-wrap:has(.cst-select-popup) {
+      z-index: 9999;
+    }
+
+    .settings-row:has(.cst-select-popup) {
+      z-index: 9999;
+    }
+
     .cst-select-btn {
       width: 100%;
       display: inline-flex;
@@ -1301,7 +1461,7 @@
       top: calc(100% + 8px);
       left: 0;
       right: 0;
-      z-index: 300;
+      z-index: 9999;
       background: var(--cal-card, #fff);
       border: 1.2px solid var(--sketch-line-soft);
       border-radius: 18px;
@@ -1498,19 +1658,23 @@
     }
 
     .add-diary-detail-btn {
-      min-height: 28px;
-      padding: 5px 12px;
+      position: absolute;
+      top: -38px;
+      right: 0;
+      min-height: 32px;
+      padding: 6px 14px;
       background: var(--ink); /* Black button */
       color: #ffffff !important;
       border: none;
       border-radius: 999px;
-      font-size: 11px;
+      font-size: 13px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       transition: background-color 0.2s ease, transform 0.15s ease;
       line-height: 1;
+      z-index: 10;
     }
 
     body.theme-dark .add-diary-detail-btn {
@@ -1631,38 +1795,15 @@
       pointer-events: none; /* 클릭 이벤트 방해 차단 */
     }
 
-    /* 캘린더 날짜 셀 내에 스티커를 배경처럼 까는 구조 */
-    .day-cell .sticker-bg-container {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1; /* 날짜 숫자보다 아래 */
-      pointer-events: none;
+    /* 캘린더 날짜 셀 내에 일기가 있는 경우 레퍼런스 스타일의 단색 원형 배경 적용 */
+    .day-cell.has-sticker {
+      background: var(--ink) !important;
+      color: #ffffff !important;
     }
 
-    .day-cell .sticker-bg-container .sticker-wrapper {
-      position: absolute;
-      inset: -1px;
-      opacity: 0.62; /* 반투명으로 만들어 뒤의 날짜 숫자가 또렷하게 겹쳐 보이도록 설정 */
-      pointer-events: none;
-    }
-
-    /* 스티커 테마 설정 연동형 파스텔 원형 배경 채색 */
-    .day-cell.has-clover {
-      background: #C8E6C9 !important; /* 연초록 */
-      color: #1b5e20 !important;
-    }
-
-    .day-cell.has-smile {
-      background: #FFE57F !important; /* 연노랑 */
-      color: #7f6f00 !important;
-    }
-
-    .day-cell.has-heart {
-      background: #FFCDD2 !important; /* 연분홍 */
-      color: #b71c1c !important;
+    body.theme-dark .day-cell.has-sticker {
+      background: var(--text-soft) !important;
+      color: #000000 !important;
     }
 
     .day-cell.muted .record-dots {
@@ -1895,7 +2036,8 @@
 
     /* Inline expanded diary view under calendar */
     .diary-detail-panel {
-      margin-top: 32px;
+      position: relative;
+      margin-top: 48px;
       padding: 24px;
       background: rgba(17, 17, 17, 0.035); /* 부드럽고 가라앉은 파스텔 음영 카드 박스화 */
       border-radius: 28px;
@@ -2801,12 +2943,11 @@
     /* ── Floating Record Mic Button (FAB) at Bottom Right ── */
     .mic-floating-container {
       position: fixed;
-      left: 50%;
-      right: auto;
+      left: auto;
+      right: calc(50% - (min(100%, var(--app-width)) / 2) + var(--page-gutter));
       bottom: calc(104px + env(safe-area-inset-bottom, 0px));
       z-index: 99;
       pointer-events: none;
-      transform: translateX(-50%);
       transition: transform 0.2s ease, opacity 0.2s ease;
     }
 
@@ -2814,33 +2955,30 @@
     body[data-view="review"] .mic-floating-container {
       opacity: 0;
       pointer-events: none;
-      transform: translateX(-50%) scale(0.8) translateY(20px);
+      transform: scale(0.8) translateY(20px);
     }
 
     .mic-button {
       pointer-events: all;
-      width: 132px;
+      width: var(--bottom-cta-height);
       height: var(--bottom-cta-height);
       min-width: 0;
       min-height: 0;
-      padding: 0 22px;
+      padding: 0;
       display: inline-flex;
-      flex-direction: row;
       align-items: center;
       justify-content: center;
-      border-radius: 999px;
+      border-radius: 50%;
       color: #fff;
       background: var(--ink);
       border: 2px solid rgba(255, 255, 255, 0.15);
       box-shadow: 0 6px 20px rgba(17, 17, 17, 0.2);
       transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s ease, box-shadow 0.2s ease;
-      font-size: 15px;
-      font-weight: 700;
-      line-height: 1.2;
       overflow: hidden;
-      white-space: normal;
-      text-align: center;
-      gap: 8px;
+    }
+
+    .mic-label {
+      display: none !important;
     }
 
     .mic-button:hover {
@@ -3282,13 +3420,10 @@
         font-size: 22px;
       }
 
-      .mic-floating-container {
-        bottom: calc(104px + env(safe-area-inset-bottom, 0px));
-      }
 
       .mic-button {
-        width: 128px;
-        height: 56px;
+        width: var(--bottom-cta-height);
+        height: var(--bottom-cta-height);
       }
 
       .nav-item {
@@ -3321,6 +3456,10 @@
 
     <section class="card live-card" aria-labelledby="liveTitle">
       <button class="live-card-close-button" id="liveCardCloseButton" type="button" aria-label="기록 취소">×</button>
+      
+      <!-- Date header to show which date is being recorded for -->
+      <div class="recording-date-badge" id="recordingDateBadge"></div>
+
       <div class="card-header">
         <h2 class="card-title" id="liveTitle">recording</h2>
         <div class="recording-meta-row">
@@ -3332,7 +3471,7 @@
         </div>
         <p class="recording-subtitle">지금의 생각을 남겨보세요.</p>
       </div>
-      <div class="transcript-box paper-lines empty" id="transcriptBox">기록 버튼을 누르면 음성 기록과 텍스트 변환이 함께 시작됩니다.</div>
+      <div class="transcript-box empty" id="transcriptBox">기록 버튼을 누르면 음성 기록과 텍스트 변환이 함께 시작됩니다.</div>
       <div class="recording-actions">
         <button class="recording-pause-button" id="recordingPauseButton" type="button">잠시 멈추기</button>
         <button class="recording-stop-button" id="recordingStopButton" type="button">기록 마치기</button>
@@ -3477,7 +3616,6 @@
           <div class="diary-detail-date" style="display: flex; align-items: center; gap: 8px; font-size: 19px; color: var(--ink); margin-bottom: 0; border: none; padding: 0;">
             <span id="diaryDetailDateText"></span>
           </div>
-          <button id="addDiaryFromDetailButton" class="add-diary-detail-btn" type="button">기록 추가</button>
         </div>
         <div class="records-list" id="recordsList"></div>
       </div>
@@ -3517,9 +3655,15 @@
 
   <div class="mic-floating-container">
     <button class="mic-button" id="micButton" type="button" aria-label="기록하기">
-      <svg class="mic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;display:block;margin:0 auto 1px;">
-        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
-        <path d="M19 10v1a7 7 0 0 1-14 0v-1"></path>
+      <svg class="mic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;display:block;">
+        <!-- Mic head: cute chubby capsule with slight organic asymmetry -->
+        <rect x="9" y="3.5" width="6" height="9" rx="3" fill="none" stroke="currentColor" stroke-width="2.6" />
+        <!-- Cute smile-like stand wrap -->
+        <path d="M5.5 10 C 5.5 15, 18.5 15, 18.5 10" fill="none" stroke="currentColor" stroke-width="2.6" />
+        <!-- Stand bottom stick -->
+        <path d="M12 14 L12 18.5" stroke="currentColor" stroke-width="2.6" />
+        <!-- Stand base plate: cute hand-drawn curved plate -->
+        <path d="M8.5 18.5 Q 12 20.5 15.5 18.5" stroke="currentColor" stroke-width="2.6" />
       </svg>
       <span class="mic-label" id="micLabel">기록</span>
     </button>
@@ -3534,6 +3678,22 @@
         <button class="edit-delete-button" id="editDeleteButton" type="button">삭제</button>
         <button class="edit-cancel-button" id="editCancelButton" type="button">취소</button>
         <button class="edit-save-button" id="editSaveButton" type="button">저장</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pre-recording target date confirmation popup -->
+  <div class="custom-modal" id="confirmRecordModal" hidden>
+    <div class="custom-modal-content card" role="dialog" aria-modal="true" aria-labelledby="confirmRecordTitle">
+      <div class="custom-modal-header">
+        <h3 id="confirmRecordTitle">녹음 시작</h3>
+      </div>
+      <div class="custom-modal-body">
+        <p><strong id="confirmRecordDateText">0000년 00월 00일</strong>에 대한<br>녹음을 시작합니다.</p>
+      </div>
+      <div class="custom-modal-actions">
+        <button class="modal-btn-cancel" id="confirmRecordCancelBtn" type="button">취소</button>
+        <button class="modal-btn-start" id="confirmRecordStartBtn" type="button">시작</button>
       </div>
     </div>
   </div>
@@ -3640,9 +3800,11 @@
     const importFileButton = $("#importFileButton");
     const importFileInput = $("#importFileInput");
     const fileStatus = $("#fileStatus");
-    const fontSelect = $("#fontSelect");
-    const stickerSelect = $("#stickerSelect");
     const profileAvatarContainer = $("#profileAvatarContainer");
+    const confirmRecordModal = $("#confirmRecordModal");
+    const confirmRecordDateText = $("#confirmRecordDateText");
+    const confirmRecordCancelBtn = $("#confirmRecordCancelBtn");
+    const confirmRecordStartBtn = $("#confirmRecordStartBtn");
     const profileAvatarPreview = $("#profileAvatarPreview");
     const profileAvatarInput = $("#profileAvatarInput");
     const profileNicknameInput = $("#profileNicknameInput");
@@ -4192,7 +4354,7 @@
     }
 
     function createId() {
-      if (crypto.randomUUID) return crypto.randomUUID();
+      if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
       return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
     }
 
@@ -4329,12 +4491,6 @@
 
         if (entryTitles.length && !isMuted) {
           button.classList.add("has-sticker");
-          
-          // 스티커 컨테이너를 먼저 렌더링해 날짜 숫자의 뒤(아래 레이어)에 배치
-          const stickerContainer = document.createElement("div");
-          stickerContainer.className = "sticker-bg-container";
-          stickerContainer.innerHTML = getStickerSvg(dateKey);
-          button.appendChild(stickerContainer);
         }
 
         // 날짜 숫자는 스티커의 유무와 상관없이 언제나 렌더링하여 또렷하게 표시
@@ -4981,6 +5137,16 @@
 
     async function startRecording() {
       recordingTargetDate = currentView === "records" ? startOfDay(selectedDate) : startOfDay(new Date());
+
+      // Update date badge at the top of the recording window
+      const dateBadge = document.getElementById("recordingDateBadge");
+      if (dateBadge) {
+        dateBadge.textContent = new Intl.DateTimeFormat("ko-KR", {
+          year: "numeric",
+          month: "long",
+          day: "numeric"
+        }).format(recordingTargetDate);
+      }
 
       if (currentView !== "recording") {
         setAppView("recording");
@@ -6010,13 +6176,6 @@
       });
     }
 
-    // Detail panel "Add Diary" button click listener
-    const addDiaryFromDetailButton = document.getElementById("addDiaryFromDetailButton");
-    if (addDiaryFromDetailButton) {
-      addDiaryFromDetailButton.addEventListener("click", () => {
-        startRecording();
-      });
-    }
 
     todayButton.addEventListener("click", () => {
       setAppView("today", { scrollBehavior: "auto" });
@@ -6109,15 +6268,49 @@
       importRecordsFromFile(importFileInput.files?.[0]);
     });
 
-    fontSelect.addEventListener("change", () => {
-      applyFontChoice(fontSelect.value);
-    });
+
+    function showConfirmRecordModal() {
+      if (!confirmRecordModal || !confirmRecordDateText) return;
+      confirmRecordDateText.textContent = formatKoreanDate(startOfDay(selectedDate));
+      confirmRecordModal.hidden = false;
+    }
+
+    function hideConfirmRecordModal() {
+      if (confirmRecordModal) {
+        confirmRecordModal.hidden = true;
+      }
+    }
+
+    if (confirmRecordCancelBtn) {
+      confirmRecordCancelBtn.addEventListener("click", () => {
+        hideConfirmRecordModal();
+      });
+    }
+
+    if (confirmRecordStartBtn) {
+      confirmRecordStartBtn.addEventListener("click", () => {
+        hideConfirmRecordModal();
+        startRecording();
+      });
+    }
+
+    if (confirmRecordModal) {
+      confirmRecordModal.addEventListener("click", (e) => {
+        if (e.target === confirmRecordModal) {
+          hideConfirmRecordModal();
+        }
+      });
+    }
 
     micButton.addEventListener("click", () => {
       if (isRecording) {
         stopRecording();
       } else {
-        startRecording();
+        if (currentView === "records") {
+          showConfirmRecordModal();
+        } else {
+          startRecording();
+        }
       }
     });
 
