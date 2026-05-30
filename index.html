@@ -2145,12 +2145,17 @@
     .records-list.has-records::before {
       content: '';
       position: absolute;
-      top: 32px;
-      bottom: 32px;
-      left: 11px;
-      width: 1.5px;
-      background: var(--sketch-line-strong, rgba(17, 17, 17, 0.15));
+      top: 16px;
+      bottom: 24px;
+      left: 10px;
+      width: 3px;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='3' height='100' viewBox='0 0 3 100' preserveAspectRatio='none'><path d='M1.5 0 Q0.5 25 2.5 50 T1.5 100' fill='none' stroke='%23171717' stroke-width='1.2' stroke-linecap='round' opacity='0.15'/></svg>");
+      background-size: 100% 100%;
       z-index: 1;
+    }
+
+    body.theme-dark .records-list.has-records::before {
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='3' height='100' viewBox='0 0 3 100' preserveAspectRatio='none'><path d='M1.5 0 Q0.5 25 2.5 50 T1.5 100' fill='none' stroke='%23ffffff' stroke-width='1.2' stroke-linecap='round' opacity='0.15'/></svg>");
     }
 
     .empty-state {
@@ -2385,8 +2390,27 @@
       z-index: 5;
     }
 
+    /* Restore Today Tab Record Styling */
+    .today-record-item {
+      position: relative !important;
+      padding: 0 0 12px !important;
+      border: 0 !important;
+      border-bottom: 1px solid rgba(17, 17, 17, 0.06) !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      transform: none !important;
+    }
+    .today-record-item:hover {
+      transform: none !important;
+      box-shadow: none !important;
+    }
+    .today-record-item::before {
+      display: none !important; /* No timeline dot in today tab! */
+    }
+
     .app[data-view="today"] .record-item {
-      padding: 16px 20px;
+      padding: 0 0 12px;
     }
 
     .record-top {
@@ -2612,6 +2636,125 @@
       overflow-wrap: anywhere;
       word-break: break-word;
       background: transparent !important;
+    }
+
+    .today-record-text {
+      margin: 0;
+      color: var(--text) !important;
+      font-size: 16px !important;
+      line-height: 34px !important;
+      white-space: pre-wrap !important;
+      background-image: linear-gradient(to bottom, transparent 33px, var(--paper-line) 33px) !important;
+      background-size: 100% 34px !important;
+      background-repeat: repeat !important;
+      background-color: transparent !important;
+      transform: translateY(4px) !important;
+    }
+
+    /* ── Timeline details for Records View ── */
+    .timeline-item {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 0;
+      max-width: 100%;
+      text-align: left;
+    }
+
+    .timeline-header-row {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -22px; /* centered on the 11px timeline line */
+      top: 50%;
+      transform: translateY(-50%);
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--ink);
+      border: 2px solid var(--bg);
+      z-index: 5;
+    }
+
+    .timeline-time-label {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--muted);
+      background: var(--accent-weak);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-family: var(--font-hand);
+      transform: rotate(-0.5deg);
+      box-shadow: 0 2px 6px rgba(17, 17, 17, 0.02);
+    }
+
+    .timeline-content-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+    }
+
+    /* Separate Title Box */
+    .timeline-title-box {
+      padding: 12px 18px;
+      background: var(--cal-card, #FFFFFF);
+      border: 1.3px solid var(--sketch-line);
+      border-radius: 14px 11px 13px 12px / 12px 13px 11px 12px;
+      box-shadow: 0 3px 8px rgba(17, 17, 17, 0.025);
+      transform: rotate(-0.2deg);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .timeline-title-box:hover {
+      transform: translateY(-1px) rotate(0.1deg);
+      box-shadow: 0 4px 12px rgba(17, 17, 17, 0.05);
+    }
+
+    .timeline-read-title {
+      margin: 0;
+      color: var(--ink);
+      font-size: 19px;
+      font-weight: 700;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    /* Separate Text Box with Lined Underlines */
+    .timeline-text-box {
+      padding: 16px 20px;
+      background: var(--cal-card, #FFFFFF);
+      border: 1.3px solid var(--sketch-line);
+      border-radius: 16px 14px 15px 13px / 13px 15px 14px 16px;
+      box-shadow: 0 3px 10px rgba(17, 17, 17, 0.025);
+      transform: rotate(0.1deg);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .timeline-text-box:hover {
+      transform: translateY(-1px) rotate(-0.1deg);
+      box-shadow: 0 5px 14px rgba(17, 17, 17, 0.05);
+    }
+
+    .timeline-read-text {
+      margin: 0;
+      color: var(--text);
+      font-size: 16px;
+      line-height: 34px; /* Matches 34px background lines exactly */
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      background-image: linear-gradient(to bottom, transparent 33px, var(--paper-line) 33px) !important;
+      background-size: 100% 34px !important;
+      background-repeat: repeat !important;
+      background-color: transparent !important;
     }
 
     .record-title-input,
@@ -4879,74 +5022,140 @@
 
     function renderRecordItems(dayRecords, container, startIndex = 0) {
       dayRecords.forEach((record, index) => {
-        const item = document.createElement("article");
-        item.className = "record-item";
+        if (container.id === "todayRecordsList" || container.parentElement.id === "todayRecordsList" || container.classList.contains("today-first-record-slot") || container.classList.contains("today-rest-records")) {
+          // ── Today view item ──
+          const item = document.createElement("article");
+          item.className = "record-item today-record-item";
 
-        const top = document.createElement("div");
-        top.className = "record-top";
+          const top = document.createElement("div");
+          top.className = "record-top";
 
-        const metaGroup = document.createElement("div");
-        metaGroup.className = "record-meta-group";
+          const metaGroup = document.createElement("div");
+          metaGroup.className = "record-meta-group";
 
-        // 노란 순번 동그라미 뱃지 및 시간 헤더 생성
-        const checkBadge = document.createElement("div");
-        checkBadge.className = "diary-check-badge";
-        checkBadge.title = `기록 번호 ${startIndex + index + 1}`;
-        checkBadge.textContent = startIndex + index + 1; // 일기 번호
-        metaGroup.appendChild(checkBadge);
+          const checkBadge = document.createElement("div");
+          checkBadge.className = "diary-check-badge";
+          checkBadge.title = `기록 번호 ${startIndex + index + 1}`;
+          checkBadge.textContent = startIndex + index + 1;
+          metaGroup.appendChild(checkBadge);
 
-        const timeEl = document.createElement("span");
-        timeEl.className = "record-time-header";
-        const timeStr = formatTime(record.createdAt);
-        timeEl.textContent = timeStr; // 시간 정보만 표기
-        metaGroup.appendChild(timeEl);
+          const timeEl = document.createElement("span");
+          timeEl.className = "record-time-header";
+          timeEl.textContent = formatTime(record.createdAt);
+          metaGroup.appendChild(timeEl);
 
-        top.appendChild(metaGroup);
+          top.appendChild(metaGroup);
 
-        const controls = document.createElement("div");
-        controls.className = "record-controls";
+          const controls = document.createElement("div");
+          controls.className = "record-controls";
 
-        const edit = document.createElement("button");
-        edit.type = "button";
-        edit.className = "edit-button";
-        edit.setAttribute("aria-label", "기록 수정");
-        edit.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21Z"/><path d="m22 21-10-10"/><path d="m14 11 5.5 5.5"/></svg>';
-        edit.addEventListener("click", () => {
-          openEditPanel(record);
-        });
-        controls.appendChild(edit);
+          const edit = document.createElement("button");
+          edit.type = "button";
+          edit.className = "edit-button";
+          edit.setAttribute("aria-label", "기록 수정");
+          edit.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21Z"/><path d="m22 21-10-10"/><path d="m14 11 5.5 5.5"/></svg>';
+          edit.addEventListener("click", () => {
+            openEditPanel(record);
+          });
+          controls.appendChild(edit);
 
-        // More options button (vertical ellipsis)
-        const more = document.createElement("button");
-        more.type = "button";
-        more.className = "more-button";
-        more.setAttribute("aria-label", "기록 옵션");
-        more.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>';
-        more.addEventListener("click", () => {
-          console.log("More options for record", record.id);
-        });
+          const more = document.createElement("button");
+          more.type = "button";
+          more.className = "more-button";
+          more.setAttribute("aria-label", "기록 옵션");
+          more.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>';
+          more.addEventListener("click", () => {
+            console.log("More options for record", record.id);
+          });
+          controls.appendChild(more);
 
-        controls.appendChild(more);
+          top.appendChild(controls);
+          item.appendChild(top);
 
-        top.appendChild(controls);
-        item.appendChild(top);
+          const read = document.createElement("div");
+          read.className = "record-read";
 
-        const read = document.createElement("div");
-        read.className = "record-read";
+          const title = document.createElement("p");
+          title.className = "record-read-title";
+          title.textContent = getRecordDisplayTitle(record);
+          read.appendChild(title);
 
-        const title = document.createElement("p");
-        title.className = "record-read-title";
-        title.textContent = getRecordDisplayTitle(record);
-        read.appendChild(title);
+          const text = document.createElement("p");
+          text.className = "record-read-text today-record-text";
+          text.textContent = (record.transcript || "").trim() || "남겨진 내용이 없습니다.";
+          read.appendChild(text);
 
-        const text = document.createElement("p");
-        text.className = "record-read-text";
-        text.textContent = (record.transcript || "").trim() || "남겨진 내용이 없습니다.";
-        read.appendChild(text);
+          item.appendChild(read);
+          container.appendChild(item);
+        } else {
+          // ── Records (timeline) view item ──
+          const item = document.createElement("article");
+          item.className = "timeline-item";
 
-        item.appendChild(read);
+          // Timeline Header Row (Dot, Time Label, Controls)
+          const headerRow = document.createElement("div");
+          headerRow.className = "timeline-header-row";
 
-        container.appendChild(item);
+          const dot = document.createElement("div");
+          dot.className = "timeline-dot";
+          headerRow.appendChild(dot);
+
+          const timeLabel = document.createElement("span");
+          timeLabel.className = "timeline-time-label";
+          timeLabel.textContent = formatTime(record.createdAt);
+          headerRow.appendChild(timeLabel);
+
+          const controls = document.createElement("div");
+          controls.className = "record-controls";
+
+          const edit = document.createElement("button");
+          edit.type = "button";
+          edit.className = "edit-button";
+          edit.setAttribute("aria-label", "기록 수정");
+          edit.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21Z"/><path d="m22 21-10-10"/><path d="m14 11 5.5 5.5"/></svg>';
+          edit.addEventListener("click", () => {
+            openEditPanel(record);
+          });
+          controls.appendChild(edit);
+
+          const more = document.createElement("button");
+          more.type = "button";
+          more.className = "more-button";
+          more.setAttribute("aria-label", "기록 옵션");
+          more.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>';
+          more.addEventListener("click", () => {
+            console.log("More options for record", record.id);
+          });
+          controls.appendChild(more);
+
+          headerRow.appendChild(controls);
+          item.appendChild(headerRow);
+
+          // Timeline Content Cards
+          const contentCard = document.createElement("div");
+          contentCard.className = "timeline-content-card";
+
+          // Title Box
+          const titleBox = document.createElement("div");
+          titleBox.className = "timeline-title-box";
+          const titleText = document.createElement("p");
+          titleText.className = "timeline-read-title";
+          titleText.textContent = getRecordDisplayTitle(record);
+          titleBox.appendChild(titleText);
+          contentCard.appendChild(titleBox);
+
+          // Text Box
+          const textBox = document.createElement("div");
+          textBox.className = "timeline-text-box";
+          const readText = document.createElement("p");
+          readText.className = "timeline-read-text";
+          readText.textContent = (record.transcript || "").trim() || "남겨진 내용이 없습니다.";
+          textBox.appendChild(readText);
+          contentCard.appendChild(textBox);
+
+          item.appendChild(contentCard);
+          container.appendChild(item);
+        }
       });
     }
 
