@@ -619,35 +619,51 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 2px dashed rgba(17, 17, 17, 0.08);
-      padding-bottom: 12px;
-      margin-bottom: 18px;
+      border-bottom: 1.5px solid var(--paper-line);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
       padding-left: 10px;
     }
 
     .review-notebook-date {
-      font-size: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 16px;
+      border: none;
+      border-radius: 20px;
+      background: #000000;
+      color: #ffffff;
+      font-size: 16px;
       font-weight: 700;
-      color: var(--ink-soft);
+      transform: rotate(-1.5deg);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    body.theme-dark .review-notebook-date {
+      background: #000000;
+      color: #ffffff;
+      border: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     }
 
     .review-notebook-timer {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 4px 12px;
-      background: transparent;
-      border: 1.35px solid rgba(17, 17, 17, 0.28);
-      border-radius: 999px 860px 940px 900px / 760px 980px 800px 930px;
-      font-size: 16px;
+      padding: 6px 14px;
+      background: var(--accent-weak);
+      border: none;
+      border-radius: 20px;
+      font-size: 15px;
       font-weight: 700;
-      color: var(--ink);
-      transform: rotate(-0.4deg);
+      color: var(--text);
+      box-shadow: 0 2px 8px rgba(17, 17, 17, 0.04);
     }
 
     .review-title-container {
       margin-bottom: 18px;
-      padding-left: 28px; /* Clear the vertical line at 22px */
+      padding-left: 10px;
     }
 
     /* 녹음창 내 상단 날짜 뱃지 (기록할 날짜를 헷갈리지 않게 표시) */
@@ -852,7 +868,7 @@
     .review-textarea-container {
       flex-grow: 1;
       margin-bottom: var(--space-3);
-      padding-left: 28px; /* Clear the vertical line at 22px */
+      padding-left: 10px;
     }
 
     .save-draft-input {
@@ -863,7 +879,7 @@
       font-size: 26px !important;
       font-weight: 700 !important;
       color: var(--ink) !important;
-      padding: 0 !important;
+      padding: 8px 0 !important;
       outline: none !important;
       box-shadow: none !important;
       border-bottom: 1.5px solid var(--paper-line-strong) !important;
@@ -874,22 +890,21 @@
       font-style: italic;
     }
 
-    .save-draft-textarea.paper-lines {
+    .save-draft-textarea {
       width: 100%;
       min-height: 310px;
       border: none !important;
       background-color: transparent !important;
-      background-attachment: local !important;
-      padding: 0 !important;
+      padding: 8px 0 !important;
       font-size: 20px !important;
-      line-height: 34px !important; /* Perfect match with the 34px background paper lines */
+      line-height: 1.6 !important;
       color: var(--text) !important;
       resize: none !important;
       outline: none !important;
       box-shadow: none !important;
     }
 
-    .save-draft-textarea.paper-lines:focus {
+    .save-draft-textarea:focus {
       border: none !important;
       box-shadow: none !important;
     }
@@ -899,8 +914,8 @@
       align-items: center;
       justify-content: flex-end;
       gap: var(--space-2);
-      padding-top: var(--space-2);
-      border-top: 1.5px dashed rgba(17, 17, 17, 0.08);
+      padding-top: var(--space-3);
+      border-top: 1px solid rgba(17, 17, 17, 0.06);
       margin-top: auto;
     }
 
@@ -915,15 +930,16 @@
     }
 
     .cancel-draft-button {
-      background: transparent;
-      color: var(--muted);
-      border: 1.4px dashed var(--sketch-line) !important;
+      background: var(--accent-weak);
+      color: var(--ink-soft);
+      border: none !important;
+      box-shadow: none;
     }
 
     .cancel-draft-button:hover {
-      background: rgba(184, 79, 79, 0.05);
+      background: rgba(184, 79, 79, 0.08);
       color: var(--danger);
-      border-color: var(--danger) !important;
+      border: none !important;
     }
 
     .save-draft-button {
@@ -3491,7 +3507,7 @@
     </section>
 
     <section class="card review-card" aria-label="기록 저장">
-      <div class="save-draft-panel paper-lines" id="saveDraftPanel" hidden>
+      <div class="save-draft-panel" id="saveDraftPanel" hidden>
         <!-- Top bar with date and length -->
         <div class="review-notebook-header">
           <div class="review-notebook-date" id="reviewDateStrip">오늘의 기록</div>
@@ -3508,7 +3524,7 @@
 
         <!-- Body text area that aligns with notebook lines -->
         <div class="review-textarea-container">
-          <textarea class="save-draft-textarea paper-lines" id="draftTranscriptInput" placeholder="오늘 어떤 생각이 떠올랐나요?"></textarea>
+          <textarea class="save-draft-textarea" id="draftTranscriptInput" placeholder="오늘 어떤 생각이 떠올랐나요?"></textarea>
         </div>
 
         <!-- Emotion-filled actions at the bottom -->
@@ -5436,7 +5452,11 @@
           }
           const reviewDateStrip = document.getElementById("reviewDateStrip");
           if (reviewDateStrip) {
-            reviewDateStrip.textContent = formatCommaDate(dateKeyToDate(record.date));
+            reviewDateStrip.textContent = new Intl.DateTimeFormat("ko-KR", {
+              year: "numeric",
+              month: "long",
+              day: "numeric"
+            }).format(dateKeyToDate(record.date));
           }
 
           window.scrollTo({ top: 0, behavior: "auto" });
@@ -5518,7 +5538,11 @@
       }
       const reviewDateStrip = $("#reviewDateStrip");
       if (reviewDateStrip && pendingRecording) {
-        reviewDateStrip.textContent = formatCommaDate(dateKeyToDate(pendingRecording.date));
+        reviewDateStrip.textContent = new Intl.DateTimeFormat("ko-KR", {
+          year: "numeric",
+          month: "long",
+          day: "numeric"
+        }).format(dateKeyToDate(pendingRecording.date));
       }
       if (reviewTranscriptPreview) {
         reviewTranscriptPreview.textContent = transcript || "아직 적힌 내용이 없습니다.";
