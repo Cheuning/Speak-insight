@@ -5199,7 +5199,6 @@
 
       showSpeechRecognitionNotice("이 브라우저에서는 음성 텍스트 변환이 지원되지 않습니다. Chrome 최신 버전 또는 https 주소에서 다시 열어주세요.");
       setStatus("텍스트 변환 미지원", false);
-      return;
 
       if (!("MediaRecorder" in window)) {
         if (!speechSupported) {
@@ -5385,25 +5384,27 @@
       }
     }
 
-    async function handleRecordingStop() {
+    function handleRecordingStop() {
       if (recordingStopHandled) return;
       recordingStopHandled = true;
       clearTimeout(recordingStopFallbackTimer);
       recordingStopFallbackTimer = null;
       cleanupActiveStream();
       const duration = Math.max(0, Math.round((Date.now() - (recordingStart || Date.now()) - pausedDuration) / 1000));
-      await wait(450);
       try {
-        await saveCompletedRecording(duration);
-      } catch (error) {
-        console.error("Recording review transition failed", error);
-        pendingRecording = buildPendingRecord(duration);
-        selectedDate = dateKeyToDate(pendingRecording.date);
+        const record = buildPendingRecord(duration);
+        pendingRecording = record;
+        selectedDate = dateKeyToDate(record.date);
         viewDate = selectedDate;
         setRecordingUi(false, "review");
         setStatus("저장 전 확인", false);
         setAppView("review", { scrollBehavior: "auto" });
         setDraftReviewUi(true);
+      } catch (error) {
+        console.error("Recording review transition failed", error);
+        // Fallback: force navigation to today
+        setRecordingUi(false);
+        setAppView(previousView || "today", { scrollBehavior: "auto" });
       }
     }
 
@@ -6342,6 +6343,7 @@
 
     if (liveCardCloseButton) {
       liveCardCloseButton.addEventListener("click", () => {
+        // Stop all recording activity immediately
         isRecording = false;
         isPaused = false;
         recordingStopHandled = true;
@@ -6352,9 +6354,7 @@
 
         if (recognition) {
           recognition.onend = null;
-          try {
-            recognition.stop();
-          } catch (e) {}
+          try { recognition.stop(); } catch (e) {}
         }
 
         if (mediaRecorder) {
@@ -6364,7 +6364,21 @@
           }
         }
         cleanupActiveStream();
-        cancelPendingRecording();
+
+        // Reset recording UI state
+        pendingRecording = null;
+        isSavingPendingRecording = false;
+        setDraftReviewUi(false);
+        setRecordingUi(false);
+        updateTranscript();
+
+        // Force navigate away from recording
+        const target = previousView || "today";
+        previousView = null;
+        setAppView(target, { scrollBehavior: "auto" });
+        setTimeout(() => {
+          if (!isRecording) setStatus("대기 중", false);
+        }, 500);
       });
     }
 
