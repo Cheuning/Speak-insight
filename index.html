@@ -5391,21 +5391,77 @@
       recordingStopFallbackTimer = null;
       cleanupActiveStream();
       const duration = Math.max(0, Math.round((Date.now() - (recordingStart || Date.now()) - pausedDuration) / 1000));
-      try {
-        const record = buildPendingRecord(duration);
-        pendingRecording = record;
-        selectedDate = dateKeyToDate(record.date);
-        viewDate = selectedDate;
-        setRecordingUi(false, "review");
-        setStatus("저장 전 확인", false);
-        setAppView("review", { scrollBehavior: "auto" });
-        setDraftReviewUi(true);
-      } catch (error) {
-        console.error("Recording review transition failed", error);
-        // Fallback: force navigation to today
-        setRecordingUi(false);
-        setAppView(previousView || "today", { scrollBehavior: "auto" });
-      }
+
+      // Use setTimeout to ensure any pending speech recognition events have settled
+      setTimeout(() => {
+        try {
+          const record = buildPendingRecord(duration);
+          pendingRecording = record;
+          selectedDate = dateKeyToDate(record.date);
+          viewDate = selectedDate;
+
+          // Directly manipulate the view without going through renderAll
+          currentView = "review";
+          app.dataset.view = "review";
+          document.body.dataset.view = "review";
+
+          // Update button states
+          if (recordingStopButton) {
+            recordingStopButton.hidden = true;
+            recordingStopButton.disabled = false;
+            recordingStopButton.textContent = "기록 마치기";
+          }
+          if (recordingPauseButton) {
+            recordingPauseButton.hidden = true;
+          }
+          if (micButton) {
+            micButton.classList.remove("recording", "saving");
+            micButton.disabled = false;
+            if (micLabel) micLabel.textContent = "기록하기";
+          }
+
+          // Populate and show the draft review panel
+          saveDraftPanel.hidden = false;
+          saveDraftButton.disabled = false;
+          cancelDraftButton.disabled = false;
+
+          const defaultTitle = record.title || createDefaultRecordTitle(new Date(record.createdAt));
+          draftTitleInput.value = defaultTitle;
+          draftTitleInput.placeholder = defaultTitle;
+          if (draftTranscriptInput) {
+            draftTranscriptInput.value = record.transcript || "";
+          }
+          if (reviewTimer) {
+            reviewTimer.textContent = formatDuration(record.duration);
+          }
+          const reviewDateStrip = document.getElementById("reviewDateStrip");
+          if (reviewDateStrip) {
+            reviewDateStrip.textContent = formatCommaDate(dateKeyToDate(record.date));
+          }
+
+          window.scrollTo({ top: 0, behavior: "auto" });
+          requestAnimationFrame(() => {
+            draftTitleInput.focus();
+          });
+        } catch (error) {
+          console.error("Recording review transition failed", error);
+          // Hard reset back to previous view
+          currentView = previousView || "today";
+          app.dataset.view = currentView;
+          document.body.dataset.view = currentView;
+          if (recordingStopButton) {
+            recordingStopButton.hidden = false;
+            recordingStopButton.disabled = false;
+            recordingStopButton.textContent = "기록 마치기";
+          }
+          if (recordingPauseButton) recordingPauseButton.hidden = false;
+          if (micButton) {
+            micButton.classList.remove("recording", "saving");
+            micButton.disabled = false;
+            if (micLabel) micLabel.textContent = "기록하기";
+          }
+        }
+      }, 100);
     }
 
     function buildPendingRecord(duration) {
