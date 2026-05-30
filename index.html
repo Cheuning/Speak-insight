@@ -3491,7 +3491,7 @@
     </section>
 
     <section class="card review-card" aria-label="기록 저장">
-      <div class="save-draft-panel" id="saveDraftPanel" hidden>
+      <div class="save-draft-panel paper-lines" id="saveDraftPanel" hidden>
         <!-- Top bar with date and length -->
         <div class="review-notebook-header">
           <div class="review-notebook-date" id="reviewDateStrip">오늘의 기록</div>
@@ -5802,8 +5802,8 @@
     }
 
     function setStatus(text, recording) {
-      statusText.textContent = text;
-      statusPill.classList.toggle("recording", recording);
+      if (statusText) statusText.textContent = text;
+      if (statusPill) statusPill.classList.toggle("recording", recording);
     }
 
     function renderFontOptions() {
