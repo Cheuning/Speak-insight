@@ -1040,59 +1040,104 @@
     .photo-preview-list,
     .photo-gallery {
       display: grid;
-      gap: 10px;
-      margin: 14px 0;
+      width: 100% !important;
+      margin: 6px 0 10px !important;
+      padding: 0 !important;
+      gap: 6px;
+      box-sizing: border-box;
     }
 
     .photo-preview-list:empty,
     .photo-gallery:empty {
+      display: none !important;
+    }
+
+    /* A. 세로형 (vertical) */
+    .photo-gallery.layout-vertical {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .photo-gallery.layout-vertical .photo-frame img {
+      width: 100%;
+      height: auto;
+      max-height: 380px;
+      object-fit: cover;
+    }
+
+    /* B. 콜라주형 (collage) */
+    .photo-gallery.layout-collage.count-1 {
+      grid-template-columns: 1fr;
+    }
+    .photo-gallery.layout-collage.count-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+    .photo-gallery.layout-collage.count-3 {
+      grid-template-columns: 2fr 1.2fr;
+      grid-template-rows: 1fr 1fr;
+    }
+    .photo-gallery.layout-collage.count-3 .photo-frame:first-child {
+      grid-row: span 2;
+    }
+    .photo-gallery.layout-collage .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .photo-gallery.layout-collage.count-1 .photo-frame img {
+      aspect-ratio: 16 / 10;
+      max-height: 300px;
+    }
+    .photo-gallery.layout-collage.count-2 .photo-frame img {
+      aspect-ratio: 1 / 1;
+      max-height: 200px;
+    }
+    .photo-gallery.layout-collage.count-3 .photo-frame img {
+      max-height: 240px;
+    }
+    .photo-gallery.layout-collage.count-3 .photo-frame:first-child img {
+      aspect-ratio: 1 / 1.2;
+      max-height: 240px;
+    }
+
+    /* C. 가로 스크롤형 (horizontalScroll) */
+    .photo-gallery.layout-horizontalScroll {
+      display: flex;
+      flex-direction: row;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      gap: 8px;
+    }
+    .photo-gallery.layout-horizontalScroll::-webkit-scrollbar {
       display: none;
     }
-
-    /* photo-preview-list를 photo-gallery와 공유하여 일치하는 다이어리 감성 렌더링 */
-    .photo-preview-list.photo-gallery {
-      display: grid;
+    .photo-gallery.layout-horizontalScroll .photo-frame {
+      flex: 0 0 78%;
+      scroll-snap-align: start;
     }
-
-    .photo-preview-item {
-      display: none; /* 하위 호환성 및 기존 마크업 정리용 */
-    }
-
-    .photo-remove-button {
-      display: none; /* 하위 호환성용 */
-    }
-
-    .photo-gallery {
-      --photo-gap: 8px;
-      gap: var(--photo-gap);
-    }
-
-    .photo-gallery.layout-split {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .photo-gallery.layout-featured {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .photo-gallery.layout-featured .photo-frame:first-child {
-      grid-column: 1 / -1;
+    .photo-gallery.layout-horizontalScroll .photo-frame img {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      max-height: 220px;
     }
 
     .photo-frame {
       position: relative;
       overflow: visible; /* 테이프가 사진 틀 밖으로 자연스럽게 삐져나오도록 */
-      border-radius: 11px 9px 12px 10px;
+      border-radius: 9px 7px 10px 8px;
       background: rgba(255, 255, 255, 0.5);
+      margin: 0;
+      padding: 0;
+      width: 100%;
     }
 
     .photo-frame img {
       width: 100%;
-      aspect-ratio: 4 / 3;
-      object-fit: cover;
       display: block;
-      max-height: 260px; /* 너무 커서 다이어리 본문을 압도하는 것 방지 */
-      border-radius: 9px 7px 10px 8px;
+      border-radius: 8px;
     }
 
     /* 프리뷰와 본문 갤러리 내의 사진 삭제 버튼 */
@@ -1136,8 +1181,58 @@
       border-color: rgba(255, 255, 255, 0.35);
     }
 
+    /* 사진 순서 변경 오버레이 버튼 */
+    .photo-frame .photo-order-btn {
+      position: absolute;
+      bottom: 6px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid rgba(17, 17, 17, 0.18);
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--ink);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      z-index: 12;
+      transition: all 0.2s ease;
+      outline: none;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .photo-frame .photo-order-btn:hover {
+      background: #fff;
+      transform: scale(1.1);
+    }
+
+    .photo-frame .photo-order-btn.move-left {
+      left: 6px;
+    }
+
+    .photo-frame .photo-order-btn.move-right {
+      right: 6px;
+    }
+
+    body.theme-dark .photo-frame .photo-order-btn {
+      background: rgba(17, 17, 17, 0.85);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: var(--text);
+    }
+
+    body.theme-dark .photo-frame .photo-order-btn:hover {
+      background: #000;
+    }
+
     .photo-gallery.style-basic .photo-frame {
       border: 1px solid rgba(17, 17, 17, 0.1);
+    }
+
+    body.theme-dark .photo-gallery.style-basic .photo-frame {
+      border-color: rgba(255, 255, 255, 0.15);
     }
 
     .photo-gallery.style-tape .photo-frame::before {
@@ -1153,17 +1248,22 @@
       z-index: 1;
     }
 
-    .photo-gallery.style-polaroid .photo-frame,
-    .photo-gallery.layout-polaroid .photo-frame {
-      padding: 8px 8px 18px;
-      background: rgba(255, 255, 255, 0.92);
-      box-shadow: 0 6px 16px rgba(17, 17, 17, 0.08);
-      border-radius: 5px;
+    .photo-gallery.style-polaroid .photo-frame {
+      padding: 8px 8px 18px !important;
+      background: rgba(255, 255, 255, 0.92) !important;
+      box-shadow: 0 6px 16px rgba(17, 17, 17, 0.08) !important;
+      border-radius: 5px !important;
+      border: 1px solid rgba(17, 17, 17, 0.06) !important;
     }
 
-    .photo-gallery.style-polaroid .photo-frame img,
-    .photo-gallery.layout-polaroid .photo-frame img {
-      border-radius: 3px;
+    body.theme-dark .photo-gallery.style-polaroid .photo-frame {
+      background: rgba(255, 255, 255, 0.08) !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35) !important;
+    }
+
+    .photo-gallery.style-polaroid .photo-frame img {
+      border-radius: 3px !important;
     }
 
     @media (max-width: 420px) {
@@ -2227,35 +2327,35 @@
 
     .list-entry-header {
       display: flex;
-      align-items: flex-start;
+      align-items: center; /* 제목과 점 세개(⋮) 버튼이 완벽한 가로 세로 정렬을 이루도록 center 지정 */
       justify-content: space-between;
       width: 100%;
-      gap: 8px;
+      gap: 10px;
     }
 
     .list-entry-meta-group {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      column-gap: 0;
-      row-gap: 1px;
-      align-items: center;
+      display: flex;
+      flex-direction: column; /* 세로 flex 구조로 간격 미세조정 극대화 */
+      gap: 3px;
       min-width: 0;
+      flex-grow: 1;
     }
 
     .list-entry-time {
-      font-size: 10px;
+      font-size: 11px; /* 메타데이터로서 가독성을 높이고 차분하게 */
       color: var(--muted);
-      font-weight: 400;
-      letter-spacing: 0.02em;
-      line-height: 1;
-      opacity: 0.82;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      line-height: 1.2;
+      opacity: 0.72;
       text-transform: uppercase;
     }
 
     .list-entry-dots {
       background: transparent;
       border: none;
-      padding: 4px;
+      width: 28px;
+      height: 28px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -2263,6 +2363,8 @@
       color: var(--muted-light);
       border-radius: 50%;
       transition: background-color 0.2s, color 0.2s;
+      flex-shrink: 0;
+      margin-top: -2px; /* 세밀하게 세로 오프셋 조율 */
     }
 
     .list-entry-dots:hover {
@@ -2282,13 +2384,13 @@
     }
 
     .list-entry-title {
-      font-size: 14px;
-      font-weight: 400;
+      font-size: 16px; /* 메인 제목으로 도톰하게 확대하여 텍스트 위계 1순위 지정 */
+      font-weight: 700; /* 손글씨 다이어리의 또렷하게 꾹꾹 눌러쓴 느낌 */
       color: var(--ink);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      line-height: 1.24;
+      line-height: 1.3;
       margin: 0;
     }
 
@@ -4137,6 +4239,7 @@
               <div class="photo-chip-group" id="draftPhotoPositionGroup">
                 <button type="button" class="photo-chip" data-value="beforeText">본문 위</button>
                 <button type="button" class="photo-chip" data-value="afterText">본문 아래</button>
+                <button type="button" class="photo-chip" data-value="betweenParagraphs">문단 사이</button>
               </div>
             </div>
             <div class="photo-option-group">
@@ -4153,6 +4256,13 @@
             </div>
           </div>
           <div class="photo-preview-list" id="draftPhotoPreview" hidden></div>
+        </div>
+
+        <!-- Live Preview Box -->
+        <div class="save-preview-box" id="draftSavePreview" style="margin: 16px 0 20px; border-top: 1.5px dashed rgba(17,17,17,0.1); padding-top: 16px; width: 100%;">
+          <span style="font-size: 14px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 8px;">기록 미리보기</span>
+          <div class="preview-content-card" id="draftSavePreviewCard" style="padding: 16px; border: 1.3px solid var(--sketch-line); border-radius: 14px; background: var(--cal-card, #fff); width: 100%;">
+          </div>
         </div>
 
         <!-- Emotion-filled actions at the bottom -->
@@ -4347,6 +4457,7 @@
             <div class="photo-chip-group" id="editPhotoPositionGroup">
               <button type="button" class="photo-chip" data-value="beforeText">본문 위</button>
               <button type="button" class="photo-chip" data-value="afterText">본문 아래</button>
+              <button type="button" class="photo-chip" data-value="betweenParagraphs">문단 사이</button>
             </div>
           </div>
           <div class="photo-option-group">
@@ -4364,6 +4475,14 @@
         </div>
         <div class="photo-preview-list" id="editPhotoPreview" hidden></div>
       </div>
+
+      <!-- Live Preview Box -->
+      <div class="save-preview-box" id="editSavePreview" style="margin: 16px 0 20px; border-top: 1.5px dashed rgba(17,17,17,0.1); padding-top: 16px; width: 100%;">
+        <span style="font-size: 14px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 8px;">기록 미리보기</span>
+        <div class="preview-content-card" id="editSavePreviewCard" style="padding: 16px; border: 1.3px solid var(--sketch-line); border-radius: 14px; background: var(--cal-card, #fff); width: 100%;">
+        </div>
+      </div>
+
       <div class="edit-panel-actions">
         <button class="edit-delete-button" id="editDeleteButton" type="button">삭제</button>
         <button class="edit-cancel-button" id="editCancelButton" type="button">취소</button>
@@ -5082,8 +5201,8 @@
     function createEmptyPhotoState() {
       return {
         photos: [],
-        position: "beforeText",
-        layout: "basic",
+        position: "afterText",
+        layout: "vertical",
         style: "basic"
       };
     }
@@ -5103,32 +5222,21 @@
         : [];
     }
 
-    function getPhotoLayoutOptions(count) {
-      if (count <= 1) {
-        return [
-          { value: "basic", label: "기본형" },
-          { value: "polaroid", label: "폴라로이드형" }
-        ];
-      }
-      if (count === 2) {
-        return [
-          { value: "vertical", label: "세로 연속형" },
-          { value: "split", label: "좌우 2분할형" }
-        ];
-      }
+    function getPhotoLayoutOptions() {
       return [
-        { value: "vertical", label: "세로 연속형" },
-        { value: "featured", label: "대표 사진형" }
+        { value: "vertical", label: "세로형" },
+        { value: "collage", label: "콜라주형" },
+        { value: "horizontalScroll", label: "가로 스크롤형" }
       ];
     }
 
     function normalizePhotoLayout(count, layout) {
-      const options = getPhotoLayoutOptions(count);
-      return options.some((option) => option.value === layout) ? layout : options[0].value;
+      const allowed = ["vertical", "collage", "horizontalScroll"];
+      return allowed.includes(layout) ? layout : "vertical";
     }
 
     function normalizePhotoPosition(position) {
-      return position === "afterText" ? "afterText" : "beforeText";
+      return ["beforeText", "afterText", "betweenParagraphs"].includes(position) ? position : "afterText";
     }
 
     function normalizePhotoStyle(style) {
@@ -5407,7 +5515,7 @@
             titleEl.className = "list-entry-title";
             titleEl.textContent = title;
 
-            metaGroup.append(timeEl, titleEl);
+            metaGroup.append(titleEl, timeEl);
             header.appendChild(metaGroup);
 
             // 세로 3점(⋮) 액션 버튼
@@ -5436,10 +5544,10 @@
             body.className = "list-entry-body";
 
             if (isExpanded) {
-              const previewEl = document.createElement("p");
-              previewEl.className = "list-entry-preview";
-              previewEl.textContent = (record.transcript || "").trim() || "남겨진 내용이 없습니다.";
-              body.appendChild(previewEl);
+              const diaryBodyContainer = document.createElement("div");
+              diaryBodyContainer.className = "record-read";
+              renderDiaryBody(diaryBodyContainer, record, false);
+              body.appendChild(diaryBodyContainer);
 
               const actions = document.createElement("div");
               actions.className = "list-entry-actions";
@@ -5645,6 +5753,78 @@
       }
     }
 
+    function renderDiaryBody(readElement, record, isTodayView) {
+      const photos = normalizePhotos(record.photos);
+      const position = normalizePhotoPosition(record.photoPosition);
+      const style = normalizePhotoStyle(record.photoStyle);
+      const layout = normalizePhotoLayout(photos.length, record.photoLayout);
+
+      const textClass = isTodayView ? "record-read-text today-record-text" : "timeline-read-text";
+
+      // 1. beforeText
+      if (photos.length && position === "beforeText") {
+        const gallery = createPhotoGallery(record);
+        if (gallery) readElement.appendChild(gallery);
+      }
+
+      // 2. Body Text & betweenParagraphs rendering
+      const textContent = (record.transcript || "").trim();
+
+      if (photos.length && position === "betweenParagraphs") {
+        const paragraphs = textContent.split(/\n\s*\n/).filter(p => p.trim().length > 0);
+
+        if (paragraphs.length === 0) {
+          const gallery = createPhotoGallery(record);
+          if (gallery) readElement.appendChild(gallery);
+        } else {
+          paragraphs.forEach((pText, pIdx) => {
+            const p = document.createElement("p");
+            p.className = textClass;
+            p.textContent = pText;
+            readElement.appendChild(p);
+
+            // Insert matching photo after paragraph
+            if (pIdx < photos.length) {
+              const singlePhotoRecord = {
+                ...record,
+                photos: [photos[pIdx]],
+                photoLayout: "vertical"
+              };
+              const singleGallery = createPhotoGallery(singlePhotoRecord);
+              if (singleGallery) {
+                readElement.appendChild(singleGallery);
+              }
+            }
+          });
+
+          // Leftover photos
+          if (photos.length > paragraphs.length) {
+            const leftoverPhotos = photos.slice(paragraphs.length);
+            const leftoverRecord = {
+              ...record,
+              photos: leftoverPhotos,
+              photoLayout: layout
+            };
+            const leftoverGallery = createPhotoGallery(leftoverRecord);
+            if (leftoverGallery) {
+              readElement.appendChild(leftoverGallery);
+            }
+          }
+        }
+      } else {
+        const p = document.createElement("p");
+        p.className = textClass;
+        p.textContent = textContent || "남겨진 내용이 없습니다.";
+        readElement.appendChild(p);
+      }
+
+      // 3. afterText
+      if (photos.length && position === "afterText") {
+        const gallery = createPhotoGallery(record);
+        if (gallery) readElement.appendChild(gallery);
+      }
+    }
+
     function renderRecordItems(dayRecords, container, startIndex = 0) {
       dayRecords.forEach((record, index) => {
         if (container.id === "todayRecordsList" || container.parentElement.id === "todayRecordsList" || container.classList.contains("today-first-record-slot") || container.classList.contains("today-rest-records")) {
@@ -5679,8 +5859,9 @@
           more.className = "more-button";
           more.setAttribute("aria-label", "기록 옵션");
           more.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>';
-          more.addEventListener("click", () => {
-            console.log("More options for record", record.id);
+          more.addEventListener("click", (e) => {
+            e.stopPropagation();
+            openEditPanel(record);
           });
           controls.appendChild(more);
 
@@ -5695,19 +5876,8 @@
           title.textContent = getRecordDisplayTitle(record);
           read.appendChild(title);
 
-          const photoGallery = createPhotoGallery(record);
-          if (photoGallery && record.photoPosition !== "afterText") {
-            read.appendChild(photoGallery);
-          }
-
-          const text = document.createElement("p");
-          text.className = "record-read-text today-record-text";
-          text.textContent = (record.transcript || "").trim() || "남겨진 내용이 없습니다.";
-          read.appendChild(text);
-
-          if (photoGallery && record.photoPosition === "afterText") {
-            read.appendChild(photoGallery);
-          }
+          // Render diary body with photos correctly placed
+          renderDiaryBody(read, record, true);
 
           item.appendChild(read);
           container.appendChild(item);
@@ -5775,8 +5945,9 @@
           more.className = "more-button";
           more.setAttribute("aria-label", "기록 옵션");
           more.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>';
-          more.addEventListener("click", () => {
-            console.log("More options for record", record.id);
+          more.addEventListener("click", (e) => {
+            e.stopPropagation();
+            openEditPanel(record);
           });
           controls.appendChild(more);
 
@@ -5812,23 +5983,11 @@
           titleBox.appendChild(titleRow);
           rightCol.appendChild(titleBox);
 
-          const photoGallery = createPhotoGallery(record);
-          if (photoGallery && record.photoPosition !== "afterText") {
-            rightCol.appendChild(photoGallery);
-          }
-
-          // Text Box
-          const textBox = document.createElement("div");
-          textBox.className = "timeline-text-box";
-          const readText = document.createElement("p");
-          readText.className = "timeline-read-text";
-          readText.textContent = (record.transcript || "").trim() || "남겨진 내용이 없습니다.";
-          textBox.appendChild(readText);
-          rightCol.appendChild(textBox);
-
-          if (photoGallery && record.photoPosition === "afterText") {
-            rightCol.appendChild(photoGallery);
-          }
+          // Render diary body with photos correctly placed in timeline rightCol
+          const diaryBodyContainer = document.createElement("div");
+          diaryBodyContainer.className = "record-read";
+          renderDiaryBody(diaryBodyContainer, record, false);
+          rightCol.appendChild(diaryBodyContainer);
 
           item.appendChild(rightCol);
           container.appendChild(item);
@@ -6032,6 +6191,39 @@
       });
     }
 
+    function updateLivePreview(kind) {
+      const isDraft = kind === "draft";
+      const previewCard = isDraft ? $("#draftSavePreviewCard") : $("#editSavePreviewCard");
+      if (!previewCard) return;
+
+      const titleVal = isDraft ? draftTitleInput.value.trim() : editTitleInput.value.trim();
+      const transcriptVal = isDraft ? draftTranscriptInput.value.trim() : editTranscriptInput.value.trim();
+      const state = isDraft ? draftPhotoState : editPhotoState;
+
+      previewCard.innerHTML = "";
+
+      // Title
+      const defaultTitle = createDefaultRecordTitle(new Date());
+      const titleEl = document.createElement("p");
+      titleEl.className = "record-read-title";
+      titleEl.textContent = titleVal || defaultTitle;
+      previewCard.appendChild(titleEl);
+
+      const mockRecord = {
+        title: titleVal,
+        transcript: transcriptVal,
+        photos: state.photos,
+        photoLayout: state.layout,
+        photoPosition: state.position,
+        photoStyle: state.style
+      };
+
+      const bodyContainer = document.createElement("div");
+      bodyContainer.className = "record-read";
+      renderDiaryBody(bodyContainer, mockRecord, isDraft);
+      previewCard.appendChild(bodyContainer);
+    }
+
     function renderPhotoEditor(kind) {
       const isDraft = kind === "draft";
       const state = isDraft ? draftPhotoState : editPhotoState;
@@ -6054,6 +6246,7 @@
         if (help) help.textContent = "최대 3장";
         if (addButton) addButton.disabled = false;
         preview.innerHTML = "";
+        updateLivePreview(kind);
         return;
       }
 
@@ -6085,23 +6278,15 @@
       // 3. 배치(레이아웃) 칩 동적 렌더링
       if (layoutGroup) {
         layoutGroup.innerHTML = "";
-        getPhotoLayoutOptions(count).forEach((opt) => {
+        getPhotoLayoutOptions().forEach((opt) => {
           const btn = document.createElement("button");
           btn.type = "button";
           btn.className = "photo-chip";
+          btn.dataset.value = opt.value;
           if (opt.value === state.layout) {
             btn.classList.add("active");
           }
-          // 모바일 및 감성 고려하여 라벨 표기 (예: split -> 좌우, vertical -> 세로)
-          let labelText = opt.label;
-          if (count === 1) {
-            labelText = opt.value === "polaroid" ? "폴라로이드" : "기본";
-          } else if (count === 2) {
-            labelText = opt.value === "split" ? "좌우" : "세로";
-          } else if (count === 3) {
-            labelText = opt.value === "featured" ? "대표 사진형" : "세로";
-          }
-          btn.textContent = labelText;
+          btn.textContent = opt.label;
           btn.addEventListener("click", () => {
             state.layout = opt.value;
             renderPhotoEditor(kind);
@@ -6112,9 +6297,9 @@
 
       // 4. 다이어리 감성의 미리보기 렌더링
       preview.innerHTML = "";
-      preview.className = `photo-preview-list photo-gallery layout-${state.layout} style-${state.style}`;
+      preview.className = `photo-preview-list photo-gallery layout-${state.layout} style-${state.style} count-${count}`;
 
-      state.photos.forEach((photo) => {
+      state.photos.forEach((photo, idx) => {
         const frame = document.createElement("figure");
         frame.className = "photo-frame";
 
@@ -6135,8 +6320,46 @@
         });
 
         frame.append(img, remove);
+
+        // Add move-left (◀) button
+        if (idx > 0) {
+          const moveLeftBtn = document.createElement("button");
+          moveLeftBtn.type = "button";
+          moveLeftBtn.className = "photo-order-btn move-left";
+          moveLeftBtn.textContent = "◀";
+          moveLeftBtn.setAttribute("aria-label", "왼쪽으로 이동");
+          moveLeftBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const temp = state.photos[idx];
+            state.photos[idx] = state.photos[idx - 1];
+            state.photos[idx - 1] = temp;
+            renderPhotoEditor(kind);
+          });
+          frame.appendChild(moveLeftBtn);
+        }
+
+        // Add move-right (▶) button
+        if (idx < count - 1) {
+          const moveRightBtn = document.createElement("button");
+          moveRightBtn.type = "button";
+          moveRightBtn.className = "photo-order-btn move-right";
+          moveRightBtn.textContent = "▶";
+          moveRightBtn.setAttribute("aria-label", "오른쪽으로 이동");
+          moveRightBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const temp = state.photos[idx];
+            state.photos[idx] = state.photos[idx + 1];
+            state.photos[idx + 1] = temp;
+            renderPhotoEditor(kind);
+          });
+          frame.appendChild(moveRightBtn);
+        }
+
         preview.appendChild(frame);
       });
+
+      // Update the live preview
+      updateLivePreview(kind);
     }
 
     async function addPhotosToState(kind, fileList) {
@@ -7659,6 +7882,11 @@
         savePendingRecording();
       }
     });
+
+    draftTitleInput.addEventListener("input", () => updateLivePreview("draft"));
+    draftTranscriptInput.addEventListener("input", () => updateLivePreview("draft"));
+    editTitleInput.addEventListener("input", () => updateLivePreview("edit"));
+    editTranscriptInput.addEventListener("input", () => updateLivePreview("edit"));
 
     async function init() {
       initFontChoice();
