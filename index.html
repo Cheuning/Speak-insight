@@ -1114,7 +1114,7 @@
       display: none;
     }
     .photo-gallery.layout-horizontalScroll .photo-frame {
-      flex: 0 0 78%;
+      flex: 0 0 100% !important;
       scroll-snap-align: start;
     }
     .photo-gallery.layout-horizontalScroll .photo-frame img {
@@ -1211,32 +1211,51 @@
       color: #000;
     }
 
-    /* Photo Size Scaling inside feed views */
-    .photo-frame.size-small {
-      width: 100px !important;
-      height: auto !important;
-    }
-    .photo-frame.size-small img {
-      width: 100px !important;
-      height: 75px !important;
-      object-fit: cover !important;
-    }
-    .photo-frame.size-medium {
-      width: 200px !important;
-      height: auto !important;
-    }
-    .photo-frame.size-medium img {
-      width: 200px !important;
-      height: 150px !important;
-      object-fit: cover !important;
-    }
+    /* Photo Size Scaling inside feed views - Always full width */
+    .photo-frame.size-small,
+    .photo-frame.size-medium,
     .photo-frame.size-large {
       width: 100% !important;
       height: auto !important;
     }
+    .photo-frame.size-small img,
+    .photo-frame.size-medium img,
     .photo-frame.size-large img {
       width: 100% !important;
       height: auto !important;
+      object-fit: cover !important;
+    }
+
+    /* Edit panel close button (top-left X) */
+    .edit-close-button {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: none;
+      border: none;
+      font-size: 32px;
+      font-family: var(--font-hand);
+      color: var(--muted-light);
+      cursor: pointer;
+      padding: 8px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s ease, transform 0.2s ease;
+      z-index: 210;
+    }
+    .edit-close-button:hover {
+      color: var(--text);
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    /* Large inline editor photo gallery styling */
+    .editor-large-gallery {
+      width: 100% !important;
+      margin: 12px 0 !important;
+      padding: 0 !important;
+      border: none !important;
     }
 
     /* Small row photo preview inside the editor input card */
@@ -1335,14 +1354,16 @@
     .photo-drawer-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(17, 17, 17, 0.4);
-      backdrop-filter: blur(4px);
+      background: transparent !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
       z-index: 10000;
       display: flex;
       align-items: flex-end;
       justify-content: center;
       opacity: 0;
       animation: drawer-fade-in 0.25s ease forwards;
+      pointer-events: none;
     }
     .photo-drawer-backdrop[hidden] {
       display: none !important;
@@ -1351,19 +1372,21 @@
       to { opacity: 1; }
     }
     .photo-drawer-content {
-      width: min(100%, var(--app-width));
-      background: var(--notebook);
-      border-top: 1.5px solid var(--sketch-line);
-      border-radius: 24px 24px 0 0;
-      padding: 20px var(--page-gutter) calc(20px + env(safe-area-inset-bottom, 0px));
-      box-shadow: 0 -8px 32px rgba(17, 17, 17, 0.15);
+      pointer-events: auto;
+      width: calc(min(100%, var(--app-width)) - 2 * var(--page-gutter));
+      background: var(--surface-soft);
+      border: 1.3px solid var(--sketch-line);
+      border-radius: 16px !important;
+      padding: 16px 20px;
+      box-shadow: 0 -8px 32px rgba(17, 17, 17, 0.12);
       animation: drawer-slide-up 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       box-sizing: border-box;
+      margin-bottom: 90px; /* Floating above the floating sticky bottom bar */
     }
     body.theme-dark .photo-drawer-content {
-      background: #0A0A0A;
-      border-top-color: rgba(255, 255, 255, 0.12);
-      box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.55);
+      background: #1A1A1A;
+      border-color: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.5);
     }
     @keyframes drawer-slide-up {
       from { transform: translateY(100%); }
@@ -1373,13 +1396,13 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       border-bottom: 1.5px dashed var(--sketch-line-soft);
-      padding-bottom: 10px;
+      padding-bottom: 8px;
     }
     .photo-drawer-header h3 {
       margin: 0;
-      font-size: 20px;
+      font-size: 16px;
       font-weight: 700;
       color: var(--ink);
     }
@@ -1389,31 +1412,38 @@
     .photo-drawer-close {
       background: transparent;
       border: none;
-      font-size: 28px;
+      font-size: 24px;
       line-height: 1;
       color: var(--muted);
       cursor: pointer;
     }
+    .photo-drawer-body .photo-tools {
+      border-top: none !important;
+      padding-top: 0 !important;
+      margin-top: 0 !important;
+    }
     .photo-drawer-actions {
       display: flex;
       justify-content: flex-end;
-      margin-top: 20px;
-      padding-top: 12px;
+      margin-top: 14px;
+      padding-top: 10px;
       border-top: 1.5px dashed var(--sketch-line-soft);
     }
     .photo-drawer-ok {
-      min-height: 38px;
-      padding: 0 20px;
-      font-size: 15px;
+      min-height: 34px;
+      padding: 0 16px;
+      font-size: 14px;
       font-weight: 700;
       border-radius: 999px 880px 940px 910px / 760px 980px 800px 930px;
       background: var(--ink);
       color: #fff;
       cursor: pointer;
+      border: 1px solid var(--ink);
     }
     body.theme-dark .photo-drawer-ok {
       background: var(--text-soft);
       color: #000;
+      border-color: var(--text-soft);
     }
 
     /* Fullscreen Lightbox Overlay */
@@ -2405,15 +2435,15 @@
 
     .list-day-row {
       display: grid;
-      grid-template-columns: 52px minmax(0, 1fr);
+      grid-template-columns: 42px minmax(0, 1fr) !important;
       align-items: flex-start;
-      gap: 12px;
+      gap: 6px !important;
       margin-bottom: 18px;
       width: 100%;
     }
 
     .list-date-col {
-      width: 52px;
+      width: 42px !important;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -4423,6 +4453,8 @@
 
         <!-- Small horizontal row photo preview inside the editor input card -->
         <div class="photo-preview-list" id="draftPhotoPreview" hidden></div>
+        <!-- Full-scale inline photo gallery inside the editor card -->
+        <div id="draftLargeGallery" class="editor-large-gallery"></div>
 
         <!-- Hidden Photo Tools that will be moved to the Bottom Drawer -->
         <div id="draftPhotoToolsContainer" style="display:none;">
@@ -4637,7 +4669,8 @@
 
   <div class="edit-panel" id="editPanel" hidden>
     <div class="edit-paper" role="dialog" aria-modal="true" aria-labelledby="editPanelTitle">
-      <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 4px;">
+      <button class="edit-close-button" id="editCancelButton" type="button" aria-label="취소">×</button>
+      <div style="display: flex; justify-content: flex-start; width: 100%; margin-bottom: 4px; padding-left: 8px;">
         <h2 class="edit-panel-title" id="editPanelTitle">기록 수정</h2>
       </div>
       <input class="record-title-input" id="editTitleInput" type="text" autocomplete="off" aria-label="수정할 제목" />
@@ -4645,6 +4678,8 @@
       
       <!-- Small horizontal row photo preview inside the editor input card -->
       <div class="photo-preview-list" id="editPhotoPreview" hidden></div>
+      <!-- Full-scale inline photo gallery inside the editor card -->
+      <div id="editLargeGallery" class="editor-large-gallery"></div>
 
       <!-- Hidden Photo Tools that will be moved to the Bottom Drawer -->
       <div id="editPhotoToolsContainer" style="display:none;">
@@ -4684,7 +4719,6 @@
         <button class="bottom-bar-btn" id="editPhotoSettingsBtn" type="button">📷 사진 설정</button>
         <div class="bottom-bar-actions">
           <button class="edit-delete-button bottom-bar-btn" id="editDeleteButton" type="button" style="color: var(--danger); border-color: rgba(184, 79, 79, 0.4);">삭제</button>
-          <button class="edit-cancel-button bottom-bar-btn" id="editCancelButton" type="button">취소</button>
           <button class="edit-save-button bottom-bar-btn" id="editSaveButton" type="button" style="background: var(--ink); color:#fff; border-color: var(--ink);">저장</button>
         </div>
       </div>
@@ -4703,6 +4737,34 @@
       <div class="custom-modal-actions">
         <button class="modal-btn-cancel" id="confirmRecordCancelBtn" type="button">취소</button>
         <button class="modal-btn-start" id="confirmRecordStartBtn" type="button">시작</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Photo framing adjustment modal -->
+  <div class="custom-modal" id="photoFramingModal" hidden>
+    <div class="custom-modal-content card" style="max-width: 340px; padding: 18px; border-radius: var(--radius);">
+      <div class="custom-modal-header" style="margin-bottom: 8px;">
+        <h3 id="photoFramingTitle" style="font-size: 17px; font-weight: 700; margin: 0;">사진 구도 조절</h3>
+      </div>
+      <div class="custom-modal-body" style="display: flex; flex-direction: column; align-items: center; gap: 14px;">
+        <p style="font-size: 13px; color: var(--muted); text-align: center; margin: 0; line-height: 1.4;">사진을 드래그해서 위치를 이동하고,<br>슬라이더로 크기를 조절해 주세요.</p>
+        
+        <!-- Framing container -->
+        <div id="framingContainer" style="width: 240px; height: 240px; overflow: hidden; position: relative; border: 1.5px solid var(--sketch-line); border-radius: 8px; background: #eee;">
+          <img id="framingImg" src="" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; cursor: move; user-select: none;" />
+        </div>
+        
+        <!-- Zoom slider -->
+        <div style="width: 100%; display: flex; align-items: center; gap: 10px; padding: 4px 0;">
+          <span style="font-size: 12px; font-weight: bold; color: var(--muted);">축소</span>
+          <input type="range" id="framingZoomSlider" min="1" max="3" step="0.05" value="1" style="flex-grow: 1; accent-color: var(--ink); cursor: pointer;" />
+          <span style="font-size: 12px; font-weight: bold; color: var(--muted);">확대</span>
+        </div>
+      </div>
+      <div class="custom-modal-actions" style="margin-top: 12px; display: flex; justify-content: flex-end; gap: 8px; width: 100%;">
+        <button class="modal-btn-cancel" id="framingCancelBtn" type="button" style="min-height: 34px; padding: 0 14px; font-size: 14px; border-radius: var(--radius); cursor: pointer;">취소</button>
+        <button class="modal-btn-start" id="framingSaveBtn" type="button" style="min-height: 34px; padding: 0 14px; font-size: 14px; border-radius: var(--radius); background: var(--ink); color: #fff; cursor: pointer; border: 1px solid var(--ink);">완료</button>
       </div>
     </div>
   </div>
@@ -4845,6 +4907,14 @@
     const drawerPhotoToolsContainer = $("#drawerPhotoToolsContainer");
     const imageLightbox = $("#imageLightbox");
     const lightboxImg = $("#lightboxImg");
+    const draftLargeGallery = $("#draftLargeGallery");
+    const editLargeGallery = $("#editLargeGallery");
+    const photoFramingModal = $("#photoFramingModal");
+    const framingContainer = $("#framingContainer");
+    const framingImg = $("#framingImg");
+    const framingZoomSlider = $("#framingZoomSlider");
+    const framingCancelBtn = $("#framingCancelBtn");
+    const framingSaveBtn = $("#framingSaveBtn");
     const authButton = $("#authButton");
     const authUser = $("#authUser");
     const nicknamePanel = $("#nicknamePanel");
@@ -6458,6 +6528,7 @@
       const isDraft = kind === "draft";
       const state = isDraft ? draftPhotoState : editPhotoState;
       const preview = isDraft ? draftPhotoPreview : editPhotoPreview;
+      const largeGallery = isDraft ? draftLargeGallery : editLargeGallery;
       const help = isDraft ? draftPhotoHelp : editPhotoHelp;
       const optionGrid = isDraft ? draftPhotoOptionGrid : editPhotoOptionGrid;
       const positionGroup = isDraft ? draftPhotoPositionGroup : editPhotoPositionGroup;
@@ -6470,17 +6541,20 @@
       state.photos = normalizePhotos(state.photos);
       const count = state.photos.length;
 
-      // Dynamic Inline Placement
+      // Dynamic Inline Placement for both Small Previews and Large Inline Gallery
       const textContainer = isDraft ? $(".review-textarea-container") : $("#editTranscriptInput");
       if (textContainer && textContainer.parentNode) {
         if (state.position === "beforeText") {
           textContainer.parentNode.insertBefore(preview, textContainer);
+          if (largeGallery) textContainer.parentNode.insertBefore(largeGallery, textContainer);
         } else {
           const next = textContainer.nextSibling;
           if (next) {
             textContainer.parentNode.insertBefore(preview, next);
+            if (largeGallery) textContainer.parentNode.insertBefore(largeGallery, next);
           } else {
             textContainer.parentNode.appendChild(preview);
+            if (largeGallery) textContainer.parentNode.appendChild(largeGallery);
           }
         }
       }
@@ -6488,6 +6562,7 @@
       if (count === 0) {
         if (optionGrid) optionGrid.hidden = true;
         preview.hidden = true;
+        if (largeGallery) largeGallery.innerHTML = "";
         if (help) help.textContent = "최대 3장";
         if (addButton) addButton.disabled = false;
         preview.innerHTML = "";
@@ -6542,7 +6617,7 @@
         });
       }
 
-      // 4. 미리보기 렌더링
+      // 4. 소형 가로 행 미리보기 렌더링 (순서 재배치용)
       preview.innerHTML = "";
       preview.className = `photo-preview-list photo-gallery layout-${state.layout} style-${state.style} count-${count}`;
 
@@ -6550,7 +6625,7 @@
 
       state.photos.forEach((photo, idx) => {
         const frame = document.createElement("figure");
-        frame.className = `photo-frame size-${photo.size || "medium"}`;
+        frame.className = `photo-frame size-large`;
         frame.style.position = "relative";
         frame.setAttribute("draggable", "true");
 
@@ -6558,13 +6633,6 @@
         img.src = photo.dataUrl;
         img.alt = photo.name || "붙인 사진";
 
-        // Size badge S/M/L
-        const sizeBadge = document.createElement("span");
-        sizeBadge.className = "photo-size-badge";
-        const labels = { small: "S", medium: "M", large: "L" };
-        sizeBadge.textContent = labels[photo.size || "medium"];
-        frame.appendChild(sizeBadge);
-        
         const remove = document.createElement("button");
         remove.type = "button";
         remove.className = "photo-remove-btn";
@@ -6578,19 +6646,6 @@
         });
 
         frame.append(img, remove);
-
-        // Click on thumbnail to cycle size
-        frame.addEventListener("click", (e) => {
-          if (e.target.closest(".photo-remove-btn")) return;
-          const currentSize = photo.size || "medium";
-          let nextSize = "medium";
-          if (currentSize === "small") nextSize = "medium";
-          else if (currentSize === "medium") nextSize = "large";
-          else if (currentSize === "large") nextSize = "small";
-          
-          photo.size = nextSize;
-          renderPhotoEditor(kind);
-        });
 
         // Native Drag-and-Drop
         frame.addEventListener("dragstart", (e) => {
@@ -6645,6 +6700,40 @@
         preview.appendChild(frame);
       });
 
+      // 5. 본문용 고해상도 인라인 갤러리 렌더링 (실제 구도 조절용)
+      if (largeGallery) {
+        largeGallery.innerHTML = "";
+        largeGallery.className = `editor-large-gallery photo-gallery layout-${state.layout} style-${state.style} count-${count}`;
+        
+        state.photos.forEach((photo) => {
+          const frame = document.createElement("figure");
+          frame.className = `photo-frame size-large`;
+          frame.style.position = "relative";
+          frame.style.overflow = "hidden";
+          
+          const img = document.createElement("img");
+          img.src = photo.dataUrl;
+          img.alt = "조정할 사진";
+          img.style.cursor = "pointer";
+          
+          // Apply scale and translation transform!
+          const scale = photo.scale || 1;
+          const offsetX = photo.offsetX || 0;
+          const offsetY = photo.offsetY || 0;
+          img.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`;
+          img.style.transformOrigin = "center center";
+          img.style.transition = "none";
+          
+          // Click to open high-fidelity framing crop modal!
+          frame.addEventListener("click", () => {
+            openPhotoFramingModal(photo, kind);
+          });
+          
+          frame.appendChild(img);
+          largeGallery.appendChild(frame);
+        });
+      }
+
       // Update the live preview
       updateLivePreview(kind);
     }
@@ -6677,9 +6766,19 @@
       photos.forEach((photo) => {
         const frame = document.createElement("figure");
         frame.className = `photo-frame size-${photo.size || "medium"}`;
+        frame.style.overflow = "hidden";
         const img = document.createElement("img");
         img.src = photo.dataUrl;
         img.alt = photo.name || "기록 사진";
+        
+        // Apply saved scale and translation offset transform!
+        const scale = photo.scale || 1;
+        const offsetX = photo.offsetX || 0;
+        const offsetY = photo.offsetY || 0;
+        img.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`;
+        img.style.transformOrigin = "center center";
+        img.style.transition = "none";
+        
         frame.appendChild(img);
         gallery.appendChild(frame);
       });
@@ -8106,6 +8205,117 @@
       });
     }
 
+    // 고해상도 사진 구도 조절 (Drag & Zoom) 로직
+    let framingActivePhoto = null;
+    let framingActiveKind = null;
+    let framingZoom = 1;
+    let framingOffsetX = 0;
+    let framingOffsetY = 0;
+    let isFramingDragging = false;
+    let framingStartX = 0;
+    let framingStartY = 0;
+
+    function openPhotoFramingModal(photo, kind) {
+      framingActivePhoto = photo;
+      framingActiveKind = kind;
+      framingZoom = photo.scale || 1;
+      framingOffsetX = photo.offsetX || 0;
+      framingOffsetY = photo.offsetY || 0;
+      
+      if (framingImg) {
+        framingImg.src = photo.dataUrl;
+      }
+      if (framingZoomSlider) {
+        framingZoomSlider.value = framingZoom;
+      }
+      
+      updateFramingTransform();
+      if (photoFramingModal) {
+        photoFramingModal.hidden = false;
+      }
+    }
+
+    function updateFramingTransform() {
+      if (framingImg) {
+        framingImg.style.transform = `scale(${framingZoom}) translate(${framingOffsetX}px, ${framingOffsetY}px)`;
+      }
+    }
+
+    // 슬라이더 줌 변경 이벤트
+    if (framingZoomSlider) {
+      framingZoomSlider.addEventListener("input", (e) => {
+        framingZoom = parseFloat(e.target.value);
+        updateFramingTransform();
+      });
+    }
+
+    // 마우스 및 터치 드래그 이동 로직
+    if (framingImg) {
+      const startDrag = (clientX, clientY) => {
+        isFramingDragging = true;
+        framingStartX = clientX - framingOffsetX;
+        framingStartY = clientY - framingOffsetY;
+      };
+
+      const moveDrag = (clientX, clientY) => {
+        if (!isFramingDragging) return;
+        framingOffsetX = clientX - framingStartX;
+        framingOffsetY = clientY - framingStartY;
+        updateFramingTransform();
+      };
+
+      const endDrag = () => {
+        isFramingDragging = false;
+      };
+
+      framingImg.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        startDrag(e.clientX, e.clientY);
+      });
+      document.addEventListener("mousemove", (e) => {
+        moveDrag(e.clientX, e.clientY);
+      });
+      document.addEventListener("mouseup", () => {
+        endDrag();
+      });
+
+      // 터치 지원 (모바일)
+      framingImg.addEventListener("touchstart", (e) => {
+        const touch = e.touches[0];
+        startDrag(touch.clientX, touch.clientY);
+      }, { passive: true });
+      document.addEventListener("touchmove", (e) => {
+        if (!isFramingDragging) return;
+        const touch = e.touches[0];
+        moveDrag(touch.clientX, touch.clientY);
+      }, { passive: true });
+      document.addEventListener("touchend", () => {
+        endDrag();
+      });
+    }
+
+    if (framingCancelBtn) {
+      framingCancelBtn.addEventListener("click", () => {
+        if (photoFramingModal) {
+          photoFramingModal.hidden = true;
+        }
+      });
+    }
+
+    if (framingSaveBtn) {
+      framingSaveBtn.addEventListener("click", () => {
+        if (framingActivePhoto) {
+          framingActivePhoto.scale = framingZoom;
+          framingActivePhoto.offsetX = framingOffsetX;
+          framingActivePhoto.offsetY = framingOffsetY;
+        }
+        if (photoFramingModal) {
+          photoFramingModal.hidden = true;
+        }
+        renderPhotoEditor(framingActiveKind);
+      });
+    }
+
     // 사진 설정 bottom sheet drawer 개폐 로직
     function openPhotoSettingsDrawer(kind) {
       const isDraft = kind === "draft";
@@ -8138,13 +8348,6 @@
     }
     if (photoDrawerOkBtn) {
       photoDrawerOkBtn.addEventListener("click", closePhotoSettingsDrawer);
-    }
-    if (photoSettingsDrawer) {
-      photoSettingsDrawer.addEventListener("click", (e) => {
-        if (e.target === photoSettingsDrawer) {
-          closePhotoSettingsDrawer();
-        }
-      });
     }
 
     // Fullscreen blurred image Lightbox overlay logic
