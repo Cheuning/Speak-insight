@@ -1,0 +1,6516 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Speak your insight</title>
+  <script>
+    if ("scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+    }
+    window.scrollTo(0, 0);
+  </script>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&display=swap");
+    @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+
+    @font-face {
+      font-family: "Griun Myoeunddobak";
+      src: url("./fonts/Griun_Myoeunddobak-Rg.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "Griun PolHumanrights";
+      src: url("./fonts/Griun_PolHumanrights-Rg.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "Yoon Childfundkorea DaeHan";
+      src: url("./fonts/YoonChildfundkoreaDaeHan.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "Yoon Childfundkorea ManSeh";
+      src: url("./fonts/YoonChildfundkoreaManSeh.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      /* Phase 1: 색감 — 세련된 회백색 계열로 변경 */
+      --bg: #EFF0F2;
+      --notebook: #F6F7F9;
+      --cal-card: #FFFFFF;          /* 캘린더 카드 전용 */
+      --surface: #ffffff;
+      --surface-soft: #EFF0F2;
+      --text: #171717;
+      --text-soft: #2a2a2a;
+      --muted: #6E6E6A;
+      --muted-light: #9A9A96;
+      --ink: #171717;
+      --ink-soft: #4a4a46;
+      --warm-line: rgba(17, 17, 17, 0.13);
+      --sketch-line: rgba(17, 17, 17, 0.13);
+      --sketch-line-soft: rgba(17, 17, 17, 0.07);
+      --line: rgba(17, 17, 17, 0.10);
+      --line-strong: rgba(17, 17, 17, 0.18);
+      --accent: #171717;
+      --accent-hover: #000000;
+      --accent-weak: #eeeeee;
+      --danger: #b84f4f;
+      /* 줄노트 선 — 기록 영역에서 더 선명하게 */
+      --paper-line: rgba(17, 17, 17, 0.07);
+      --paper-line-strong: rgba(17, 17, 17, 0.10);
+      --shadow: 0 4px 24px -4px rgba(17, 17, 17, 0.06);
+      --radius: 14px;
+      --space-1: 8px;
+      --space-2: 16px;
+      --space-3: 24px;
+      --space-4: 32px;
+      --app-width: 430px;
+      --page-gutter: 34px;
+      --top-tab-height: 42px;
+      --bottom-cta-height: 58px;
+      --font-hand: "Griun Myoeunddobak", "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: var(--font-hand);
+      font-synthesis: none;
+    }
+
+    /* 배경색 테마 오버라이드 */
+    body.theme-white {
+      --bg: #FFFFFF;
+      --notebook: #FFFFFF;
+      --cal-card: #FFFFFF;
+      --surface-soft: #F9FAFB;
+      --text: #111111;
+      --text-soft: #1F2937;
+      --muted: #4B5563;
+      --muted-light: #9CA3AF;
+      --ink: #111111;
+      --ink-soft: #374151;
+      --paper-line: rgba(17, 17, 17, 0.05);
+      --paper-line-strong: rgba(17, 17, 17, 0.08);
+    }
+
+    body.theme-dark {
+      --bg: #000000;
+      --notebook: #000000;
+      --cal-card: #111111;
+      --surface: #0A0A0A;
+      --surface-soft: #111111;
+      --text: #E5E7EB;
+      --text-soft: #F3F4F6;
+      --muted: #9CA3AF;
+      --muted-light: #6B7280;
+      --ink: #E5E7EB;
+      --ink-soft: #D1D5DB;
+      --paper-line: rgba(255, 255, 255, 0.08);
+      --paper-line-strong: rgba(255, 255, 255, 0.12);
+      --sketch-line: rgba(255, 255, 255, 0.15);
+      --sketch-line-soft: rgba(255, 255, 255, 0.08);
+      --line: rgba(255, 255, 255, 0.10);
+      --line-strong: rgba(255, 255, 255, 0.18);
+      --accent-weak: #2D2D2D;
+      --shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-synthesis: none;
+      font-style: normal;
+      font-weight: 400;
+    }
+
+    html {
+      scrollbar-width: none;
+    }
+
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+      display: none;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      font-family: var(--font-hand);
+      font-size: 18px;
+    }
+
+    body,
+    button,
+    input,
+    select,
+    textarea {
+      font-family: var(--font-hand) !important;
+    }
+
+    body,
+    body * {
+      font-family: var(--font-hand) !important;
+      font-synthesis: none !important;
+      font-style: normal !important;
+      font-weight: 400 !important;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      line-height: 1;
+      text-align: center;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:focus {
+      outline: none;
+    }
+
+    .app {
+      position: relative;
+      width: min(100%, var(--app-width));
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 40px var(--page-gutter) 180px;
+      background: var(--notebook);
+      border-inline: 1px solid var(--sketch-line-soft);
+      box-shadow: 0 0 44px rgba(17, 17, 17, 0.035);
+      overflow-x: hidden;
+      overflow-y: visible;
+    }
+
+    .app[data-view="today"],
+    .app[data-view="records"] {
+      padding-top: 40px;
+    }
+
+    .app[data-view="recording"],
+    .app[data-view="review"] {
+      padding-top: 40px;
+      padding-bottom: 40px; /* recording/review 때는 하단 탭 미표시 */
+    }
+
+    .app::before {
+      display: none;
+    }
+
+    .section-label {
+      display: none;
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 24px;
+      text-align: left;
+      letter-spacing: 0;
+    }
+
+    .topbar {
+      display: none;
+      align-items: center;
+      justify-content: flex-start;
+      margin-bottom: var(--space-4);
+      padding-bottom: 0;
+    }
+
+    .date-strip {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      margin: 0;
+      color: var(--ink);
+      font-size: 19px;
+      font-weight: 700;
+      line-height: 24px;
+      text-align: left;
+    }
+
+    .date-strip::after {
+      display: none;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 38px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      border: 1.5px solid var(--line-strong);
+      white-space: nowrap;
+      box-shadow: none;
+    }
+
+    .auth-button {
+      min-height: 38px;
+      padding: 0 13px;
+      border-radius: 999px 920px 980px 900px;
+      background: var(--ink);
+      color: #fff;
+      font-weight: 700;
+      font-size: 17px;
+      white-space: nowrap;
+      box-shadow: none;
+    }
+
+    .settings-row:nth-child(2) .auth-button {
+      width: 132px;
+      justify-self: start;
+      height: 34px;
+      min-height: 34px;
+      padding: 0 14px;
+      border: 1.4px solid rgba(17, 17, 17, 0.62);
+      border-radius: 15px 13px 17px 12px / 12px 16px 13px 15px;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--text);
+      box-shadow: none;
+      text-align: left;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      overflow: hidden;
+      white-space: nowrap;
+      transform: rotate(-0.4deg);
+    }
+
+    .auth-button.signed-in {
+      background: var(--surface-soft);
+      color: var(--text);
+      box-shadow: none;
+    }
+
+    .auth-user {
+      width: 100%;
+      max-width: 100%;
+      height: 38px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 19px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+    }
+
+    .settings-control {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      width: 100%;
+      height: 34px;
+      min-height: 32px;
+      padding: 0;
+      border: 0;
+      border-bottom: 1.4px solid rgba(17, 17, 17, 0.48);
+      border-radius: 0;
+      background: transparent;
+      color: var(--muted);
+      box-shadow: none;
+      overflow: visible;
+    }
+
+    .settings-control:has(.cst-select-wrap) {
+      border-bottom: none;
+      height: auto;
+    }
+
+    .settings-control label {
+      font-size: 16px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .font-select,
+    .theme-select,
+    .sticker-select {
+      width: 100%;
+      height: 30px;
+      min-height: 30px;
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      font-family: var(--font-hand);
+      font-size: 17px;
+      line-height: 30px;
+      outline: none;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--line-strong);
+    }
+
+    .status-pill.recording .status-dot {
+      background: var(--danger);
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.35; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.12); }
+    }
+
+    .card {
+      position: relative;
+      background: transparent;
+      border: 1.4px solid var(--sketch-line);
+      border-radius: 24px 17px 27px 15px / 18px 25px 16px 23px;
+      box-shadow: var(--shadow);
+    }
+
+    .paper-lines {
+      background-image:
+        linear-gradient(to bottom, transparent 33px, var(--paper-line) 34px),
+        linear-gradient(to right, rgba(184, 79, 79, 0.13) 0 1px, transparent 1px);
+      background-size: 100% 34px, 100% 100%;
+      background-position: 0 0, 22px 0;
+    }
+
+    .live-card {
+      position: relative;
+      padding: var(--space-3);
+      margin-bottom: var(--space-3);
+    }
+
+    .live-card-close-button {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 32px;
+      font-family: var(--font-hand);
+      color: var(--muted-light);
+      cursor: pointer;
+      padding: 8px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s ease, transform 0.2s ease;
+      z-index: 10;
+    }
+
+    .live-card-close-button:hover {
+      color: var(--text);
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    .app[data-view="today"] .live-card,
+    .app[data-view="records"] .live-card,
+    .app[data-view="review"] .live-card {
+      display: none;
+    }
+
+    .app[data-view="recording"] .live-card {
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100vh - 112px);
+      padding: var(--space-3) var(--space-3);
+      background: transparent;
+      border: none;
+      box-shadow: none;
+    }
+
+    .app[data-view="review"] .review-card {
+      display: block;
+      min-height: calc(100vh - 112px);
+      padding: var(--space-3) var(--space-3);
+      background: transparent;
+      border: none;
+      box-shadow: none;
+    }
+
+    .app[data-view="recording"] .topbar,
+    .app[data-view="review"] .topbar,
+    .app[data-view="review"] .date-strip,
+    .app[data-view="recording"] .date-strip {
+      display: none;
+    }
+
+    body[data-view="recording"] .bottom-nav,
+    body[data-view="review"] .bottom-nav {
+      display: none;
+    }
+
+    .app[data-view="review"] .review-card .card-header {
+      align-items: center;
+      flex-direction: column;
+      gap: var(--space-2);
+      margin-bottom: var(--space-3);
+      text-align: center;
+    }
+
+    .app[data-view="recording"] .live-card .card-header {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+
+    .app[data-view="recording"] .live-card .card-title {
+      display: none;
+    }
+
+    .review-card {
+      display: none;
+    }
+
+    /* Full-page Diary Review Layout */
+    .app[data-view="review"] .review-card {
+      display: block;
+      min-height: calc(100vh - 124px);
+      padding: 0;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+    }
+
+    .save-draft-panel.paper-lines {
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100vh - 124px);
+      padding: var(--space-3) var(--space-3) var(--space-4);
+      border: 0;
+      border-radius: 0;
+      background-color: transparent;
+      box-shadow: none;
+    }
+
+    .recording-subtitle {
+      margin: 0;
+      color: var(--ink);
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.35;
+      text-align: left;
+    }
+
+    .recording-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .app[data-view="recording"] .timer {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 68px;
+      height: 28px;
+      min-height: 28px;
+      padding: 0 10px;
+      border: 1.2px solid var(--sketch-line);
+      border-radius: 999px 890px 960px 920px / 760px 980px 800px 930px;
+      color: var(--ink-soft);
+      font-size: 14px;
+      font-weight: 700;
+      transform: rotate(-0.5deg);
+    }
+
+    .recording-state {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 6px;
+      min-height: 28px;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .recording-state-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #d83f36;
+      animation: pulse 1.2s infinite;
+    }
+
+    .recording-state.paused .recording-state-dot {
+      background: var(--muted-light);
+      animation: none;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+      margin-bottom: var(--space-2);
+    }
+
+    .card-title {
+      margin: 0;
+      color: var(--text-soft);
+      font-size: 23px;
+      font-weight: 700;
+    }
+
+    .timer {
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+      font-family: "Pretendard", var(--font-hand);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .transcript-box {
+      position: relative;
+      min-height: 112px;
+      padding: var(--space-2);
+      border-radius: 20px 14px 24px 13px / 16px 24px 15px 22px;
+      background-color: transparent;
+      border: 1.4px solid var(--sketch-line);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 20px;
+      white-space: pre-wrap;
+      text-align: left;
+    }
+
+    .app[data-view="recording"] .transcript-box {
+      flex-grow: 1;
+      min-height: 240px;
+      padding: var(--space-3);
+      background-color: transparent;
+      border-color: transparent;
+      border-radius: 0;
+      font-size: 24px;
+      text-align: left;
+    }
+
+    .review-notebook-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px dashed rgba(17, 17, 17, 0.08);
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+      padding-left: 10px;
+    }
+
+    .review-notebook-date {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink-soft);
+    }
+
+    .review-notebook-timer {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: transparent;
+      border: 1.35px solid rgba(17, 17, 17, 0.28);
+      border-radius: 999px 860px 940px 900px / 760px 980px 800px 930px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+      transform: rotate(-0.4deg);
+    }
+
+    .review-title-container {
+      margin-bottom: 18px;
+      padding-left: 28px; /* Clear the vertical line at 22px */
+    }
+
+    /* 녹음창 내 상단 날짜 뱃지 (기록할 날짜를 헷갈리지 않게 표시) */
+    .recording-date-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 16px;
+      border: none;
+      border-radius: 20px;
+      background: #000000;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      align-self: flex-start;
+      transform: rotate(-1deg);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    body.theme-dark .recording-date-badge {
+      background: #000000;
+      color: #ffffff;
+      border: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    /* ── CUSTOM MODAL DIALOG ── */
+    .custom-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 17, 17, 0.4);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      animation: modal-fade-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    body.theme-dark .custom-modal {
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .custom-modal[hidden] {
+      display: none !important;
+    }
+
+    @keyframes modal-fade-in {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .custom-modal-content {
+      width: min(90%, 320px);
+      padding: 24px;
+      background: var(--cal-card, #fff);
+      border: 1.5px solid var(--sketch-line);
+      border-radius: 24px 20px 26px 22px / 20px 26px 22px 24px;
+      box-shadow: 0 16px 40px rgba(17, 17, 17, 0.15);
+      animation: modal-scale-in 0.24s cubic-bezier(0.175, 0.885, 0.32, 1.25) forwards;
+      transform-origin: center center;
+    }
+
+    body.theme-dark .custom-modal-content {
+      background: var(--surface-soft);
+      border-color: rgba(255,255,255,0.12);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    @keyframes modal-scale-in {
+      from { transform: scale(0.9) translateY(12px); }
+      to   { transform: scale(1) translateY(0); }
+    }
+
+    .custom-modal-header h3 {
+      margin: 0 0 14px;
+      font-size: 21px;
+      font-weight: 700;
+      color: var(--ink);
+      text-align: center;
+    }
+
+    .custom-modal-body p {
+      margin: 0 0 24px;
+      font-size: 18px;
+      line-height: 1.5;
+      color: var(--text-soft);
+      text-align: center;
+    }
+
+    .custom-modal-body strong {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .custom-modal-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .modal-btn-cancel,
+    .modal-btn-start {
+      flex: 1;
+      height: 44px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.18s, transform 0.15s;
+    }
+
+    .modal-btn-cancel {
+      border: 1.4px dashed var(--sketch-line);
+      border-radius: 16px 12px 17px 14px / 13px 16px 12px 15px;
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .modal-btn-cancel:hover {
+      background: rgba(17,17,17,0.04);
+      color: var(--text);
+    }
+
+    body.theme-dark .modal-btn-cancel:hover {
+      background: rgba(255,255,255,0.06);
+    }
+
+    .modal-btn-start {
+      border: 1.4px solid var(--ink);
+      border-radius: 14px 17px 13px 16px / 16px 13px 15px 12px;
+      background: var(--ink);
+      color: #fff;
+    }
+
+    body.theme-dark .modal-btn-start {
+      background: var(--text-soft);
+      color: var(--notebook);
+      border-color: var(--text-soft);
+    }
+
+    .modal-btn-start:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(17,17,17,0.12);
+    }
+
+    .recording-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-1);
+      align-items: center;
+      justify-content: center;
+      margin-top: var(--space-3);
+      width: 100%;
+      max-width: 320px;
+      margin-inline: auto;
+    }
+
+    .recording-stop-button,
+    .recording-pause-button {
+      width: 100%;
+      min-width: 0;
+      min-height: 46px;
+      border: 1.4px solid var(--ink);
+      border-radius: 999px 870px 940px 900px / 760px 980px 800px 930px;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 0 10px;
+      letter-spacing: 0.3px;
+    }
+
+    .recording-stop-button {
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .recording-pause-button {
+      background: transparent;
+      color: var(--ink);
+    }
+
+    .recording-stop-button:disabled,
+    .recording-pause-button:disabled,
+    .save-draft-button:disabled,
+    .cancel-draft-button:disabled,
+    .mic-button:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    .save-draft-panel {
+      position: relative;
+    }
+
+    .save-draft-panel[hidden] {
+      display: none;
+    }
+
+    .review-textarea-container {
+      flex-grow: 1;
+      margin-bottom: var(--space-3);
+      padding-left: 28px; /* Clear the vertical line at 22px */
+    }
+
+    .save-draft-input {
+      width: 100%;
+      min-height: 44px;
+      border: none !important;
+      background: transparent !important;
+      font-size: 26px !important;
+      font-weight: 700 !important;
+      color: var(--ink) !important;
+      padding: 0 !important;
+      outline: none !important;
+      box-shadow: none !important;
+      border-bottom: 1.5px solid var(--paper-line-strong) !important;
+    }
+
+    .save-draft-input::placeholder {
+      color: var(--muted-light);
+      font-style: italic;
+    }
+
+    .save-draft-textarea.paper-lines {
+      width: 100%;
+      min-height: 310px;
+      border: none !important;
+      background-color: transparent !important;
+      background-attachment: local !important;
+      padding: 0 !important;
+      font-size: 20px !important;
+      line-height: 34px !important; /* Perfect match with the 34px background paper lines */
+      color: var(--text) !important;
+      resize: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    .save-draft-textarea.paper-lines:focus {
+      border: none !important;
+      box-shadow: none !important;
+    }
+
+    .save-draft-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--space-2);
+      padding-top: var(--space-2);
+      border-top: 1.5px dashed rgba(17, 17, 17, 0.08);
+      margin-top: auto;
+    }
+
+    .save-draft-button,
+    .cancel-draft-button {
+      min-height: 48px;
+      padding: 0 24px;
+      font-size: 18px;
+      font-weight: 700;
+      border-radius: 999px 880px 940px 910px / 760px 980px 800px 930px;
+      transition: all 0.2s ease;
+    }
+
+    .cancel-draft-button {
+      background: transparent;
+      color: var(--muted);
+      border: 1.4px dashed var(--sketch-line) !important;
+    }
+
+    .cancel-draft-button:hover {
+      background: rgba(184, 79, 79, 0.05);
+      color: var(--danger);
+      border-color: var(--danger) !important;
+    }
+
+    .save-draft-button {
+      background: var(--ink);
+      color: #fff;
+      border: 1.4px solid var(--ink) !important;
+      box-shadow: 0 4px 12px rgba(17, 17, 17, 0.1);
+    }
+
+    .save-draft-button:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(17, 17, 17, 0.15);
+    }
+
+    .settings-card {
+      display: none;
+      padding: 0;
+      background: transparent;
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    .app[data-view="settings"] .settings-card {
+      display: block;
+    }
+
+    /* Phase 1: 설정 화면은 줄노트 선 약하게 */
+    .app[data-view="settings"] {
+      background: var(--notebook);
+    }
+
+    .settings-list {
+      display: grid;
+      gap: 30px;
+    }
+
+    .settings-row {
+      position: relative;
+      display: grid;
+      gap: 10px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .settings-row:nth-child(2n) {
+      border-radius: 0;
+    }
+
+    .font-settings-row,
+    .theme-settings-row,
+    .sticker-settings-row,
+    .storage-settings-row {
+      grid-template-columns: 70px minmax(0, 1fr);
+      column-gap: 10px;
+    }
+
+    .font-settings-row,
+    .theme-settings-row,
+    .sticker-settings-row {
+      align-items: end;
+      min-height: 34px;
+    }
+
+    .storage-settings-row {
+      align-items: start;
+      min-height: 82px;
+      grid-template-rows: 34px 44px;
+    }
+
+    .font-settings-row .settings-control,
+    .theme-settings-row .settings-control,
+    .sticker-settings-row .settings-control {
+      width: 88%;
+      transform: translateY(1px);
+    }
+
+    .storage-settings-row .file-actions,
+    .storage-settings-row .file-status,
+    .storage-settings-row input {
+      grid-column: 2;
+    }
+
+    .settings-label {
+      color: var(--muted);
+      font-size: 18px;
+      font-weight: 700;
+      text-align: left;
+      width: 70px;
+      height: 34px;
+      min-height: 34px;
+      line-height: 34px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .settings-card .status-pill {
+      display: none;
+    }
+
+    .nickname-panel {
+      display: grid;
+      gap: var(--space-1);
+      margin-top: var(--space-1);
+    }
+
+    .nickname-panel[hidden] {
+      display: none;
+    }
+
+    .nickname-input {
+      width: 100%;
+      min-height: 42px;
+      padding: 0 var(--space-2);
+      border: 1.4px solid var(--sketch-line);
+      border-radius: 18px 12px 20px 13px / 14px 20px 13px 18px;
+      background: transparent;
+      color: var(--text);
+      font-family: var(--font-hand);
+      font-size: 18px;
+      line-height: 1;
+      text-align: left;
+      outline: none;
+    }
+
+    .nickname-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      flex-wrap: wrap;
+    }
+
+    .nickname-save-button {
+      min-height: 38px;
+      padding: 0 14px;
+      border: 1.4px solid var(--ink);
+      border-radius: 999px 880px 940px 910px / 760px 980px 800px 930px;
+      background: transparent;
+      color: var(--ink);
+      font-size: 17px;
+    }
+
+    .file-actions {
+      display: flex;
+      align-items: start;
+      justify-items: start;
+      gap: 8px;
+      flex-wrap: wrap;
+      width: 100%;
+      height: 34px;
+      overflow: hidden;
+    }
+
+    .file-save-button,
+    .file-load-button {
+      width: 72px;
+      flex: 0 0 72px;
+      height: 34px;
+      min-height: 34px;
+      padding: 0 14px;
+      border: 1.4px solid rgba(17, 17, 17, 0.62);
+      border-radius: 15px 13px 17px 12px / 12px 16px 13px 15px;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--ink);
+      font-size: 17px;
+      line-height: 1;
+      text-align: left;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: none;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .file-save-button {
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--ink);
+      transform: rotate(-0.5deg);
+    }
+
+    .file-load-button {
+      transform: rotate(0.4deg);
+    }
+
+    .file-save-button:disabled,
+    .file-load-button:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    .file-status {
+      width: 100%;
+      height: 44px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 22px;
+      text-align: left;
+      margin: 2px 0 0;
+      overflow: hidden;
+    }
+
+    .transcript-box.empty {
+      color: var(--muted);
+    }
+
+    .interim {
+      color: var(--muted);
+    }
+
+    .notice {
+      display: none;
+      margin-top: 12px;
+      color: #786a3b;
+      background: #fff8dc;
+      border: 1px solid #efe1aa;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .notice.visible {
+      display: block;
+    }
+
+    .calendar-card {
+      width: 100%;
+      padding: 0;
+      margin: 0 auto 22px;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .app[data-view="today"] .calendar-card {
+      display: none;
+    }
+
+    /* today-records-card: only visible in today view */
+    .today-records-card {
+      display: none;
+      padding: 0;
+      background: transparent;
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    .app[data-view="today"] .today-records-card {
+      display: block;
+    }
+
+    .app[data-view="recording"] .calendar-card,
+    .app[data-view="review"] .calendar-card,
+    .app[data-view="settings"] .live-card,
+    .app[data-view="settings"] .review-card,
+    .app[data-view="settings"] .calendar-card {
+      display: none;
+    }
+
+    .calendar-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding: 0;
+    }
+
+    .calendar-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 14px;
+    }
+
+    .period-buttons {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .icon-button {
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 52% 48% 55% 45% / 46% 55% 45% 54%;
+      color: var(--ink-soft);
+      background: transparent;
+      border: 1.2px solid var(--sketch-line);
+    }
+
+    .icon-button:hover {
+      background: transparent;
+      color: var(--accent);
+    }
+
+    .period-selector-container {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    /* New custom period picker button */
+    .period-picker-btn {
+      display: inline-flex;
+      align-items: center;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.5px;
+      white-space: nowrap;
+      line-height: 1;
+      background: transparent;
+      border: none;
+      padding: 4px 0;
+      cursor: pointer;
+      transition: opacity 0.15s ease;
+      font-family: var(--font-hand);
+    }
+
+    .period-picker-btn:hover {
+      opacity: 0.72;
+    }
+
+    .period-picker-btn[aria-expanded="true"] .dropdown-arrow {
+      transform: rotate(180deg);
+    }
+
+    body.theme-dark .period-picker-btn {
+      color: var(--text-soft);
+    }
+
+    /* ── Month/Year Picker Popup ── */
+    .period-picker-popup {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 0;
+      z-index: 200;
+      background: var(--cal-card);
+      border: 1.2px solid var(--sketch-line-soft);
+      border-radius: 22px;
+      box-shadow: 0 16px 40px -8px rgba(17,17,17,0.14), 0 4px 12px -4px rgba(17,17,17,0.08);
+      padding: 20px;
+      width: 280px;
+      animation: picker-pop 0.22s cubic-bezier(0.16,1,0.3,1) forwards;
+      transform-origin: top left;
+    }
+
+    body.theme-dark .period-picker-popup {
+      background: var(--surface-soft);
+      box-shadow: 0 16px 40px -8px rgba(0,0,0,0.5);
+      border-color: rgba(255,255,255,0.1);
+    }
+
+    .period-picker-popup.hidden {
+      display: none;
+    }
+
+    @keyframes picker-pop {
+      from { opacity: 0; transform: scale(0.94) translateY(-6px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* Year navigation row */
+    .picker-year-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .picker-year-label {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.3px;
+    }
+
+    body.theme-dark .picker-year-label {
+      color: var(--text-soft);
+    }
+
+    .picker-year-arrow {
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 1.2px solid var(--sketch-line);
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+      transition: background 0.15s, transform 0.15s;
+      flex-shrink: 0;
+    }
+
+    .picker-year-arrow:hover {
+      background: var(--surface-soft);
+      transform: scale(1.06);
+    }
+
+    .picker-year-arrow:disabled {
+      opacity: 0.28;
+      cursor: default;
+      transform: none;
+    }
+
+    /* Month grid */
+    .picker-month-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .picker-month-cell {
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      background: transparent;
+      border: 1.2px solid transparent;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      line-height: 1;
+    }
+
+    .picker-month-cell:hover {
+      background: var(--surface-soft);
+      border-color: var(--sketch-line);
+    }
+
+    .picker-month-cell.is-current-month {
+      border-color: var(--sketch-line);
+    }
+
+    .picker-month-cell.is-selected {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+      box-shadow: 0 4px 10px rgba(17,17,17,0.15);
+    }
+
+    body.theme-dark .picker-month-cell.is-selected {
+      background: var(--text-soft);
+      border-color: var(--text-soft);
+      color: var(--notebook);
+    }
+
+    body.theme-dark .picker-month-cell:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* ══════════════════════════════════════════
+       ── GLOBAL CUSTOM SELECT COMPONENT ──
+       설정 / 기타 모든 드롭다운 선택에 사용
+       ══════════════════════════════════════════ */
+    .cst-select-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .cst-select-wrap:has(.cst-select-popup) {
+      z-index: 9999;
+    }
+
+    .settings-row:has(.cst-select-popup) {
+      z-index: 9999;
+    }
+
+    .cst-select-btn {
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      min-height: 36px;
+      padding: 0 12px;
+      background: var(--surface-soft, rgba(17,17,17,0.04));
+      border: 1.2px solid var(--sketch-line);
+      border-radius: 14px 11px 16px 12px / 11px 16px 12px 14px;
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 600;
+      font-family: var(--font-hand);
+      cursor: pointer;
+      transition: border-color 0.18s, background 0.18s, transform 0.15s;
+      text-align: left;
+      line-height: 1;
+    }
+
+    .cst-select-btn:hover {
+      border-color: var(--ink-soft);
+      background: rgba(17,17,17,0.06);
+    }
+
+    body.theme-dark .cst-select-btn {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.12);
+      color: var(--text-soft);
+    }
+
+    body.theme-dark .cst-select-btn:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .cst-select-btn[aria-expanded="true"] {
+      border-color: var(--ink);
+      box-shadow: 0 0 0 2px rgba(17,17,17,0.08);
+    }
+
+    .cst-select-btn[aria-expanded="true"] svg {
+      transform: rotate(180deg);
+    }
+
+    .cst-select-btn svg {
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+      color: var(--muted);
+    }
+
+    .cst-select-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* Popup panel */
+    .cst-select-popup {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      z-index: 9999;
+      background: var(--cal-card, #fff);
+      border: 1.2px solid var(--sketch-line-soft);
+      border-radius: 18px;
+      box-shadow: 0 14px 36px -6px rgba(17,17,17,0.13), 0 4px 12px -4px rgba(17,17,17,0.07);
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      animation: cst-pop 0.2s cubic-bezier(0.16,1,0.3,1) forwards;
+      transform-origin: top center;
+    }
+
+    body.theme-dark .cst-select-popup {
+      background: var(--surface-soft);
+      border-color: rgba(255,255,255,0.1);
+      box-shadow: 0 14px 36px -6px rgba(0,0,0,0.45);
+    }
+
+    @keyframes cst-pop {
+      from { opacity: 0; transform: scale(0.95) translateY(-4px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* Option item */
+    .cst-select-opt {
+      width: 100%;
+      min-height: 40px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border: none;
+      border-radius: 12px;
+      background: transparent;
+      color: var(--text);
+      font-size: 15px;
+      font-family: var(--font-hand);
+      font-weight: 500;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s;
+      line-height: 1.2;
+    }
+
+    .cst-select-opt:hover {
+      background: rgba(17,17,17,0.05);
+      color: var(--ink);
+    }
+
+    body.theme-dark .cst-select-opt:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .cst-select-opt[aria-selected="true"] {
+      background: var(--ink);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    body.theme-dark .cst-select-opt[aria-selected="true"] {
+      background: var(--text-soft);
+      color: var(--notebook);
+    }
+
+    /* Check mark for selected item */
+    .cst-select-opt[aria-selected="true"]::after {
+      content: "";
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+
+
+    .calendar-view-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .view-toggle-btn {
+      min-height: 32px;
+      padding: 6px 14px;
+      background: var(--ink); /* Black pill button */
+      color: #ffffff !important;
+      border: none;
+      border-radius: 999px;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.15s ease;
+      line-height: 1;
+    }
+
+    body.theme-dark .view-toggle-btn {
+      background: var(--surface-soft);
+      color: var(--text) !important;
+      border: 1.2px solid var(--sketch-line);
+    }
+
+    .view-toggle-btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .dropdown-arrow {
+      transition: transform 0.2s ease;
+      stroke: currentColor;
+    }
+
+    .view-toggle-btn[aria-expanded="true"] .dropdown-arrow {
+      transform: rotate(180deg);
+    }
+
+    .view-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      z-index: 150;
+      background: var(--cal-card);
+      border: 1.2px solid var(--sketch-line);
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(17, 17, 17, 0.12);
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 112px;
+      transform-origin: top right;
+      animation: dropdown-fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    body.theme-dark .view-dropdown-menu {
+      background: var(--surface-soft);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    .view-dropdown-menu[hidden] {
+      display: none;
+    }
+
+    @keyframes dropdown-fade-in {
+      from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-4px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .dropdown-opt {
+      width: 100%;
+      min-height: 32px;
+      padding: 6px 12px;
+      border: none;
+      background: transparent;
+      color: var(--text-soft);
+      font-size: 13px;
+      border-radius: 10px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      transition: background-color 0.15s ease, color 0.15s ease;
+      line-height: 1;
+    }
+
+    .dropdown-opt:hover {
+      background: var(--surface-soft);
+      color: var(--text);
+    }
+
+    body.theme-dark .dropdown-opt:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .dropdown-opt.active {
+      background: var(--ink);
+      color: #ffffff !important;
+    }
+
+    body.theme-dark .dropdown-opt.active {
+      background: var(--accent-weak);
+      color: var(--text) !important;
+    }
+
+    .add-diary-detail-btn {
+      position: absolute;
+      top: -38px;
+      right: 0;
+      min-height: 32px;
+      padding: 6px 14px;
+      background: var(--ink); /* Black button */
+      color: #ffffff !important;
+      border: none;
+      border-radius: 999px;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.15s ease;
+      line-height: 1;
+      z-index: 10;
+    }
+
+    body.theme-dark .add-diary-detail-btn {
+      background: var(--surface-soft);
+      color: var(--text) !important;
+      border: 1.2px solid var(--sketch-line);
+    }
+
+    .add-diary-detail-btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    /* ── DIARY GRID CALENDAR ── */
+    .weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      margin-bottom: 0;
+      border-bottom: none;
+    }
+
+    .weekdays span {
+      padding: 6px 0 5px;
+      color: var(--muted-light);
+      font-size: 11px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .weekdays span:first-child { color: rgba(216,63,54,0.55); }
+    .weekdays span:last-child  { color: rgba(90,110,200,0.55); }
+
+    /* 월/주 븷업: list-mode일 때 캘린더 그리드 숨김 */
+    .calendar-card.list-mode .weekdays,
+    .calendar-card.list-mode .calendar-grid {
+      display: none;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px 4px; /* 가로세로 간격을 띄워 둥근 칩들이 공중에 뜬 귀여운 느낌 부여 */
+      padding: 4px 0;
+    }
+
+    /* ── Day Cell: rounded circle chip style ── */
+    .day-cell {
+      position: relative;
+      width: 34px;
+      height: 34px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(17, 17, 17, 0.04); /* 기본 일기가 없는 날 옅은 회색 서클 */
+      color: var(--text);
+      border: none;
+      border-radius: 50%;
+      padding: 0;
+      cursor: pointer;
+      transition: all 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    body.theme-dark .day-cell {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .day-cell:hover {
+      transform: scale(1.08);
+      background: rgba(17, 17, 17, 0.08);
+    }
+
+    body.theme-dark .day-cell:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .day-cell.muted {
+      color: rgba(17, 17, 17, 0.22);
+      background: transparent !important;
+      pointer-events: none; /* 이전/다음 달 날짜는 클릭 비활성화 */
+    }
+
+    body.theme-dark .day-cell.muted {
+      color: rgba(255, 255, 255, 0.18);
+    }
+
+    .day-cell.today {
+      border: 1.5px dashed var(--ink-soft);
+    }
+
+    body.theme-dark .day-cell.today {
+      border-color: var(--text-soft);
+    }
+
+    .day-cell.selected {
+      transform: scale(1.08);
+      box-shadow: 0 4px 12px rgba(17, 17, 17, 0.1);
+      border: 2px solid var(--ink);
+    }
+
+    body.theme-dark .day-cell.selected {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      border-color: var(--text-soft);
+    }
+
+    .day-number {
+      position: relative;
+      z-index: 5; /* 스티커보다 위로 올림 */
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+      text-align: center;
+      line-height: 1;
+      margin: 0;
+      width: auto;
+      font-weight: inherit; /* 굵기는 절대 수정 불가 제약 준수 */
+      pointer-events: none; /* 클릭 이벤트 방해 차단 */
+    }
+
+    /* 캘린더 날짜 셀 내에 일기가 있는 경우 레퍼런스 스타일의 단색 원형 배경 적용 */
+    .day-cell.has-sticker {
+      background: var(--ink) !important;
+      color: #ffffff !important;
+    }
+
+    body.theme-dark .day-cell.has-sticker {
+      background: var(--text-soft) !important;
+      color: #000000 !important;
+    }
+
+    .day-cell.muted .record-dots {
+      display: none;
+    }
+
+
+    /* Phase 2: 리스트 보기 */
+    .list-view {
+      display: none;
+      padding-top: 4px;
+    }
+
+    .calendar-card.list-mode .list-view {
+      display: block;
+    }
+
+    .list-month-header {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.3px;
+      padding: 4px 0 14px;
+      border-bottom: none; /* 밑줄 영구 삭제 */
+      margin-bottom: 8px;
+    }
+
+    /* ── NEW DIARY LIST VIEW REDESIGN (MATCHING PHOTO) ── */
+    .list-view {
+      display: none;
+      padding-top: 4px;
+    }
+
+    .calendar-card.list-mode .list-view {
+      display: block;
+    }
+
+    .list-day-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+      width: 100%;
+    }
+
+    .list-date-col {
+      width: 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      flex-shrink: 0;
+      padding-top: 6px;
+      cursor: pointer;
+    }
+
+    .list-weekday {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      line-height: 1.2;
+      text-transform: capitalize;
+      text-align: center;
+      width: 100%;
+    }
+
+    .list-day-num {
+      position: relative;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.1;
+      margin-top: 2px;
+      text-align: center;
+      display: inline-block;
+    }
+
+    /* Weekend highlighting */
+    .list-day-row.is-sunday .list-weekday,
+    .list-day-row.is-sunday .list-day-num {
+      color: #d83f36; /* Warm reddish orange for Sunday */
+    }
+
+    .list-day-row.is-saturday .list-weekday,
+    .list-day-row.is-saturday .list-day-num {
+      color: #5a6ec8; /* Calm blue for Saturday */
+    }
+
+    /* Small hand-drawn circle or dot next to today's date */
+    .list-day-row.is-today .list-day-num::after {
+      content: "•";
+      position: absolute;
+      left: 100%;
+      margin-left: 2px;
+      top: -3px;
+      font-size: 16px;
+      color: #d83f36;
+      line-height: 1;
+    }
+
+    .list-capsule-col {
+      flex-grow: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Elegant, highly rounded capsule cards */
+    .list-entry-capsule {
+      background: var(--cal-card);
+      border: 1px solid var(--sketch-line-soft);
+      border-radius: 20px;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      cursor: pointer;
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease;
+      min-width: 0;
+      width: 100%;
+      text-align: left;
+    }
+
+    .list-entry-capsule:hover {
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 0 6px 20px rgba(17, 17, 17, 0.05);
+    }
+
+    body.theme-dark .list-entry-capsule:hover {
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.03);
+    }
+
+    .list-entry-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .list-entry-time {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      opacity: 0.8;
+    }
+
+    .list-entry-dots {
+      background: transparent;
+      border: none;
+      padding: 4px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted-light);
+      border-radius: 50%;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .list-entry-dots:hover {
+      background-color: var(--surface-soft);
+      color: var(--text);
+    }
+
+    .list-entry-dots svg {
+      width: 16px;
+      height: 16px;
+      stroke-width: 2.5;
+    }
+
+    .list-entry-body {
+      width: 100%;
+    }
+
+    .list-entry-title {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--ink);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      line-height: 1.3;
+      margin: 0;
+    }
+
+    .list-entry-preview {
+      font-size: 13.5px;
+      color: var(--text-soft);
+      line-height: 1.45;
+      margin-top: 2px;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      opacity: 0.8;
+    }
+
+    .list-card-no-records {
+      font-size: 14px;
+      color: var(--muted-light);
+      padding: 14px 20px;
+      border: 1.2px dashed var(--sketch-line);
+      border-radius: 20px;
+      width: 100%;
+      text-align: center;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    /* 보기 토글 버튼에 리스트 추가 */
+
+    /* ── Inline diary detail panel (shown below calendar when date selected) ── */
+    .records-card {
+      padding: 0;
+      background: transparent;
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    .app[data-view="today"] .records-card {
+      padding: 0;
+      background: transparent;
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    /* Inline expanded diary view under calendar */
+    .diary-detail-panel {
+      position: relative;
+      margin-top: 48px;
+      padding: 24px;
+      background: rgba(17, 17, 17, 0.035); /* 부드럽고 가라앉은 파스텔 음영 카드 박스화 */
+      border-radius: 28px;
+      display: none;
+      box-sizing: border-box;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+    }
+
+    body.theme-dark .diary-detail-panel {
+      background: rgba(255, 255, 255, 0.055);
+    }
+
+    .diary-detail-panel.open {
+      display: block;
+    }
+
+    /* 캘린더 상세 카드 내부의 기록 항목 스타일 정돈 */
+    .diary-detail-panel .record-item {
+      padding: 10px 0; /* 기존 16px에서 10px로 줄여 여백 촘촘화 */
+      border-bottom: 1.2px dashed var(--sketch-line-soft);
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .diary-detail-panel .record-item:last-child {
+      border-bottom: none;
+    }
+
+    .diary-detail-date {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 0 12px;
+      margin-bottom: 8px;
+      font-size: 18px;
+      font-weight: inherit; /* 굵기 절대 변경 금지 제약 준수 */
+      color: var(--ink);
+      border-bottom: 1.5px dashed var(--sketch-line-soft);
+    }
+
+    .diary-check-badge {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #FFE57F; /* Soft warm yellow */
+      border: 1.2px solid var(--ink);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-right: 8px;
+      transform: translateY(-1px);
+    }
+
+    body.theme-dark .diary-check-badge {
+      background: #FFD54F;
+      border-color: var(--text-soft);
+    }
+
+    .records-meta {
+      color: var(--muted);
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .app[data-view="today"] .records-meta {
+      display: none;
+    }
+
+    .records-card .card-title {
+      display: none;
+    }
+
+    .records-list {
+      display: grid;
+      gap: 10px; /* 기존 18px에서 10px로 줄여 피드 간격 긴밀화 */
+      margin-top: 0;
+    }
+
+    .today-date-note {
+      padding: 0 var(--space-1);
+    }
+
+    .records-list.has-records {
+      margin-top: -2px;
+    }
+
+    .empty-state {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 0;
+      color: var(--ink-soft);
+      text-align: left;
+      min-height: 136px;
+    }
+
+    /* 캘린더 일기 상세 영역에서만 빈 기록 문구 밑줄 독립적 렌더링 - 여러 줄 대응 줄노트 선 적용 */
+    .diary-detail-panel .empty-state {
+      display: block;
+      width: 100%;
+      color: var(--muted);
+      text-align: left;
+      min-height: auto;
+      line-height: 1.6;
+      font-size: 15px;
+      padding: 12px 0;
+      background-image: none !important; /* 복잡한 격자 줄노트 배경선 제거 */
+      border: none !important;
+    }
+
+    .app[data-view="today"] .empty-state {
+      padding-top: 0;
+      font-size: 22px;
+    }
+
+    .app[data-view="today"] .today-entry-layout.empty-state {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .empty-date {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 19px;
+      font-weight: 700;
+      line-height: 24px;
+    }
+
+    .cozy-today-date {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0;
+      margin-bottom: 0;
+      border-bottom: none;
+      position: relative;
+      width: fit-content;
+      flex-shrink: 0;
+      height: 92px;
+    }
+
+    .today-date-note .cozy-today-date {
+      margin-right: auto;
+      margin-bottom: 24px;
+    }
+
+    .today-entry-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 0;
+    }
+
+    .today-entry-layout::after {
+      display: none;
+    }
+
+    .today-entry-layout > .cozy-today-date {
+      margin-bottom: 0;
+    }
+
+    .today-first-record-slot {
+      min-width: 0;
+      padding-top: 0;
+      margin-top: -6px;
+    }
+
+    .today-first-record-slot .record-item {
+      padding-bottom: 0;
+    }
+
+    .today-first-record-slot .record-top {
+      min-height: 34px;
+      align-items: flex-end;
+      margin-bottom: 0;
+    }
+
+    .today-first-record-slot .record-meta-group,
+    .today-first-record-slot .record-controls {
+      min-height: 34px;
+      align-items: center;
+      padding-bottom: 0;
+    }
+
+    .today-first-record-slot .record-read {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .today-welcome-note {
+      min-width: 0;
+      padding-top: 30px;
+      padding-left: 0;
+      padding-right: 0;
+      color: var(--ink-soft);
+      text-align: left;
+    }
+
+    .today-welcome-title {
+      margin: 0;
+      color: var(--ink);
+      font-size: 24px;
+      line-height: 34px;
+      background-image: linear-gradient(to bottom, transparent 33px, var(--paper-line) 33px) !important;
+      background-size: 100% 34px !important;
+      background-repeat: repeat !important;
+    }
+
+    .today-welcome-text {
+      clear: both;
+      margin: 0;
+      color: var(--text);
+      font-size: 16px;
+      line-height: 34px;
+      white-space: pre-line;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      background-image: linear-gradient(to bottom, transparent 33px, var(--paper-line) 33px) !important;
+      background-size: 100% 34px !important;
+      background-repeat: repeat !important;
+    }
+
+    .today-rest-records {
+      display: grid;
+      gap: var(--space-2);
+      margin-top: var(--space-2);
+    }
+
+    .cozy-date-top {
+      font-size: 14px;
+      color: var(--muted-light);
+      letter-spacing: 0.5px;
+      margin: 0;
+      height: 24px;
+      line-height: 24px;
+      opacity: 0.85;
+      text-align: left;
+      padding-top: 0;
+      box-sizing: border-box;
+    }
+
+    .cozy-date-main {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      line-height: 1;
+      height: 68px;
+    }
+
+    .cozy-date-day {
+      font-size: 46px;
+      color: var(--ink);
+      height: 68px;
+      line-height: 68px;
+      letter-spacing: -1px;
+      margin: 0;
+      padding-top: 0;
+      box-sizing: border-box;
+    }
+
+    .cozy-date-weekday {
+      font-size: 16px;
+      color: var(--ink-soft);
+      height: 34px;
+      line-height: 34px;
+      opacity: 0.85;
+      margin: 0;
+      padding-top: 2px;
+      box-sizing: border-box;
+    }
+
+    .empty-question {
+      display: block;
+      color: var(--ink-soft);
+      font-size: 22px;
+      line-height: 34px;
+      margin: 0;
+      margin-top: 34px;
+      padding-top: 2px;
+    }
+
+    .record-item {
+      position: relative;
+      padding: 0 0 12px; /* 패딩 하단 여백을 촘촘하게 조절 */
+      border: 0;
+      border-bottom: 1px solid rgba(17, 17, 17, 0.06);
+      border-radius: 0;
+      background-color: transparent;
+      text-align: left;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .record-item:last-child {
+      border-bottom: none;
+    }
+
+    .app[data-view="today"] .record-item {
+      border-color: transparent;
+      padding-inline: 0;
+    }
+
+    .record-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 16px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .record-meta-group {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      flex-wrap: wrap;
+      min-height: 34px;
+      transform: translateY(3px);
+      flex: 1;
+      min-width: 0;
+    }
+
+    .record-time-header {
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.2;
+      font-family: var(--font-hand);
+    }
+
+    .record-controls {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .edit-button,
+    .delete-button {
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 52% 48% 55% 45% / 44% 56% 46% 54%;
+    }
+
+    .edit-button {
+      color: var(--ink);
+      background: transparent;
+      border: 1.2px solid var(--sketch-line);
+    }
+
+    .more-button {
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 52% 48% 55% 45% / 44% 56% 46% 54%;
+      color: var(--muted);
+      background: transparent;
+      border: 1.2px solid var(--sketch-line);
+      cursor: pointer;
+      transition: color 0.18s, background 0.18s;
+    }
+
+    .more-button:hover {
+      color: var(--ink);
+      background: var(--surface-soft);
+    }
+
+    .more-button svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Eraser Rubbing Motion Styles */
+    .record-read {
+      position: relative;
+    }
+
+    .record-read.is-erasing {
+      pointer-events: none;
+    }
+
+    .record-item.is-erasing .record-read-title,
+    .record-item.is-erasing .record-read-text {
+      animation: text-erasing 0.8s forwards ease-in-out;
+    }
+
+    @keyframes text-erasing {
+      0% {
+        opacity: 1;
+        filter: blur(0px);
+      }
+      30% {
+        opacity: 0.8;
+        filter: blur(1.5px);
+        transform: skewX(-3deg);
+      }
+      60% {
+        opacity: 0.4;
+        filter: blur(3.5px);
+        transform: skewX(3deg);
+      }
+      100% {
+        opacity: 0.05;
+        filter: blur(7px);
+        transform: scale(0.97);
+      }
+    }
+
+    .eraser-motion-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .floating-eraser {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      animation: eraser-rubbing 0.8s ease-in-out forwards;
+    }
+
+    @keyframes eraser-rubbing {
+      0% {
+        transform: translate(-60px, -20px) rotate(-15deg) scale(0.8);
+        opacity: 0;
+      }
+      15% {
+        transform: translate(-40px, 0px) rotate(-20deg) scale(1.1);
+        opacity: 1;
+      }
+      30% {
+        transform: translate(40px, -10px) rotate(-10deg) scale(1.1);
+      }
+      45% {
+        transform: translate(-30px, 10px) rotate(-25deg) scale(1.1);
+      }
+      60% {
+        transform: translate(30px, -5px) rotate(-15deg) scale(1.1);
+      }
+      75% {
+        transform: translate(-10px, 15px) rotate(-20deg) scale(1.1);
+      }
+      90% {
+        transform: translate(10px, 5px) rotate(-15deg) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(20px, 10px) rotate(-10deg) scale(0.7);
+        opacity: 0;
+      }
+    }
+
+    .sync-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 0 9px;
+      border-radius: 999px;
+      background: var(--surface-soft);
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .sync-badge.pending {
+      background: #fff8dc;
+      color: #786a3b;
+    }
+
+    .sync-badge.synced {
+      background: var(--accent-weak);
+      color: var(--accent);
+    }
+
+    .sync-badge.error {
+      background: #f8eeee;
+      color: var(--danger);
+    }
+
+    .record-editor {
+      display: grid;
+      gap: var(--space-2);
+      margin-bottom: var(--space-2);
+    }
+
+    .record-read {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      padding-left: 0;
+      padding-right: 0;
+      min-width: 0;
+    }
+
+    .record-read-title {
+      margin: 0;
+      color: var(--ink);
+      font-size: 22px;
+      line-height: 34px;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      font-weight: 700;
+    }
+
+    .record-read-text {
+      margin: 0;
+      color: var(--text);
+      font-size: 16px;
+      line-height: 34px;
+      white-space: pre-wrap;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      transform: translateY(4px);
+      background-image: linear-gradient(to bottom, transparent 33px, var(--paper-line) 33px) !important;
+      background-size: 100% 34px !important;
+      background-repeat: repeat !important;
+    }
+
+    .record-title-input,
+    .record-textarea {
+      width: 100%;
+      font-family: var(--font-hand);
+      border: 1.4px solid var(--sketch-line);
+      border-radius: 18px 12px 21px 13px / 14px 21px 13px 19px;
+      background-color: transparent;
+      color: var(--text);
+      outline: none;
+      text-align: left;
+    }
+
+    .record-title-input {
+      min-height: 44px;
+      padding: 0 var(--space-2);
+      display: flex;
+      align-items: center;
+      font-size: 21px;
+      font-weight: 700;
+    }
+
+    .record-textarea {
+      min-height: 112px;
+      padding: var(--space-2);
+      line-height: 1.7;
+      font-size: 19px;
+      resize: vertical;
+    }
+
+    .record-title-input:focus,
+    .record-textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-weak);
+    }
+
+    .record-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--space-1);
+      flex-wrap: wrap;
+      margin-top: var(--space-1);
+    }
+
+    .save-note {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.2;
+    }
+
+    .save-button {
+      min-height: 38px;
+      padding: 0 14px;
+      border-radius: 999px 880px 940px 910px / 760px 980px 800px 930px;
+      color: #fff;
+      background: var(--ink);
+      border: 1.4px solid var(--ink);
+      font-weight: 700;
+      font-size: 17px;
+    }
+
+    .delete-button {
+      color: var(--danger);
+      background: #f8eeee;
+    }
+
+    .record-item audio {
+      width: 100%;
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    .edit-panel[hidden] {
+      display: none;
+    }
+
+    .edit-panel {
+      position: fixed;
+      inset: 0;
+      z-index: 150; /* 하단 탭바 등 모든 앱 요소를 완전히 덮음 */
+      background: var(--notebook); /* 전체 화면 뷰 */
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      overflow-y: auto;
+      transition: all 0.25s ease;
+    }
+
+    .edit-paper {
+      width: min(100%, var(--app-width));
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 40px var(--page-gutter) 140px;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      position: relative;
+    }
+
+    /* 링 바인더 효과 타공 구멍 완전히 제거 */
+    .edit-paper::before {
+      display: none !important;
+    }
+
+    .edit-panel-title {
+      margin: 0 0 8px;
+      color: var(--ink);
+      font-size: 24px;
+      font-weight: 700;
+      font-family: var(--font-hand);
+      border-bottom: 1.5px solid var(--sketch-line-soft);
+      padding-bottom: 12px;
+    }
+
+    .edit-paper .record-title-input {
+      border: none !important;
+      background: transparent !important;
+      padding: 8px 0 !important;
+      font-size: 24px !important;
+      font-weight: 700 !important;
+      color: var(--ink) !important;
+      box-shadow: none !important;
+      border-bottom: 1.5px solid var(--paper-line-strong) !important;
+      border-radius: 0 !important;
+      margin-bottom: 8px;
+      font-family: var(--font-hand) !important;
+    }
+
+    .edit-paper .record-title-input:focus {
+      border-bottom-color: var(--ink) !important;
+    }
+
+    /* 고책용 줄선 완전히 제거하고 미니멀 현대 폼으로 개편 */
+    .edit-paper .record-textarea {
+      border: none !important;
+      background-color: transparent !important;
+      background-image: none !important; /* 줄선 완전 제거 */
+      padding: 8px 0 !important;
+      font-size: 19px !important;
+      line-height: 1.6 !important;
+      color: var(--text) !important;
+      box-shadow: none !important;
+      resize: vertical !important;
+      min-height: 280px;
+      border-radius: 0 !important;
+      font-family: var(--font-hand) !important;
+      flex-grow: 1;
+    }
+
+    .edit-panel-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+      margin-top: 14px;
+      border-top: 1.5px dashed rgba(17, 17, 17, 0.08);
+      padding-top: 16px;
+    }
+
+    .edit-delete-button {
+      min-height: 42px;
+      margin-right: auto;
+      padding: 0 18px;
+      border: 1.4px dashed var(--danger) !important;
+      border-radius: 999px 880px 940px 910px / 760px 980px 800px 930px;
+      background: transparent;
+      color: var(--danger);
+      font-size: 16px;
+      font-weight: 700;
+      transition: all 0.2s ease;
+    }
+
+    .edit-delete-button:hover {
+      background: rgba(184, 79, 79, 0.06);
+      transform: translateY(-1px);
+    }
+
+    .edit-save-button,
+    .edit-cancel-button {
+      min-height: 42px;
+      padding: 0 20px;
+      border: 1.4px solid var(--ink);
+      border-radius: 999px 880px 940px 910px / 760px 980px 800px 930px;
+      font-size: 16px;
+      font-weight: 700;
+      transition: all 0.2s ease;
+    }
+
+    .edit-save-button {
+      background: var(--ink);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(17, 17, 17, 0.1);
+    }
+
+    .edit-save-button:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(17, 17, 17, 0.15);
+    }
+
+    .edit-cancel-button {
+      background: transparent;
+      color: var(--muted);
+      border: 1.4px dashed var(--sketch-line) !important;
+    }
+
+    .edit-cancel-button:hover {
+      background: rgba(17, 17, 17, 0.04);
+      color: var(--text);
+      transform: translateY(-1px);
+    }
+
+    .edit-delete-button:disabled,
+    .edit-save-button:disabled,
+    .edit-cancel-button:disabled {
+      opacity: 0.45;
+      cursor: default;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    /* Phase 3: 하단 탭바 재디자인 - 모던 프리미엄 Glassmorphism 플로팅 탭바 */
+    .bottom-nav {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+      top: auto;
+      right: auto;
+      width: calc(100% - 48px);
+      max-width: calc(var(--app-width) - 48px);
+      height: 72px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      align-items: center;
+      justify-items: center;
+      padding: 0 10px;
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(17, 17, 17, 0.08);
+      border-radius: 24px;
+      box-shadow: 
+        0 12px 36px -4px rgba(17, 17, 17, 0.08), 
+        0 2px 8px -2px rgba(17, 17, 17, 0.03);
+      z-index: 100;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body.theme-dark .bottom-nav {
+      background: rgba(15, 15, 15, 0.82);
+      border-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 
+        0 12px 36px -4px rgba(0, 0, 0, 0.35), 
+        0 2px 8px -2px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Phase 3: 탭 아이템 — 미니멀하고 직관적인 구성 */
+    .nav-item {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      color: var(--muted);
+      background: transparent;
+      border: none;
+      font-size: 11px;
+      font-weight: 500;
+      text-align: center;
+      line-height: 1;
+      position: relative;
+      white-space: nowrap;
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .nav-icon {
+      display: block;
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), stroke-width 0.22s ease;
+    }
+
+    .nav-item span {
+      display: block;
+      font-size: 11px;
+      line-height: 1;
+      transition: font-weight 0.22s ease, color 0.22s ease;
+    }
+
+    .nav-item:hover {
+      color: var(--text);
+    }
+
+    .nav-item:hover .nav-icon {
+      transform: translateY(-2px);
+    }
+
+    .nav-item.active {
+      color: var(--ink);
+    }
+
+    .nav-item.active .nav-icon {
+      transform: translateY(-3px) scale(1.05);
+      stroke-width: 2.3;
+    }
+
+    .nav-item.active span {
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .nav-item.active::after,
+    .nav-item::after,
+    .nav-item.active::before {
+      display: none;
+    }
+
+    /* Cozy hand-drawn diary stats popup/tooltip */
+    .stats-tooltip {
+      position: fixed;
+      width: 230px;
+      padding: 16px;
+      border: 1.4px solid var(--sketch-line);
+      background-color: var(--notebook);
+      border-radius: 18px 24px 15px 22px / 22px 18px 25px 15px;
+      box-shadow: 0 8px 32px rgba(17, 17, 17, 0.12);
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(10px) scale(0.95);
+      transition: opacity 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+      text-align: left;
+    }
+
+    .stats-tooltip.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .stats-tooltip-header h3 {
+      margin: 0 0 10px 0;
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--ink);
+      border-bottom: 1.5px dashed rgba(17, 17, 17, 0.15);
+      padding-bottom: 6px;
+    }
+
+    .stats-tooltip-body p {
+      margin: 6px 0;
+      font-size: 16px;
+      color: var(--text-soft);
+      line-height: 1.4;
+    }
+
+    /* ── Floating Record Mic Button (FAB) at Bottom Right ── */
+    .mic-floating-container {
+      position: fixed;
+      left: auto;
+      right: calc(50% - (min(100%, var(--app-width)) / 2) + var(--page-gutter));
+      bottom: calc(104px + env(safe-area-inset-bottom, 0px));
+      z-index: 99;
+      pointer-events: none;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    body[data-view="recording"] .mic-floating-container,
+    body[data-view="review"] .mic-floating-container {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.8) translateY(20px);
+    }
+
+    .mic-button {
+      pointer-events: all;
+      width: var(--bottom-cta-height);
+      height: var(--bottom-cta-height);
+      min-width: 0;
+      min-height: 0;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--ink);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 6px 20px rgba(17, 17, 17, 0.2);
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s ease, box-shadow 0.2s ease;
+      overflow: hidden;
+    }
+
+    .mic-label {
+      display: none !important;
+    }
+
+    .mic-button:hover {
+      transform: scale(1.08) translateY(-2px);
+      background: var(--accent-hover);
+      box-shadow: 0 8px 24px rgba(17, 17, 17, 0.26);
+    }
+
+    .mic-button.recording {
+      color: #fff;
+      background: #b84f4f;
+      box-shadow: 0 6px 20px rgba(184, 79, 79, 0.35);
+      animation: recording-pulse 1.4s infinite alternate ease-in-out;
+    }
+
+    @keyframes recording-pulse {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.08); }
+    }
+
+    /* Phase 3: mic-icon - FAB 안에서 표시 */
+    .mic-icon {
+      display: block;
+      flex-shrink: 0;
+    }
+
+    .icon-button svg,
+    .edit-button svg,
+    .delete-button svg {
+      width: 19px;
+      height: 19px;
+      stroke-width: 2.2;
+    }
+
+    .mic-label {
+      display: block;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1;
+      text-align: center;
+      white-space: nowrap;
+      word-break: keep-all;
+    }
+
+    /* ── 주간 히트맵 스티커 판 스타일 ── */
+    .today-header-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 24px;
+      gap: 16px;
+    }
+
+    .weekly-heatmap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      padding: 0;
+      box-sizing: border-box;
+      flex-shrink: 0;
+    }
+
+    .heatmap-day {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      width: 38px;
+    }
+
+    .heatmap-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: capitalize;
+      letter-spacing: -0.3px;
+    }
+
+    .heatmap-circle {
+      position: relative;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(17, 17, 17, 0.05); /* 기본 회색 동그라미 */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted-light);
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+    }
+
+    body.theme-dark .heatmap-circle {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--muted);
+    }
+
+    /* 오늘 날짜 표시 */
+    .heatmap-circle.is-today {
+      border: 1.5px dashed var(--ink-soft);
+      box-shadow: 0 0 8px rgba(17, 17, 17, 0.05);
+    }
+
+    body.theme-dark .heatmap-circle.is-today {
+      border-color: var(--ink);
+    }
+
+    /* 스티커 부착 시 */
+    .heatmap-circle.has-sticker {
+      background: transparent !important;
+      box-shadow: none !important;
+      border: none !important;
+    }
+
+    .heatmap-circle.has-sticker span {
+      display: none; /* 스티커가 붙으면 숫자는 숨김 */
+    }
+
+    /* 스티커 컨테이너 */
+    .sticker-wrapper {
+      position: absolute;
+      inset: -2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: sticker-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.3) forwards;
+      transform-origin: center center;
+    }
+
+    .sticker-svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 2px 4px rgba(17, 17, 17, 0.15));
+      transition: transform 0.2s ease;
+    }
+
+    body.theme-dark .sticker-svg {
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+    }
+
+    .sticker-wrapper:hover .sticker-svg {
+      transform: scale(1.18) rotate(6deg);
+    }
+
+    @keyframes sticker-pop {
+      0% {
+        transform: scale(0) rotate(-15deg);
+        opacity: 0;
+      }
+      70% {
+        transform: scale(1.12) rotate(10deg);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1) rotate(0deg);
+      }
+    }
+
+    /* ── 오늘 탭 첫 번째 행: 날짜와 아바타 가로 정렬 ── */
+    .today-date-avatar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+    }
+
+    .user-avatar-btn {
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.25);
+      overflow: hidden;
+      box-shadow: 0 0 0 2px var(--ink-soft);
+      outline: none;
+      flex-shrink: 0;
+    }
+
+    body.theme-dark .user-avatar-btn {
+      box-shadow: 0 0 0 2px var(--text-soft);
+    }
+
+    .user-avatar-btn:hover {
+      transform: scale(1.08) rotate(5deg);
+    }
+
+    .user-avatar-btn img,
+    .user-avatar-btn svg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .user-avatar-btn svg {
+      stroke: var(--ink);
+      padding: 4px;
+    }
+
+    body.theme-dark .user-avatar-btn svg {
+      stroke: var(--text-soft);
+    }
+
+    /* ── 오늘 탭 두 번째 행: 주간 히트맵 스티커 판 ── */
+    .today-heatmap-row {
+      width: 100%;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1.5px dashed var(--sketch-line-soft);
+      box-sizing: border-box;
+    }
+
+    /* ── 설정 탭 내 프로필 변경 카드 UI ── */
+    .profile-settings-row {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: var(--space-2) 0 var(--space-3);
+      border-bottom: 1.5px dashed var(--sketch-line-soft);
+      margin-bottom: 24px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .profile-avatar-container {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      box-shadow: 0 0 0 2px.5 var(--ink);
+      cursor: pointer;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+    }
+
+    body.theme-dark .profile-avatar-container {
+      box-shadow: 0 0 0 2px.5 var(--text-soft);
+    }
+
+    .profile-avatar-container:hover {
+      transform: scale(1.06);
+    }
+
+    .profile-avatar-container img,
+    .profile-avatar-container svg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-avatar-container svg {
+      stroke: var(--ink);
+      padding: 8px;
+    }
+
+    body.theme-dark .profile-avatar-container svg {
+      stroke: var(--text-soft);
+    }
+
+    .profile-avatar-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(17, 17, 17, 0.45);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .profile-avatar-container:hover .profile-avatar-overlay {
+      opacity: 1;
+    }
+
+    .profile-nickname-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 80%;
+      max-width: 280px;
+    }
+
+    .profile-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      text-align: left;
+    }
+
+    .profile-nickname-input {
+      width: 100%;
+      min-height: 38px;
+      padding: 0 var(--space-2);
+      border: 1.4px solid var(--sketch-line);
+      border-radius: 14px 10px 15px 11px / 11px 14px 10px 13px;
+      background: transparent;
+      color: var(--text);
+      font-family: var(--font-hand);
+      font-size: 17px;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .profile-nickname-input:focus {
+      border-color: var(--ink);
+    }
+
+    .profile-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .profile-save-btn {
+      min-height: 34px;
+      padding: 0 16px;
+      border: 1.4px solid var(--ink);
+      border-radius: 999px 880px 940px 910px / 760px 980px 800px 930px;
+      background: var(--ink);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      transition: transform 0.2s ease;
+      cursor: pointer;
+    }
+
+    .profile-save-btn:hover {
+      transform: translateY(-1px);
+      background: var(--accent-hover);
+    }
+
+    /* 모바일 미디어 쿼리 오프셋 보완 */
+    @media (max-width: 500px) {
+      .today-date-avatar-row {
+        margin-bottom: 12px;
+      }
+
+      .today-heatmap-row {
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+      }
+
+      .weekly-heatmap {
+        width: 100%;
+        justify-content: space-between;
+        gap: 0;
+      }
+    }
+
+    /* Phase 3: 모바일 미디어 쿼리 */
+    @media (max-width: 540px) {
+      :root {
+        --page-gutter: 28px;
+      }
+
+      .app {
+        padding: 88px var(--page-gutter) 126px;
+        border-inline: 0;
+      }
+
+      .app[data-view="recording"],
+      .app[data-view="review"] {
+        padding-top: 36px;
+        padding-bottom: 36px;
+      }
+
+      .app::before {
+        left: 30px;
+        right: 30px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: var(--space-2);
+      }
+
+      .status-pill {
+        width: auto;
+        justify-content: center;
+      }
+
+      .calendar-controls {
+        align-items: center;
+        flex-direction: row;
+        gap: 8px;
+      }
+
+      .calendar-actions {
+        width: auto;
+        flex: 0 0 auto;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+
+      .period-label-styled {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+
+
+
+
+      .day-entry-title {
+        font-size: 9px;
+      }
+
+      .period-label-styled {
+        font-size: 24px;
+      }
+
+      .app[data-view="recording"] .live-card {
+        min-height: calc(100vh - 96px);
+        padding-inline: var(--space-1);
+      }
+
+      .app[data-view="recording"] .transcript-box {
+        min-height: 210px;
+        font-size: 22px;
+      }
+
+
+      .mic-button {
+        width: var(--bottom-cta-height);
+        height: var(--bottom-cta-height);
+      }
+
+      .nav-item {
+        width: 100%;
+        height: 100%;
+      }
+
+      .nav-item span {
+        display: block;
+      }
+
+      /* safe area 지원 (iPhone notch 등) */
+      .bottom-nav {
+        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100% - 32px);
+        max-width: calc(var(--app-width) - 32px);
+        height: 68px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app" data-view="today">
+    <header class="topbar">
+      <div class="date-strip" id="dateStrip"></div>
+    </header>
+    <div class="section-label" id="sectionLabel">오늘</div>
+
+    <section class="card live-card" aria-labelledby="liveTitle">
+      <button class="live-card-close-button" id="liveCardCloseButton" type="button" aria-label="기록 취소">×</button>
+      
+      <!-- Date header to show which date is being recorded for -->
+      <div class="recording-date-badge" id="recordingDateBadge"></div>
+
+      <div class="card-header">
+        <h2 class="card-title" id="liveTitle">recording</h2>
+        <div class="recording-meta-row">
+          <div class="recording-state" id="recordingState">
+            <span class="recording-state-dot"></span>
+            <span id="recordingStateText">기록 중</span>
+          </div>
+          <span class="timer" id="timer">00:00</span>
+        </div>
+        <p class="recording-subtitle">지금의 생각을 남겨보세요.</p>
+      </div>
+      <div class="transcript-box empty" id="transcriptBox">기록 버튼을 누르면 음성 기록과 텍스트 변환이 함께 시작됩니다.</div>
+      <div class="recording-actions">
+        <button class="recording-pause-button" id="recordingPauseButton" type="button">잠시 멈추기</button>
+        <button class="recording-stop-button" id="recordingStopButton" type="button">기록 마치기</button>
+      </div>
+      <div class="notice" id="speechNotice">이 브라우저에서는 음성 텍스트 변환이 지원되지 않습니다. 음성 기록만 작동합니다.</div>
+      <div class="notice" id="micNotice">마이크 권한이 필요합니다. 브라우저에서 권한을 허용한 뒤 다시 시도해 주세요.</div>
+    </section>
+
+    <section class="card review-card" aria-label="기록 저장">
+      <div class="save-draft-panel paper-lines" id="saveDraftPanel" hidden>
+        <!-- Top bar with date and length -->
+        <div class="review-notebook-header">
+          <div class="review-notebook-date" id="reviewDateStrip">오늘의 기록</div>
+          <div class="review-notebook-timer">
+            <span class="review-timer-icon">⏱</span>
+            <span class="timer" id="reviewTimer">00:00</span>
+          </div>
+        </div>
+
+        <!-- Title of the diary entry, styled like a line in the notebook -->
+        <div class="review-title-container">
+          <input class="save-draft-input" id="draftTitleInput" type="text" autocomplete="off" placeholder="제목" />
+        </div>
+
+        <!-- Body text area that aligns with notebook lines -->
+        <div class="review-textarea-container">
+          <textarea class="save-draft-textarea paper-lines" id="draftTranscriptInput" placeholder="오늘 어떤 생각이 떠올랐나요?"></textarea>
+        </div>
+
+        <!-- Emotion-filled actions at the bottom -->
+        <div class="save-draft-actions">
+          <button class="cancel-draft-button" id="cancelDraftButton" type="button">지우기</button>
+          <button class="save-draft-button" id="saveDraftButton" type="button">기록 저장하기</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card settings-card" aria-label="설정">
+      <div class="settings-list">
+        <div class="profile-settings-row">
+          <div class="profile-avatar-container" id="profileAvatarContainer" title="프로필 사진 변경">
+            <div id="profileAvatarPreview" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <div class="profile-avatar-overlay">사진 변경</div>
+          </div>
+          <input type="file" id="profileAvatarInput" accept="image/*" style="display:none;" />
+          <div class="profile-nickname-input-group">
+            <span class="profile-label">닉네임</span>
+            <input type="text" class="profile-nickname-input" id="profileNicknameInput" placeholder="이름을 입력해주세요" autocomplete="off" maxlength="10" />
+          </div>
+          <div class="profile-actions">
+            <button class="profile-save-btn" id="profileSaveBtn" type="button">프로필 저장</button>
+          </div>
+        </div>
+        <div class="settings-row font-settings-row">
+          <div class="settings-label">글씨체</div>
+          <div class="settings-control">
+            <div class="cst-select-wrap" id="fontSelectWrap">
+              <button type="button" class="cst-select-btn" id="fontSelectBtn" aria-haspopup="listbox" aria-expanded="false">
+                <span class="cst-select-label" id="fontSelectLabel">글씨체 선택</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;flex-shrink:0;"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="settings-row theme-settings-row">
+          <div class="settings-label">배경색</div>
+          <div class="settings-control">
+            <div class="cst-select-wrap" id="themeSelectWrap">
+              <button type="button" class="cst-select-btn" id="themeSelectBtn" aria-haspopup="listbox" aria-expanded="false">
+                <span class="cst-select-label" id="themeSelectLabel">폰 선택</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;flex-shrink:0;"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="settings-row sticker-settings-row">
+          <div class="settings-label">스티커</div>
+          <div class="settings-control">
+            <div class="cst-select-wrap" id="stickerSelectWrap">
+              <button type="button" class="cst-select-btn" id="stickerSelectBtn" aria-haspopup="listbox" aria-expanded="false">
+                <span class="cst-select-label" id="stickerSelectLabel">스티커 선택</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;flex-shrink:0;"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="settings-row storage-settings-row">
+          <div class="settings-label">저장</div>
+          <div class="file-actions">
+            <button class="file-save-button" id="exportFileButton" type="button">저장</button>
+            <button class="file-load-button" id="importFileButton" type="button">불러오기</button>
+          </div>
+          <p class="file-status" id="fileStatus">텍스트 기록을 이 기기에 JSON 파일로 백업할 수 있습니다.</p>
+          <input id="importFileInput" type="file" accept="application/json,.json" hidden />
+        </div>
+      </div>
+    </section>
+
+    <!-- Today view records list (only shown in today view) -->
+    <section class="card today-records-card" aria-label="오늘의 기록">
+      <div class="records-list" id="todayRecordsList"></div>
+    </section>
+
+    <section class="card calendar-card" aria-label="캘린더">
+      <div class="calendar-controls">
+        <!-- Month/Year Picker: custom popup replaces native select -->
+        <div class="period-selector-container" id="periodSelectorContainer">
+          <button type="button" class="period-picker-btn" id="periodPickerBtn" aria-haspopup="dialog" aria-expanded="false">
+            <span id="periodLabelText"></span>
+            <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;margin-left:4px;display:inline-block;vertical-align:middle;opacity:0.65;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+        </div>
+        <div class="calendar-actions">
+          <div class="calendar-view-dropdown" id="calendarViewDropdown">
+            <button id="viewToggleButton" class="view-toggle-btn" type="button" aria-haspopup="listbox" aria-expanded="false">
+              <span id="viewToggleLabel">월간 보기</span>
+              <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;margin-left:4px;display:inline-block;vertical-align:middle;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div id="viewDropdownMenu" class="view-dropdown-menu" hidden>
+              <button id="optMonthView" class="dropdown-opt active" type="button">월간 보기</button>
+              <button id="optListView" class="dropdown-opt" type="button">목록 보기</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="weekdays" aria-hidden="true">
+        <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+
+      <!-- Phase 2: 리스트형 보기 -->
+      <div class="list-view" id="calendarListView"></div>
+
+      <!-- Inline diary detail — expands below grid when a date is clicked -->
+      <div class="diary-detail-panel" id="diaryDetailPanel">
+        <div class="diary-detail-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1.5px dashed var(--sketch-line-soft); padding-bottom: 12px;">
+          <div class="diary-detail-date" style="display: flex; align-items: center; gap: 8px; font-size: 19px; color: var(--ink); margin-bottom: 0; border: none; padding: 0;">
+            <span id="diaryDetailDateText"></span>
+          </div>
+        </div>
+        <div class="records-list" id="recordsList"></div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <nav class="bottom-nav" aria-label="하단 내비게이션">
+    <button class="nav-item active" type="button" id="todayButton">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      <span>오늘</span>
+    </button>
+    <button class="nav-item" type="button" id="calendarButton">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+        <line x1="16" x2="16" y1="2" y2="6"/>
+        <line x1="8" x2="8" y1="2" y2="6"/>
+        <line x1="3" x2="21" y1="10" y2="10"/>
+      </svg>
+      <span>기록</span>
+    </button>
+    <button class="nav-item" type="button" id="settingsButton">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+      <span>설정</span>
+    </button>
+    <button class="nav-item" type="button" id="statsButton" style="display:none">
+      <span>분석</span>
+    </button>
+  </nav>
+
+  <div class="mic-floating-container">
+    <button class="mic-button" id="micButton" type="button" aria-label="기록하기">
+      <svg class="mic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;display:block;">
+        <!-- Mic head: cute chubby capsule with slight organic asymmetry -->
+        <rect x="9" y="3.5" width="6" height="9" rx="3" fill="none" stroke="currentColor" stroke-width="2.6" />
+        <!-- Cute smile-like stand wrap -->
+        <path d="M5.5 10 C 5.5 15, 18.5 15, 18.5 10" fill="none" stroke="currentColor" stroke-width="2.6" />
+        <!-- Stand bottom stick -->
+        <path d="M12 14 L12 18.5" stroke="currentColor" stroke-width="2.6" />
+        <!-- Stand base plate: cute hand-drawn curved plate -->
+        <path d="M8.5 18.5 Q 12 20.5 15.5 18.5" stroke="currentColor" stroke-width="2.6" />
+      </svg>
+      <span class="mic-label" id="micLabel">기록</span>
+    </button>
+  </div>
+
+  <div class="edit-panel" id="editPanel" hidden>
+    <div class="edit-paper" role="dialog" aria-modal="true" aria-labelledby="editPanelTitle">
+      <h2 class="edit-panel-title" id="editPanelTitle">기록 수정</h2>
+      <input class="record-title-input" id="editTitleInput" type="text" autocomplete="off" aria-label="수정할 제목" />
+      <textarea class="record-textarea paper-lines" id="editTranscriptInput" aria-label="수정할 내용"></textarea>
+      <div class="edit-panel-actions">
+        <button class="edit-delete-button" id="editDeleteButton" type="button">삭제</button>
+        <button class="edit-cancel-button" id="editCancelButton" type="button">취소</button>
+        <button class="edit-save-button" id="editSaveButton" type="button">저장</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pre-recording target date confirmation popup -->
+  <div class="custom-modal" id="confirmRecordModal" hidden>
+    <div class="custom-modal-content card" role="dialog" aria-modal="true" aria-labelledby="confirmRecordTitle">
+      <div class="custom-modal-header">
+        <h3 id="confirmRecordTitle">녹음 시작</h3>
+      </div>
+      <div class="custom-modal-body">
+        <p><strong id="confirmRecordDateText">0000년 00월 00일</strong>에 대한<br>녹음을 시작합니다.</p>
+      </div>
+      <div class="custom-modal-actions">
+        <button class="modal-btn-cancel" id="confirmRecordCancelBtn" type="button">취소</button>
+        <button class="modal-btn-start" id="confirmRecordStartBtn" type="button">시작</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    const DB_NAME = "voice-journal-db";
+    const DB_VERSION = 1;
+    const STORE_NAME = "records";
+    const DEFAULT_RECORD_TITLE = "기록";
+    const FONT_STORAGE_KEY = "speak-your-insight-font";
+    const STICKER_STORAGE_KEY = "speak-your-insight-sticker";
+    const AVATAR_STORAGE_KEY = "speak-your-insight-avatar";
+    const PROFILE_NICKNAME_KEY = "speak-your-insight-nickname";
+    const NICKNAME_STORAGE_PREFIX = "speak-your-insight-nickname:";
+    const AUTH_PENDING_KEY = "speak-your-insight-auth-pending";
+    const PREVIEW_MODE = new URLSearchParams(window.location.search).get("preview");
+    const IS_PREVIEW_MODE = Boolean(PREVIEW_MODE);
+    const IS_FILE_URL = window.location.protocol === "file:";
+    const IS_SECURE_APP_CONTEXT = window.isSecureContext || window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+    const FONT_OPTIONS = {
+      pretendard: {
+        label: "프리텐다드",
+        family: "Pretendard",
+        css: '"Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+      },
+      myoeunddobak: {
+        label: "그리운 묘은또박체",
+        family: "Griun Myoeunddobak",
+        source: "./fonts/Griun_Myoeunddobak-Rg.ttf",
+        css: '"Griun Myoeunddobak", "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+      },
+      polHumanrights: {
+        label: "그리운 경찰인권체",
+        family: "Griun PolHumanrights",
+        source: "./fonts/Griun_PolHumanrights-Rg.ttf",
+        css: '"Griun PolHumanrights", "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+      },
+      yoonDaeHan: {
+        label: "윤초록우산어린이 대한체",
+        family: "Yoon Childfundkorea DaeHan",
+        source: "./fonts/YoonChildfundkoreaDaeHan.ttf",
+        css: '"Yoon Childfundkorea DaeHan", "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+      },
+      yoonManSeh: {
+        label: "윤초록우산어린이 만세체",
+        family: "Yoon Childfundkorea ManSeh",
+        source: "./fonts/YoonChildfundkoreaManSeh.ttf",
+        css: '"Yoon Childfundkorea ManSeh", "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+      },
+      gaegu: {
+        label: "구글 개구체",
+        family: "Gaegu",
+        css: '"Gaegu", "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+      }
+    };
+    const SYNC_LOCAL_ONLY = "local";
+    const SYNC_PENDING = "pending";
+    const SYNC_SYNCED = "synced";
+    const SYNC_ERROR = "error";
+    const SPEECH_HELP_DELAY_MS = 3000;
+    const SPEECH_RESTART_DELAY_MS = 120;
+
+    const $ = (selector) => document.querySelector(selector);
+    const app = $(".app");
+    const sectionLabel = $("#sectionLabel");
+    const calendarGrid = $("#calendarGrid");
+    const periodLabel = $("#periodLabel");
+    const recordsList = $("#recordsList");
+    const todayRecordsList = $("#todayRecordsList");
+    const recordsMeta = $("#recordsMeta");
+    const recordsTitle = $("#recordsTitle");
+    const transcriptBox = $("#transcriptBox");
+    const speechNotice = $("#speechNotice");
+    const micNotice = $("#micNotice");
+    const timer = $("#timer");
+    const statusPill = $("#statusPill");
+    const statusText = $("#statusText");
+    const micButton = $("#micButton");
+    const micLabel = $("#micLabel");
+    const recordingPauseButton = $("#recordingPauseButton");
+    const recordingStopButton = $("#recordingStopButton");
+    const recordingState = $("#recordingState");
+    const recordingStateText = $("#recordingStateText");
+    const saveDraftPanel = $("#saveDraftPanel");
+    const draftTitleInput = $("#draftTitleInput");
+    const draftTranscriptInput = $("#draftTranscriptInput");
+    const reviewTimer = $("#reviewTimer");
+    const reviewTranscriptPreview = $("#reviewTranscriptPreview");
+    const saveDraftButton = $("#saveDraftButton");
+    const cancelDraftButton = $("#cancelDraftButton");
+    const liveCardCloseButton = $("#liveCardCloseButton");
+    const editPanel = $("#editPanel");
+    const editTitleInput = $("#editTitleInput");
+    const editTranscriptInput = $("#editTranscriptInput");
+    const editDeleteButton = $("#editDeleteButton");
+    const editCancelButton = $("#editCancelButton");
+    const editSaveButton = $("#editSaveButton");
+    const authButton = $("#authButton");
+    const authUser = $("#authUser");
+    const nicknamePanel = $("#nicknamePanel");
+    const nicknameInput = $("#nicknameInput");
+    const nicknameSaveButton = $("#nicknameSaveButton");
+    const exportFileButton = $("#exportFileButton");
+    const importFileButton = $("#importFileButton");
+    const importFileInput = $("#importFileInput");
+    const fileStatus = $("#fileStatus");
+    const profileAvatarContainer = $("#profileAvatarContainer");
+    const confirmRecordModal = $("#confirmRecordModal");
+    const confirmRecordDateText = $("#confirmRecordDateText");
+    const confirmRecordCancelBtn = $("#confirmRecordCancelBtn");
+    const confirmRecordStartBtn = $("#confirmRecordStartBtn");
+    const profileAvatarPreview = $("#profileAvatarPreview");
+    const profileAvatarInput = $("#profileAvatarInput");
+    const profileNicknameInput = $("#profileNicknameInput");
+    const profileSaveBtn = $("#profileSaveBtn");
+    const dateStrip = $("#dateStrip");
+    const todayButton = $("#todayButton");
+    const calendarButton = $("#calendarButton");
+    const settingsButton = $("#settingsButton");
+    const statsButton = $("#statsButton");
+    const diaryDetailPanel = $("#diaryDetailPanel");
+    const diaryDetailDateText = $("#diaryDetailDateText");
+    const diaryDetailClose = $("#diaryDetailClose");
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const speechSupported = Boolean(SpeechRecognition);
+
+    let db;
+    let records = [];
+    let pendingAvatarDataUrl = "";
+    let selectedDate = startOfDay(new Date());
+    let viewDate = startOfDay(new Date());
+    let calendarMode = "month";
+    let currentView = "today";
+    let previousView = "today";
+    let mediaRecorder;
+    let activeStream;
+    let isRecording = false;
+    let isPaused = false;
+    let recordingStart = 0;
+    let pausedAt = 0;
+    let pausedDuration = 0;
+    let timerId;
+    let recognition;
+    let recognitionRestartTimer;
+    let speechHelpTimer;
+    let finalTranscript = "";
+    let interimTranscript = "";
+    let recognitionBaseTranscript = "";
+    let textOnlyRecording = false;
+    let pendingRecording = null;
+    let recordingTargetDate = startOfDay(new Date());
+    let isSavingPendingRecording = false;
+    let recordingStopHandled = false;
+    let recordingStopFallbackTimer = null;
+    let editingRecordId = null;
+    let currentNickname = "";
+    const loadedFontKeys = new Set();
+
+    const cloudSync = {
+      isConfigured: false,
+      currentUser: null,
+      async upsertTextRecord(record) {
+        if (!this.currentUser) return { skipped: true, reason: "not-signed-in" };
+
+        await setDoc(
+          doc(firestore, "users", this.currentUser.uid, "records", record.id),
+          {
+            ...record,
+            userId: this.currentUser.uid
+          },
+          { merge: true }
+        );
+
+        return { synced: true };
+      },
+      async deleteTextRecord(id) {
+        if (!this.currentUser) return { skipped: true, reason: "not-signed-in" };
+
+        await deleteDoc(doc(firestore, "users", this.currentUser.uid, "records", id));
+        return { deleted: true };
+      },
+      async fetchTextRecords() {
+        if (!this.currentUser) return [];
+
+        const snapshot = await getDocs(query(
+          collection(firestore, "users", this.currentUser.uid, "records"),
+          orderBy("createdAt", "desc")
+        ));
+
+        return snapshot.docs.map((snapshotDoc) => ({
+          id: snapshotDoc.id,
+          ...snapshotDoc.data()
+        }));
+      },
+      async fetchProfile() {
+        if (!this.currentUser) return null;
+
+        const snapshot = await getDoc(doc(firestore, "users", this.currentUser.uid, "profile", "settings"));
+        return snapshot.exists() ? snapshot.data() : null;
+      },
+      async saveProfile(profile) {
+        if (!this.currentUser) return { skipped: true, reason: "not-signed-in" };
+
+        await setDoc(
+          doc(firestore, "users", this.currentUser.uid, "profile", "settings"),
+          {
+            ...profile,
+            updatedAt: Date.now()
+          },
+          { merge: true }
+        );
+
+        return { saved: true };
+      }
+    };
+
+    function openDatabase() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+        request.onupgradeneeded = () => {
+          const database = request.result;
+          if (!database.objectStoreNames.contains(STORE_NAME)) {
+            const store = database.createObjectStore(STORE_NAME, { keyPath: "id" });
+            store.createIndex("date", "date", { unique: false });
+            store.createIndex("createdAt", "createdAt", { unique: false });
+          }
+        };
+
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function getAllRecords() {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, "readonly");
+        const request = tx.objectStore(STORE_NAME).getAll();
+        request.onsuccess = () => resolve((request.result || []).map(normalizeRecord));
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function saveRecord(record) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, "readwrite");
+        const request = tx.objectStore(STORE_NAME).put(normalizeRecord(record));
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function deleteRecord(id) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, "readwrite");
+        const request = tx.objectStore(STORE_NAME).delete(id);
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    async function saveRecordAndSync(record) {
+      if (IS_PREVIEW_MODE) {
+        const previewRecord = normalizeRecord({
+          ...record,
+          updatedAt: Date.now(),
+          syncStatus: SYNC_LOCAL_ONLY,
+          lastSyncError: ""
+        });
+        records = records.map((item) => item.id === previewRecord.id ? previewRecord : item);
+        if (!records.some((item) => item.id === previewRecord.id)) records.unshift(previewRecord);
+        renderAll();
+        return;
+      }
+
+      const status = cloudSync.isConfigured && cloudSync.currentUser ? SYNC_PENDING : SYNC_LOCAL_ONLY;
+      const localRecord = normalizeRecord({
+        ...record,
+        updatedAt: Date.now(),
+        syncStatus: status,
+        lastSyncError: ""
+      });
+
+      await saveRecord(localRecord);
+      await refreshRecords();
+      syncRecordToCloud(localRecord).catch((error) => {
+        console.warn("Background cloud sync failed", error);
+      });
+    }
+
+    async function deleteRecordEverywhere(record) {
+      if (IS_PREVIEW_MODE) {
+        records = records.filter((item) => item.id !== record.id);
+        renderAll();
+        return;
+      }
+
+      await deleteRecord(record.id);
+
+      if (cloudSync.isConfigured && cloudSync.currentUser) {
+        try {
+          await cloudSync.deleteTextRecord(record.id);
+        } catch (error) {
+          console.warn("Cloud delete failed", error);
+        }
+      }
+
+      await refreshRecords();
+    }
+
+    async function syncRecordToCloud(record) {
+      if (!cloudSync.isConfigured || !cloudSync.currentUser) return;
+
+      try {
+        await cloudSync.upsertTextRecord(toCloudTextRecord(record));
+        await saveRecord({
+          ...record,
+          syncStatus: SYNC_SYNCED,
+          lastSyncError: ""
+        });
+        await refreshRecords();
+      } catch (error) {
+        await saveRecord({
+          ...record,
+          syncStatus: SYNC_ERROR,
+          lastSyncError: error.message || "Cloud sync failed"
+        });
+        await refreshRecords();
+      }
+    }
+
+    async function syncPendingRecords() {
+      if (!cloudSync.isConfigured || !cloudSync.currentUser) return;
+
+      const pendingRecords = (await getAllRecords()).filter((record) => (
+        record.syncStatus === SYNC_PENDING || record.syncStatus === SYNC_ERROR || record.syncStatus === SYNC_LOCAL_ONLY
+      ));
+
+      for (const record of pendingRecords) {
+        await syncRecordToCloud({
+          ...record,
+          syncStatus: SYNC_PENDING
+        });
+      }
+    }
+
+    async function mergeCloudTextRecords() {
+      if (!cloudSync.isConfigured || !cloudSync.currentUser) return;
+
+      const cloudRecords = await cloudSync.fetchTextRecords();
+      const localRecords = await getAllRecords();
+      const localById = new Map(localRecords.map((record) => [record.id, record]));
+
+      for (const cloudRecord of cloudRecords) {
+        const localRecord = localById.get(cloudRecord.id);
+        if (localRecord && localRecord.updatedAt > cloudRecord.updatedAt) continue;
+
+        await saveRecord({
+          ...localRecord,
+          ...cloudRecord,
+          audioBlob: null,
+          hasLocalAudio: false,
+          syncStatus: SYNC_SYNCED,
+          lastSyncError: ""
+        });
+      }
+
+      await refreshRecords();
+    }
+
+    function startOfDay(date) {
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    }
+
+    function toDateKey(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function dateKeyToDate(dateKey) {
+      const [year, month, day] = String(dateKey || "").split("-").map(Number);
+      if (!year || !month || !day) return startOfDay(new Date());
+      return startOfDay(new Date(year, month - 1, day));
+    }
+
+    function formatKoreanDate(date) {
+      return new Intl.DateTimeFormat("ko-KR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        weekday: "short"
+      }).format(date);
+    }
+
+    function formatMonthDayWeekday(date) {
+      return new Intl.DateTimeFormat("ko-KR", {
+        month: "long",
+        day: "numeric",
+        weekday: "short"
+      }).format(date);
+    }
+
+    function formatCommaDate(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const weekday = new Intl.DateTimeFormat("ko-KR", { weekday: "short" }).format(date);
+      return `${year}, ${month}, ${day}, ${weekday}`;
+    }
+
+    function createCozyDateElement(dateObj) {
+      const container = document.createElement("div");
+      container.className = "cozy-today-date";
+
+      const year = dateObj.getFullYear();
+      const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+      const day = String(dateObj.getDate()).padStart(2, "0");
+      const weekdayShort = new Intl.DateTimeFormat("ko-KR", { weekday: "short" }).format(dateObj);
+      const weekdayLong = new Intl.DateTimeFormat("ko-KR", { weekday: "long" }).format(dateObj);
+
+      const monthEnglish = new Intl.DateTimeFormat("en-US", { month: "long" }).format(dateObj);
+      const weekdayEnglish = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(dateObj);
+
+      const topEl = document.createElement("div");
+      topEl.className = "cozy-date-top";
+      topEl.textContent = `${monthEnglish}, ${weekdayEnglish}`;
+      container.appendChild(topEl);
+
+      const mainEl = document.createElement("div");
+      mainEl.className = "cozy-date-main";
+
+      const dayEl = document.createElement("span");
+      dayEl.className = "cozy-date-day";
+      dayEl.textContent = Number(day);
+
+      mainEl.append(dayEl);
+      container.appendChild(mainEl);
+
+      return container;
+    }
+
+    function formatHeaderDate(date) {
+      const year = String(date.getFullYear()).slice(-2);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const weekday = new Intl.DateTimeFormat("ko-KR", { weekday: "long" }).format(date);
+      return `${year}년 ${month}월 ${day}일 ${weekday}`;
+    }
+
+    function getStickerSvg(dateKey) {
+      const STICKERS = [
+        // 0: 네잎클로버 (그린)
+        `<div class="sticker-wrapper" title="행운의 네잎클로버">
+          <svg viewBox="0 0 40 40" class="sticker-svg clover-sticker">
+            <g fill="#A5D6A7" stroke="#171717" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+              <path d="M 20 20 C 16 14 13 8 20 8 C 27 8 24 14 20 20 Z" />
+              <path d="M 20 20 C 26 16 32 13 32 20 C 32 27 26 24 20 20 Z" />
+              <path d="M 20 20 C 24 26 27 32 20 32 C 13 32 16 26 20 20 Z" />
+              <path d="M 20 20 C 14 24 8 27 8 20 C 8 13 14 16 20 20 Z" />
+            </g>
+            <path d="M 20 20 Q 17 28 13 31" fill="none" stroke="#171717" stroke-width="2.5" stroke-linecap="round" />
+            <circle cx="20" cy="20" r="1.5" fill="#171717" />
+          </svg>
+        </div>`,
+        // 1: 스마일 (옐로우)
+        `<div class="sticker-wrapper" title="행복한 스마일">
+          <svg viewBox="0 0 40 40" class="sticker-svg smile-sticker">
+            <circle cx="20" cy="20" r="16" fill="#FFE57F" stroke="#171717" stroke-width="2.5" />
+            <circle cx="15" cy="17" r="2.2" fill="#171717" />
+            <circle cx="25" cy="17" r="2.2" fill="#171717" />
+            <path d="M 14 22 Q 20 28 26 22" fill="none" stroke="#171717" stroke-width="2.5" stroke-linecap="round" />
+          </svg>
+        </div>`,
+        // 2: 하트 (레드)
+        `<div class="sticker-wrapper" title="따뜻한 하트">
+          <svg viewBox="0 0 40 40" class="sticker-svg heart-sticker">
+            <path d="M 20 33 C 20 33 8 23 8 15 C 8 10 12 7.5 17 8.5 C 20 9.5 20 12 20 12 C 20 12 20 9.5 23 8.5 C 28 7.5 32 10 32 15 C 32 23 20 33 20 33 Z" 
+                  fill="#FF8A80" stroke="#171717" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
+            <path d="M 16 16.5 L 16.5 16.5 M 23.5 16.5 L 24 16.5" stroke="#171717" stroke-width="2" stroke-linecap="round" fill="none" />
+            <path d="M 17.5 20.5 Q 20 23.5 22.5 20.5" fill="none" stroke="#171717" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </div>`
+      ];
+
+      const savedStickerConfig = localStorage.getItem("speak-your-insight-sticker") || "mix";
+      let stickerIndex = 0;
+      if (savedStickerConfig === "clover") {
+        stickerIndex = 0;
+      } else if (savedStickerConfig === "smile") {
+        stickerIndex = 1;
+      } else if (savedStickerConfig === "heart") {
+        stickerIndex = 2;
+      } else {
+        stickerIndex = Math.abs(hashCode(dateKey)) % STICKERS.length;
+      }
+      return STICKERS[stickerIndex];
+    }
+
+    function createWeeklyHeatmapElement() {
+      const container = document.createElement("div");
+      container.className = "weekly-heatmap";
+
+      const todayObj = new Date();
+      const currentDay = todayObj.getDay(); // 0: 일요일, 1: 월요일, ...
+      const distanceToMonday = currentDay === 0 ? -6 : 1 - currentDay;
+      const monday = new Date(todayObj);
+      monday.setDate(todayObj.getDate() + distanceToMonday);
+      monday.setHours(0, 0, 0, 0);
+
+      const weekdayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+      for (let i = 0; i < 7; i++) {
+        const date = new Date(monday);
+        date.setDate(monday.getDate() + i);
+
+        const dateKey = toDateKey(date);
+        const isToday = dateKey === toDateKey(new Date());
+        
+        // 데이터 캐시에서 해당 날짜 일기 존재 확인
+        const dayRecords = records.filter(r => r.date === dateKey);
+        const hasDiary = dayRecords.length > 0;
+
+        const dayCol = document.createElement("div");
+        dayCol.className = "heatmap-day";
+
+        const label = document.createElement("span");
+        label.className = "heatmap-label";
+        label.textContent = weekdayLabels[i];
+        dayCol.appendChild(label);
+
+        const circle = document.createElement("div");
+        circle.className = "heatmap-circle";
+        if (isToday) circle.classList.add("is-today");
+
+        if (hasDiary) {
+          circle.classList.add("has-sticker");
+          circle.innerHTML = getStickerSvg(dateKey);
+        } else {
+          const numSpan = document.createElement("span");
+          numSpan.textContent = date.getDate();
+          circle.appendChild(numSpan);
+        }
+
+        // 요일 서클 클릭 시 해당 날짜의 일기를 오늘 탭에서 조회하고 쓸 수 있도록 날짜 변경
+        circle.addEventListener("click", (e) => {
+          e.stopPropagation();
+          selectedDate = startOfDay(date);
+          viewDate = selectedDate;
+          renderAll();
+        });
+
+        dayCol.appendChild(circle);
+        container.appendChild(dayCol);
+      }
+
+      return container;
+    }
+
+    function renderDateStrip() {
+      dateStrip.textContent = formatHeaderDate(new Date());
+    }
+
+    function setAppView(view, options = {}) {
+      const scrollBehavior = options.scrollBehavior || "smooth";
+      const oldView = currentView;
+      const targetView = ["today", "records", "recording", "review", "settings"].includes(view) ? view : "today";
+      
+      if (["today", "records", "settings"].includes(oldView) && targetView === "recording") {
+        previousView = oldView;
+      }
+      
+      currentView = targetView;
+      app.dataset.view = currentView;
+      document.body.dataset.view = currentView;
+      const sectionLabels = {
+        today: "오늘",
+        records: "기록",
+        recording: "기록 중",
+        review: "저장하기",
+        settings: "설정"
+      };
+      sectionLabel.textContent = sectionLabels[currentView] || "오늘";
+      todayButton.classList.toggle("active", currentView === "today");
+      calendarButton.classList.toggle("active", currentView === "records");
+      settingsButton.classList.toggle("active", currentView === "settings");
+
+      if (currentView === "today") {
+        selectedDate = startOfDay(new Date());
+        viewDate = selectedDate;
+        // Close diary detail panel when returning to today view
+        if (diaryDetailPanel) diaryDetailPanel.classList.remove("open");
+      }
+
+      renderAll();
+      window.scrollTo({ top: 0, behavior: scrollBehavior });
+    }
+
+    function formatTime(timestamp) {
+      return new Intl.DateTimeFormat("ko-KR", {
+        hour: "2-digit",
+        minute: "2-digit"
+      }).format(new Date(timestamp));
+    }
+
+    function getCircledNumber(num) {
+      const circledNumbers = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩", "⑪", "⑫", "⑬", "⑭", "⑮", "⑯", "⑰", "⑱", "⑲", "⑳"];
+      return circledNumbers[num - 1] || `(${num})`;
+    }
+
+    function createDefaultRecordTitle(date = new Date()) {
+      return "제목";
+    }
+
+    function isTimeDefaultRecordTitle(title) {
+      return /^(오전|오후)\s*\d{1,2}:\d{2}의 기록$/.test(title || "");
+    }
+
+    function getRecordDisplayTitle(record) {
+      const defaultTitle = createDefaultRecordTitle(new Date(record.createdAt || Date.now()));
+      return !record.title || isTimeDefaultRecordTitle(record.title) ? defaultTitle : record.title;
+    }
+
+    function loadPreviewRecords() {
+      if (PREVIEW_MODE !== "today-saved") return false;
+
+      const now = new Date();
+      const today = startOfDay(now);
+      const createdAt = now.getTime() - 6 * 60 * 1000;
+      selectedDate = today;
+      viewDate = today;
+      records = [
+        normalizeRecord({
+          id: "preview-today-saved",
+          title: "두근두근 제목 짓기",
+          date: toDateKey(today),
+          createdAt,
+          updatedAt: createdAt,
+          audioBlob: null,
+          transcript: "오늘은 어떤 일이 있었나요? 지금 떠오르는 생각들, 인사이트를 적어봐요!",
+          duration: 15,
+          hasLocalAudio: false,
+          syncStatus: SYNC_LOCAL_ONLY
+        })
+      ];
+      setStatus("미리보기", false);
+      setAppView("today", { scrollBehavior: "auto" });
+      return true;
+    }
+
+    function formatDuration(seconds) {
+      const total = Math.max(0, Math.round(seconds || 0));
+      const mins = String(Math.floor(total / 60)).padStart(2, "0");
+      const secs = String(total % 60).padStart(2, "0");
+      return `${mins}:${secs}`;
+    }
+
+    function createId() {
+      if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
+      return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    }
+
+    function normalizeRecord(record) {
+      const createdAt = record.createdAt || Date.now();
+      return {
+        id: record.id || createId(),
+        title: record.title || createDefaultRecordTitle(new Date(createdAt)) || DEFAULT_RECORD_TITLE,
+        date: record.date || toDateKey(new Date(createdAt)),
+        createdAt,
+        updatedAt: record.updatedAt || createdAt,
+        audioBlob: null,
+        transcript: record.transcript || "",
+        duration: record.duration || 0,
+        hasLocalAudio: false,
+        syncStatus: record.syncStatus || SYNC_LOCAL_ONLY,
+        lastSyncError: record.lastSyncError || ""
+      };
+    }
+
+    function toCloudTextRecord(record) {
+      const normalized = normalizeRecord(record);
+      return {
+        id: normalized.id,
+        date: normalized.date,
+        createdAt: normalized.createdAt,
+        updatedAt: normalized.updatedAt,
+        title: normalized.title,
+        transcript: normalized.transcript,
+        duration: normalized.duration
+      };
+    }
+
+    function getSyncLabel(status) {
+      return "";
+    }
+
+    function getSupportedAudioMimeType() {
+      if (!("MediaRecorder" in window) || !MediaRecorder.isTypeSupported) return "";
+
+      const candidates = [
+        "audio/webm;codecs=opus",
+        "audio/webm",
+        "audio/mp4;codecs=mp4a.40.2",
+        "audio/mp4",
+        "audio/aac"
+      ];
+
+      return candidates.find((type) => MediaRecorder.isTypeSupported(type)) || "";
+    }
+
+    function cleanupActiveStream() {
+      if (!activeStream) return;
+      activeStream.getTracks().forEach((track) => track.stop());
+      activeStream = null;
+    }
+
+    function showMicMessage(message, status = "기록 오류") {
+      micNotice.textContent = message;
+      micNotice.classList.add("visible");
+      setStatus(status, false);
+    }
+
+    function wait(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    function renderAll() {
+      renderCalendar();
+      renderRecords();
+    }
+
+    function buildRecordTitleMap() {
+      const map = {};
+      records
+        .slice()
+        .sort((a, b) => a.createdAt - b.createdAt)
+        .forEach((record) => {
+          if (!map[record.date]) map[record.date] = [];
+          map[record.date].push(getRecordDisplayTitle(record));
+        });
+      return map;
+    }
+
+
+
+    function updatePeriodLabelDisplay() {
+      const labelText = document.getElementById("periodLabelText");
+      if (labelText) {
+        labelText.textContent = `${viewDate.getFullYear()}년 ${viewDate.getMonth() + 1}월`;
+      }
+    }
+
+    function renderCalendar() {
+      const calendarCard = document.querySelector(".calendar-card");
+      const isListMode = calendarMode === "list";
+
+      // 리스트 모드 클래스 동기화
+      calendarCard.classList.toggle("list-mode", isListMode);
+
+      if (isListMode) {
+        updatePeriodLabelDisplay();
+        renderListView();
+        if (diaryDetailPanel) {
+          diaryDetailPanel.classList.remove("open");
+        }
+        return;
+      }
+
+      const recordTitleMap = buildRecordTitleMap();
+      const todayKey = toDateKey(new Date());
+      const selectedKey = toDateKey(selectedDate);
+      const days = getMonthDays(viewDate);
+
+      calendarGrid.innerHTML = "";
+
+      updatePeriodLabelDisplay();
+
+      days.forEach((date) => {
+        const dateKey = toDateKey(date);
+        const isMuted = date.getMonth() !== viewDate.getMonth();
+        const isToday = dateKey === todayKey;
+        const isSelected = dateKey === selectedKey;
+        const entryTitles = recordTitleMap[dateKey] || [];
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "day-cell";
+        button.setAttribute("aria-label", `${formatKoreanDate(date)} 선택`);
+
+        if (isMuted) button.classList.add("muted");
+        if (isToday) button.classList.add("today");
+        if (isSelected) button.classList.add("selected");
+
+        if (entryTitles.length && !isMuted) {
+          button.classList.add("has-sticker");
+        }
+
+        // 날짜 숫자는 스티커의 유무와 상관없이 언제나 렌더링하여 또렷하게 표시
+        const number = document.createElement("span");
+        number.className = "day-number";
+        number.textContent = date.getDate();
+        button.appendChild(number);
+
+        button.addEventListener("click", () => {
+          const wasSelected = isSelected && diaryDetailPanel.classList.contains("open");
+          // Deselect all cells
+          calendarGrid.querySelectorAll(".day-cell.selected").forEach((c) => c.classList.remove("selected"));
+
+          if (wasSelected) {
+            // Toggle off
+            diaryDetailPanel.classList.remove("open");
+            return;
+          }
+
+          button.classList.add("selected");
+          selectedDate = startOfDay(date);
+          // Update diary detail date label (3차 개편: 날짜는 비우고 renderRecords에서 첫 일기 뱃지+시간 주입)
+          diaryDetailDateText.innerHTML = "";
+          diaryDetailPanel.classList.add("open");
+          renderRecords();
+
+          // Smooth scroll to detail panel
+          setTimeout(() => {
+            diaryDetailPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          }, 80);
+        });
+
+        calendarGrid.appendChild(button);
+      });
+
+      // Sync diary detail panel with current state (3차 개편: 날짜는 비우고 renderRecords에서 주입)
+      if (currentView === "records" && diaryDetailPanel) {
+        diaryDetailDateText.innerHTML = "";
+        diaryDetailPanel.classList.add("open");
+      }
+    }
+
+    function hashCode(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      return hash;
+    }
+
+    function renderListView() {
+      const listViewEl = document.getElementById("calendarListView");
+      if (!listViewEl) return;
+      listViewEl.innerHTML = "";
+
+      const todayKey = toDateKey(new Date());
+      const year = viewDate.getFullYear();
+      const month = viewDate.getMonth();
+
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const recordMap = {};
+      records.forEach((r) => {
+        if (!recordMap[r.date]) recordMap[r.date] = [];
+        recordMap[r.date].push(r);
+      });
+
+      // 2. 날짜별 루프
+      for (let d = 1; d <= daysInMonth; d++) {
+        const date = new Date(year, month, d);
+        const dateKey = toDateKey(date);
+        const isToday = dateKey === todayKey;
+        const dayRecords = (recordMap[dateKey] || []).sort((a, b) => a.createdAt - b.createdAt);
+
+        // 기록이 없고 오늘이 아닌 날은 목록에서 생략
+        if (!dayRecords.length && !isToday) continue;
+
+        // 3. Row 제작
+        const row = document.createElement("div");
+        const isSun = date.getDay() === 0;
+        const isSat = date.getDay() === 6;
+        row.className = "list-day-row" + (isToday ? " is-today" : "") + (isSun ? " is-sunday" : "") + (isSat ? " is-saturday" : "");
+
+        // 4. 좌측 날짜 컬럼
+        const dateCol = document.createElement("div");
+        dateCol.className = "list-date-col";
+
+        const weekdayStr = new Intl.DateTimeFormat("en-US", { weekday: "short" }).format(date);
+        const weekdayEl = document.createElement("span");
+        weekdayEl.className = "list-weekday";
+        weekdayEl.textContent = weekdayStr;
+
+        const numEl = document.createElement("span");
+        numEl.className = "list-day-num";
+        numEl.textContent = d;
+
+        dateCol.append(weekdayEl, numEl);
+        row.appendChild(dateCol);
+
+        // 날짜 영역 클릭 시 아래 상세 보기 활성화
+        dateCol.addEventListener("click", (e) => {
+          e.stopPropagation();
+          triggerDetailView(date);
+        });
+
+        // 5. 우측 캡슐 컬럼
+        const capsuleCol = document.createElement("div");
+        capsuleCol.className = "list-capsule-col";
+
+        if (dayRecords.length) {
+          dayRecords.forEach((record, index) => {
+            const entry = document.createElement("div");
+            entry.className = "list-entry-capsule";
+
+            const timeStr = formatTime(record.createdAt);
+            const title = getRecordDisplayTitle(record);
+
+            // 5-1. 상단 헤더 영역 (시간 정보 및 세로 3점 아이콘)
+            const header = document.createElement("div");
+            header.className = "list-entry-header";
+
+            // 메타 그룹 (번호 동그라미 뱃지 + 시간 가로 정렬)
+            const metaGroup = document.createElement("div");
+            metaGroup.className = "list-entry-meta-group";
+            metaGroup.style.display = "flex";
+            metaGroup.style.alignItems = "center";
+            metaGroup.style.gap = "8px";
+
+            // 노랑 동그라미 일기 번호 뱃지
+            const checkBadge = document.createElement("div");
+            checkBadge.className = "diary-check-badge";
+            checkBadge.textContent = index + 1; // 일기 번호
+
+            const timeEl = document.createElement("span");
+            timeEl.className = "list-entry-time";
+            timeEl.textContent = timeStr;
+
+            metaGroup.append(checkBadge, timeEl);
+            header.appendChild(metaGroup);
+
+            // 세로 3점(⋮) 액션 버튼
+            const dotsBtn = document.createElement("button");
+            dotsBtn.type = "button";
+            dotsBtn.className = "list-entry-dots";
+            dotsBtn.setAttribute("aria-label", "기록 메뉴");
+            dotsBtn.innerHTML = `
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="5" r="1"/>
+                <circle cx="12" cy="12" r="1"/>
+                <circle cx="12" cy="19" r="1"/>
+              </svg>
+            `;
+            // 3점 메뉴 클릭 시 상세 토글 간섭을 차단하고 수정 팝업 오픈
+            dotsBtn.addEventListener("click", (e) => {
+              e.stopPropagation();
+              openEditPanel(record);
+            });
+            header.appendChild(dotsBtn);
+
+            entry.appendChild(header);
+
+            // 5-2. 하단 제목 영역 (큰 글씨의 제목)
+            const body = document.createElement("div");
+            body.className = "list-entry-body";
+
+            const titleEl = document.createElement("h3");
+            titleEl.className = "list-entry-title";
+            titleEl.textContent = title;
+            body.appendChild(titleEl);
+
+            entry.appendChild(body);
+
+            // 캡슐 클릭 시 상세 패널 오픈
+            entry.addEventListener("click", () => {
+              triggerDetailView(date);
+            });
+
+            capsuleCol.appendChild(entry);
+          });
+        } else {
+          // 오늘의 기록이 없을 때
+          const noRecord = document.createElement("div");
+          noRecord.className = "list-card-no-records";
+          noRecord.textContent = "아직 기록이 없어요";
+          
+          noRecord.addEventListener("click", () => {
+            triggerDetailView(date);
+          });
+          capsuleCol.appendChild(noRecord);
+        }
+
+        row.appendChild(capsuleCol);
+        listViewEl.appendChild(row);
+      }
+    }
+
+    // 상세 패널 유틸화
+    function triggerDetailView(date) {
+      selectedDate = startOfDay(date);
+      // 3차 개편: 날짜는 비우고 renderRecords에서 첫 일기 뱃지+시간 주입
+      diaryDetailDateText.innerHTML = "";
+      diaryDetailPanel.classList.add("open");
+      renderRecords();
+      setTimeout(() => {
+        diaryDetailPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }, 80);
+    }
+
+    function getMonthDays(date) {
+      const first = new Date(date.getFullYear(), date.getMonth(), 1);
+      const start = new Date(first);
+      start.setDate(first.getDate() - first.getDay());
+      return Array.from({ length: 42 }, (_, index) => {
+        const day = new Date(start);
+        day.setDate(start.getDate() + index);
+        return day;
+      });
+    }
+
+    function renderRecords() {
+      const dateKey = toDateKey(selectedDate);
+      const dayRecords = records
+        .filter((record) => record.date === dateKey)
+        .sort((a, b) => a.createdAt - b.createdAt);
+
+      if (currentView === "today") {
+        // ── Today view: render into todayRecordsList ──
+        todayRecordsList.innerHTML = "";
+        todayRecordsList.classList.toggle("has-records", Boolean(dayRecords.length));
+
+        // 1. 사용자 아바타 이미지 로드
+        const currentAvatar = localStorage.getItem(AVATAR_STORAGE_KEY) || "";
+
+        const avatarBtn = document.createElement("button");
+        avatarBtn.type = "button";
+        avatarBtn.className = "user-avatar-btn";
+        avatarBtn.title = "프로필 설정으로 이동";
+        
+        if (currentAvatar) {
+          avatarBtn.innerHTML = `<img src="${currentAvatar}" alt="프로필 아바타" />`;
+        } else {
+          avatarBtn.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          `;
+        }
+
+        // 아바타 클릭 시 설정 화면으로 이동
+        avatarBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          setAppView("settings");
+        });
+
+        // 2. 첫 번째 행: 날짜와 아바타 가로 정렬 배치
+        const dateAvatarRow = document.createElement("div");
+        dateAvatarRow.className = "today-date-avatar-row";
+        const dateEl = createCozyDateElement(selectedDate);
+        dateAvatarRow.append(dateEl, avatarBtn);
+
+        // 3. 두 번째 행: 주간 히트맵 스티커 판 배치
+        const heatmapRow = document.createElement("div");
+        heatmapRow.className = "today-heatmap-row";
+        const heatmapEl = createWeeklyHeatmapElement();
+        heatmapRow.appendChild(heatmapEl);
+
+        if (!dayRecords.length) {
+          const empty = document.createElement("div");
+          empty.className = "today-entry-layout empty-state";
+
+          const welcome = document.createElement("div");
+          welcome.className = "today-welcome-note";
+
+          const welcomeTitle = document.createElement("p");
+          welcomeTitle.className = "today-welcome-title";
+          welcomeTitle.textContent = "어서 오세요.";
+
+          const welcomeText = document.createElement("p");
+          welcomeText.className = "today-welcome-text";
+          welcomeText.textContent = `이곳은 오늘의 생각과 경험,
+문득 떠오른 인사이트를
+목소리로 남겨두는 공책입니다.
+
+잘 정리된 말이 아니어도 괜찮아요.
+지금의 생각부터 편하게 기록해보세요.`;
+
+          welcome.append(welcomeTitle, welcomeText);
+          empty.append(dateAvatarRow, heatmapRow, welcome);
+          todayRecordsList.appendChild(empty);
+          return;
+        }
+
+        const entryLayout = document.createElement("div");
+        entryLayout.className = "today-entry-layout";
+
+        const firstRecordSlot = document.createElement("div");
+        firstRecordSlot.className = "today-first-record-slot";
+
+        entryLayout.append(dateAvatarRow, heatmapRow, firstRecordSlot);
+        todayRecordsList.appendChild(entryLayout);
+
+        renderRecordItems(dayRecords.slice(0, 1), firstRecordSlot);
+
+        if (dayRecords.length > 1) {
+          const restRecords = document.createElement("div");
+          restRecords.className = "today-rest-records";
+          todayRecordsList.appendChild(restRecords);
+          renderRecordItems(dayRecords.slice(1), restRecords, 1);
+        }
+
+      } else {
+        // ── Calendar view: render into diary-detail-panel's recordsList ──
+        recordsList.innerHTML = "";
+        recordsList.classList.toggle("has-records", Boolean(dayRecords.length));
+
+        if (!dayRecords.length) {
+          const empty = document.createElement("div");
+          empty.className = "empty-state";
+          empty.textContent = "이 날엔 아직 기록이 없어요. 마이크 버튼으로 생각을 남겨보세요 ✎";
+          recordsList.appendChild(empty);
+          // Clear header when no records
+          diaryDetailDateText.innerHTML = "";
+          return;
+        }
+
+        // Populate header with first record's badge and time
+        const firstRecord = dayRecords[0];
+        const badgeEl = document.createElement("div");
+        badgeEl.className = "diary-check-badge";
+        badgeEl.textContent = 1;
+        const timeEl = document.createElement("span");
+        timeEl.className = "record-time-header";
+        timeEl.textContent = formatTime(firstRecord.createdAt);
+        diaryDetailDateText.innerHTML = "";
+        diaryDetailDateText.appendChild(badgeEl);
+        diaryDetailDateText.appendChild(timeEl);
+
+        // Render all records (first record will hide its own badge/time)
+        renderRecordItems(dayRecords, recordsList, 0);
+      }
+    }
+
+    function renderRecordItems(dayRecords, container, startIndex = 0) {
+      dayRecords.forEach((record, index) => {
+        const item = document.createElement("article");
+        item.className = "record-item";
+
+        const top = document.createElement("div");
+        top.className = "record-top";
+
+        const metaGroup = document.createElement("div");
+        metaGroup.className = "record-meta-group";
+
+        // 노란 순번 동그라미 뱃지 및 시간 헤더 생성 (상세 뷰 첫 번째 레코드에서는 상단에 표시하지 않음)
+        const isDetailFirst = (container.id === "recordsList" && startIndex === 0 && index === 0);
+        if (!isDetailFirst) {
+          const checkBadge = document.createElement("div");
+          checkBadge.className = "diary-check-badge";
+          checkBadge.title = `기록 번호 ${startIndex + index + 1}`;
+          checkBadge.textContent = startIndex + index + 1; // 일기 번호
+          metaGroup.appendChild(checkBadge);
+
+          const timeEl = document.createElement("span");
+          timeEl.className = "record-time-header";
+          const timeStr = formatTime(record.createdAt);
+          timeEl.textContent = timeStr; // 시간 정보만 표기
+          metaGroup.appendChild(timeEl);
+        }
+
+        top.appendChild(metaGroup);
+
+        const controls = document.createElement("div");
+        controls.className = "record-controls";
+
+        const edit = document.createElement("button");
+        edit.type = "button";
+        edit.className = "edit-button";
+        edit.setAttribute("aria-label", "기록 수정");
+        edit.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21Z"/><path d="m22 21-10-10"/><path d="m14 11 5.5 5.5"/></svg>';
+        edit.addEventListener("click", () => {
+          openEditPanel(record);
+        });
+        controls.appendChild(edit);
+
+        // More options button (vertical ellipsis)
+        const more = document.createElement("button");
+        more.type = "button";
+        more.className = "more-button";
+        more.setAttribute("aria-label", "기록 옵션");
+        more.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>';
+        more.addEventListener("click", () => {
+          console.log("More options for record", record.id);
+        });
+
+        controls.appendChild(more);
+
+        top.appendChild(controls);
+        item.appendChild(top);
+
+        const read = document.createElement("div");
+        read.className = "record-read";
+
+        const title = document.createElement("p");
+        title.className = "record-read-title";
+        title.textContent = getRecordDisplayTitle(record);
+        read.appendChild(title);
+
+        const text = document.createElement("p");
+        text.className = "record-read-text";
+        text.textContent = (record.transcript || "").trim() || "남겨진 내용이 없습니다.";
+        read.appendChild(text);
+
+        item.appendChild(read);
+
+        container.appendChild(item);
+      });
+    }
+
+    function openEditPanel(record) {
+      editingRecordId = record.id;
+      editTitleInput.value = getRecordDisplayTitle(record);
+      editTitleInput.placeholder = createDefaultRecordTitle(new Date(record.createdAt));
+      editTranscriptInput.value = record.transcript || "";
+      editPanel.hidden = false;
+      requestAnimationFrame(() => {
+        editTitleInput.focus();
+        editTitleInput.select();
+      });
+    }
+
+    function closeEditPanel() {
+      editingRecordId = null;
+      editPanel.hidden = true;
+      editTitleInput.value = "";
+      editTranscriptInput.value = "";
+    }
+
+    async function saveEditingRecord() {
+      if (!editingRecordId) return;
+      const record = records.find((item) => item.id === editingRecordId);
+      if (!record) {
+        closeEditPanel();
+        return;
+      }
+
+      editDeleteButton.disabled = true;
+      editSaveButton.disabled = true;
+      editCancelButton.disabled = true;
+
+      const defaultTitle = createDefaultRecordTitle(new Date(record.createdAt));
+      const updatedRecord = {
+        ...record,
+        title: editTitleInput.value.trim() || defaultTitle,
+        transcript: editTranscriptInput.value.trim(),
+        updatedAt: Date.now()
+      };
+
+      try {
+        await saveRecordAndSync(updatedRecord);
+        setStatus("수정됨", false);
+        closeEditPanel();
+        if (diaryDetailPanel) diaryDetailPanel.classList.remove("open");
+        setTimeout(() => {
+          if (!isRecording) setStatus("대기 중", false);
+        }, 1200);
+      } catch (error) {
+        console.error(error);
+        setStatus("수정 오류", false);
+      } finally {
+        editDeleteButton.disabled = false;
+        editSaveButton.disabled = false;
+        editCancelButton.disabled = false;
+      }
+    }
+
+    async function deleteEditingRecord() {
+      if (!editingRecordId) return;
+      const record = records.find((item) => item.id === editingRecordId);
+      if (!record) {
+        closeEditPanel();
+        return;
+      }
+
+      editDeleteButton.disabled = true;
+      editSaveButton.disabled = true;
+      editCancelButton.disabled = true;
+
+      try {
+        await deleteRecordEverywhere(record);
+        setStatus("삭제됨", false);
+        closeEditPanel();
+        if (diaryDetailPanel) diaryDetailPanel.classList.remove("open");
+        setTimeout(() => {
+          if (!isRecording) setStatus("대기 중", false);
+        }, 1200);
+      } catch (error) {
+        console.error(error);
+        setStatus("삭제 오류", false);
+      } finally {
+        editDeleteButton.disabled = false;
+        editSaveButton.disabled = false;
+        editCancelButton.disabled = false;
+      }
+    }
+
+    async function refreshRecords() {
+      records = await getAllRecords();
+
+      // 만약 데이터베이스에 일기가 전혀 없는 상태라면, 개편된 목록 보기를 바로 확인할 수 있도록 체크용 가상 일기 데이터를 자동 주입합니다.
+      if (records.length === 0) {
+        const now = new Date();
+        
+        // 1. 오늘 작성한 가상의 일기
+        const todayRecord = normalizeRecord({
+          id: "mock-today",
+          title: "반가워요! 오늘의 첫 음성 일기 ✍️",
+          date: toDateKey(now),
+          createdAt: now.getTime() - 10 * 60 * 1000,
+          updatedAt: now.getTime() - 10 * 60 * 1000,
+          transcript: "이것은 체크용으로 자동 생성된 가상 일기입니다. 오늘 남긴 목소리 일기의 텍스트가 여기에 나타납니다. 우측 상단의 3점(⋮) 버튼을 누르면 즉시 이 일기를 수정하거나 삭제할 수 있어요! 캘린더나 목록 보기에서 디자인이 어떻게 바뀌었는지 확인해보세요.",
+          duration: 25,
+          syncStatus: SYNC_LOCAL_ONLY
+        });
+        
+        // 2. 어제 작성한 가상의 일기
+        const yesterday = new Date(now);
+        yesterday.setDate(now.getDate() - 1);
+        const yesterdayRecord = normalizeRecord({
+          id: "mock-yesterday",
+          title: "어제의 기록: 새로운 시작",
+          date: toDateKey(yesterday),
+          createdAt: yesterday.getTime() - 2 * 60 * 60 * 1000,
+          updatedAt: yesterday.getTime() - 2 * 60 * 60 * 1000,
+          transcript: "어제는 정말 뜻깊은 하루였습니다. 음성 일기를 기록해보니 생각보다 편리하고 마음이 편해지더군요. 나중에 돌아볼 수 있도록 매일 꾸준히 목소리로 기록을 남겨보려고 합니다.",
+          duration: 48,
+          syncStatus: SYNC_LOCAL_ONLY
+        });
+
+        // IndexedDB에 테스트 기록 저장
+        await saveRecord(todayRecord);
+        await saveRecord(yesterdayRecord);
+        records = await getAllRecords();
+      }
+
+      renderAll();
+    }
+
+    function showFileStatus(message) {
+      if (fileStatus) fileStatus.textContent = message;
+    }
+
+    function makeBackupPayload(recordList) {
+      return {
+        app: "Speak your insight",
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        records: recordList
+          .map(normalizeRecord)
+          .sort((a, b) => a.createdAt - b.createdAt)
+          .map((record) => ({
+            id: record.id,
+            date: record.date,
+            createdAt: record.createdAt,
+            updatedAt: record.updatedAt,
+            title: record.title,
+            transcript: record.transcript,
+            duration: record.duration,
+            syncStatus: SYNC_LOCAL_ONLY,
+            lastSyncError: ""
+          }))
+      };
+    }
+
+    async function exportRecordsToFile() {
+      const recordList = IS_PREVIEW_MODE ? records : await getAllRecords();
+      const payload = makeBackupPayload(recordList);
+      const json = JSON.stringify(payload, null, 2);
+      const blob = new Blob([json], { type: "application/json;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const todayKey = toDateKey(new Date());
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Speak your insight backup ${todayKey}.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      showFileStatus(`${payload.records.length}개의 기록을 파일로 저장했습니다.`);
+      setStatus("파일 저장됨", false);
+    }
+
+    async function importRecordsFromFile(file) {
+      if (!file) return;
+
+      importFileButton.disabled = true;
+      exportFileButton.disabled = true;
+      showFileStatus("파일을 불러오는 중입니다.");
+
+      try {
+        const text = await file.text();
+        const payload = JSON.parse(text);
+        const incoming = Array.isArray(payload) ? payload : payload.records;
+        if (!Array.isArray(incoming)) {
+          throw new Error("records array missing");
+        }
+
+        const currentRecords = IS_PREVIEW_MODE ? records : await getAllRecords();
+        const currentById = new Map(currentRecords.map((record) => [record.id, record]));
+        let importedCount = 0;
+
+        for (const item of incoming) {
+          const imported = normalizeRecord({
+            ...item,
+            syncStatus: SYNC_LOCAL_ONLY,
+            lastSyncError: ""
+          });
+          const existing = currentById.get(imported.id);
+          if (existing && existing.updatedAt > imported.updatedAt) continue;
+
+          importedCount += 1;
+          currentById.set(imported.id, imported);
+          if (!IS_PREVIEW_MODE) await saveRecord(imported);
+        }
+
+        if (IS_PREVIEW_MODE) {
+          records = [...currentById.values()].map(normalizeRecord);
+          renderAll();
+        } else {
+          await refreshRecords();
+        }
+
+        showFileStatus(`${importedCount}개의 기록을 이 기기에 불러왔습니다.`);
+        setStatus("파일 불러옴", false);
+      } catch (error) {
+        console.error(error);
+        showFileStatus("파일을 불러오지 못했습니다. Speak your insight 백업 파일인지 확인해주세요.");
+        setStatus("파일 오류", false);
+      } finally {
+        importFileButton.disabled = false;
+        exportFileButton.disabled = false;
+        importFileInput.value = "";
+      }
+    }
+
+    async function startRecording() {
+      recordingTargetDate = currentView === "records" ? startOfDay(selectedDate) : startOfDay(new Date());
+
+      // Update date badge at the top of the recording window
+      const dateBadge = document.getElementById("recordingDateBadge");
+      if (dateBadge) {
+        dateBadge.textContent = new Intl.DateTimeFormat("ko-KR", {
+          year: "numeric",
+          month: "long",
+          day: "numeric"
+        }).format(recordingTargetDate);
+      }
+
+      if (currentView !== "recording") {
+        setAppView("recording");
+      }
+
+      if (!IS_SECURE_APP_CONTEXT) {
+        showMicMessage("휴대폰 Chrome에서 녹음하려면 HTTPS 배포 주소 또는 localhost 주소로 열어야 합니다. file:// 또는 일반 http 주소에서는 마이크가 막힐 수 있습니다.", "보안 주소 필요");
+        return;
+      }
+
+      pendingRecording = null;
+      setDraftReviewUi(false);
+      micNotice.classList.remove("visible");
+      speechNotice.classList.remove("visible");
+      clearSpeechRecognitionTimers();
+
+      finalTranscript = "";
+      interimTranscript = "";
+      recognitionBaseTranscript = "";
+      recordingStart = Date.now();
+      pausedAt = 0;
+      pausedDuration = 0;
+      isPaused = false;
+      textOnlyRecording = false;
+      mediaRecorder = null;
+      recordingStopHandled = false;
+      clearTimeout(recordingStopFallbackTimer);
+      recordingStopFallbackTimer = null;
+
+      if (speechSupported) {
+        textOnlyRecording = true;
+        isRecording = true;
+        startSpeechRecognition();
+        startTimer();
+        updateTranscript();
+        setRecordingUi(true);
+        setStatus("기록 중", true);
+        return;
+      }
+
+      showSpeechRecognitionNotice("이 브라우저에서는 음성 텍스트 변환이 지원되지 않습니다. Chrome 최신 버전 또는 https 주소에서 다시 열어주세요.");
+      setStatus("텍스트 변환 미지원", false);
+
+      if (!("MediaRecorder" in window)) {
+        if (!speechSupported) {
+          showMicMessage("이 브라우저에서는 음성 기록과 음성 텍스트 변환이 모두 지원되지 않습니다.");
+          return;
+        }
+
+        textOnlyRecording = true;
+        isRecording = true;
+        startSpeechRecognition();
+        startTimer();
+        updateTranscript();
+        setRecordingUi(true);
+        setStatus("텍스트 기록 중", true);
+        return;
+      }
+
+      try {
+        activeStream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true
+          }
+        });
+      } catch (error) {
+        try {
+          activeStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        } catch (fallbackError) {
+          if (!speechSupported) {
+            showMicMessage("마이크 권한이 필요합니다. 브라우저에서 권한을 허용한 뒤 다시 시도해 주세요.", "마이크 권한 필요");
+            return;
+          }
+
+          textOnlyRecording = true;
+          isRecording = true;
+          startSpeechRecognition();
+          startTimer();
+          updateTranscript();
+          setRecordingUi(true);
+          setStatus("텍스트 기록 중", true);
+          return;
+        }
+      }
+
+      const mimeType = getSupportedAudioMimeType();
+      try {
+        mediaRecorder = mimeType
+          ? new MediaRecorder(activeStream, { mimeType })
+          : new MediaRecorder(activeStream);
+      } catch (error) {
+        cleanupActiveStream();
+        if (!speechSupported) {
+          showMicMessage("이 브라우저에서는 오디오 기록 형식이 지원되지 않습니다.");
+          return;
+        }
+
+        textOnlyRecording = true;
+        isRecording = true;
+        startSpeechRecognition();
+        startTimer();
+        updateTranscript();
+        setRecordingUi(true);
+        setStatus("텍스트 기록 중", true);
+        return;
+      }
+
+      mediaRecorder.addEventListener("error", (event) => {
+        console.error("MediaRecorder error", event.error || event);
+          showMicMessage("기록 중 오류가 발생했습니다. 텍스트가 인식되었다면 텍스트 기록은 저장할 수 있습니다.");
+      });
+      mediaRecorder.addEventListener("stop", handleRecordingStop);
+      mediaRecorder.start(1000);
+
+      isRecording = true;
+      startSpeechRecognition();
+      startTimer();
+      updateTranscript();
+      setRecordingUi(true);
+      setStatus("기록 중", true);
+    }
+
+    function stopRecording() {
+      if (!isRecording) {
+        if (currentView === "recording") {
+          setRecordingUi(false, "saving");
+          setStatus("저장 중", false);
+          handleRecordingStop();
+        }
+        return;
+      }
+      if (isPaused) {
+        resumeRecording();
+      }
+      isRecording = false;
+      isPaused = false;
+      stopTimer();
+      setRecordingUi(false, "saving");
+      setStatus("저장 중", false);
+      clearSpeechRecognitionTimers();
+
+      if (recognition) {
+        recognition.onend = null;
+        try {
+          recognition.stop();
+        } catch (error) {
+          console.warn("Speech recognition stop failed", error);
+        }
+      }
+
+      if (mediaRecorder && mediaRecorder.state !== "inactive") {
+        try {
+          mediaRecorder.stop();
+          clearTimeout(recordingStopFallbackTimer);
+          recordingStopFallbackTimer = setTimeout(() => {
+            handleRecordingStop();
+          }, 900);
+        } catch (error) {
+          console.warn("MediaRecorder stop failed", error);
+          handleRecordingStop();
+        }
+        return;
+      }
+
+      handleRecordingStop();
+    }
+
+    function pauseRecording() {
+      if (!isRecording || isPaused) return;
+
+      isPaused = true;
+      pausedAt = Date.now();
+      stopTimer();
+      clearSpeechRecognitionTimers();
+
+      if (mediaRecorder && mediaRecorder.state === "recording" && mediaRecorder.pause) {
+        try {
+          mediaRecorder.pause();
+        } catch (error) {
+          console.warn("MediaRecorder pause failed", error);
+        }
+      }
+
+      if (recognition) {
+        recognition.onend = null;
+        try {
+          recognition.stop();
+        } catch (error) {
+          console.warn("Speech recognition pause failed", error);
+        }
+      }
+
+      setPausedUi(true);
+      setStatus("잠시 멈춤", false);
+    }
+
+    function resumeRecording() {
+      if (!isRecording || !isPaused) return;
+
+      pausedDuration += Date.now() - pausedAt;
+      pausedAt = 0;
+      isPaused = false;
+
+      if (mediaRecorder && mediaRecorder.state === "paused" && mediaRecorder.resume) {
+        try {
+          mediaRecorder.resume();
+        } catch (error) {
+          console.warn("MediaRecorder resume failed", error);
+        }
+      }
+
+      startSpeechRecognition();
+      startTimer();
+      setPausedUi(false);
+      setStatus("기록 중", true);
+    }
+
+    function togglePauseRecording() {
+      if (isPaused) {
+        resumeRecording();
+      } else {
+        pauseRecording();
+      }
+    }
+
+    function handleRecordingStop() {
+      if (recordingStopHandled) return;
+      recordingStopHandled = true;
+      clearTimeout(recordingStopFallbackTimer);
+      recordingStopFallbackTimer = null;
+      cleanupActiveStream();
+      const duration = Math.max(0, Math.round((Date.now() - (recordingStart || Date.now()) - pausedDuration) / 1000));
+
+      // Use setTimeout to ensure any pending speech recognition events have settled
+      setTimeout(() => {
+        try {
+          const record = buildPendingRecord(duration);
+          pendingRecording = record;
+          selectedDate = dateKeyToDate(record.date);
+          viewDate = selectedDate;
+
+          // Directly manipulate the view without going through renderAll
+          currentView = "review";
+          app.dataset.view = "review";
+          document.body.dataset.view = "review";
+
+          // Update button states
+          if (recordingStopButton) {
+            recordingStopButton.hidden = true;
+            recordingStopButton.disabled = false;
+            recordingStopButton.textContent = "기록 마치기";
+          }
+          if (recordingPauseButton) {
+            recordingPauseButton.hidden = true;
+          }
+          if (micButton) {
+            micButton.classList.remove("recording", "saving");
+            micButton.disabled = false;
+            if (micLabel) micLabel.textContent = "기록하기";
+          }
+
+          // Populate and show the draft review panel
+          saveDraftPanel.hidden = false;
+          saveDraftButton.disabled = false;
+          cancelDraftButton.disabled = false;
+
+          const defaultTitle = record.title || createDefaultRecordTitle(new Date(record.createdAt));
+          draftTitleInput.value = defaultTitle;
+          draftTitleInput.placeholder = defaultTitle;
+          if (draftTranscriptInput) {
+            draftTranscriptInput.value = record.transcript || "";
+          }
+          if (reviewTimer) {
+            reviewTimer.textContent = formatDuration(record.duration);
+          }
+          const reviewDateStrip = document.getElementById("reviewDateStrip");
+          if (reviewDateStrip) {
+            reviewDateStrip.textContent = formatCommaDate(dateKeyToDate(record.date));
+          }
+
+          window.scrollTo({ top: 0, behavior: "auto" });
+          requestAnimationFrame(() => {
+            draftTitleInput.focus();
+          });
+        } catch (error) {
+          console.error("Recording review transition failed", error);
+          // Hard reset back to previous view
+          currentView = previousView || "today";
+          app.dataset.view = currentView;
+          document.body.dataset.view = currentView;
+          if (recordingStopButton) {
+            recordingStopButton.hidden = false;
+            recordingStopButton.disabled = false;
+            recordingStopButton.textContent = "기록 마치기";
+          }
+          if (recordingPauseButton) recordingPauseButton.hidden = false;
+          if (micButton) {
+            micButton.classList.remove("recording", "saving");
+            micButton.disabled = false;
+            if (micLabel) micLabel.textContent = "기록하기";
+          }
+        }
+      }, 100);
+    }
+
+    function buildPendingRecord(duration) {
+      const transcript = appendSpeechText(finalTranscript, interimTranscript);
+      const targetDate = startOfDay(recordingTargetDate || new Date());
+      const createdAt = Date.now();
+
+      return {
+        id: createId(),
+        title: createDefaultRecordTitle(new Date(createdAt)),
+        date: toDateKey(targetDate),
+        createdAt,
+        updatedAt: createdAt,
+        audioBlob: null,
+        transcript,
+        duration,
+        hasLocalAudio: false,
+        syncStatus: cloudSync.isConfigured && cloudSync.currentUser ? SYNC_PENDING : SYNC_LOCAL_ONLY
+      };
+    }
+
+    async function saveCompletedRecording(duration) {
+      const record = buildPendingRecord(duration);
+
+      pendingRecording = record;
+      selectedDate = dateKeyToDate(record.date);
+      viewDate = selectedDate;
+      setRecordingUi(false, "review");
+      setStatus("저장 전 확인", false);
+      setAppView("review", { scrollBehavior: "auto" });
+      setDraftReviewUi(true);
+    }
+
+    function setDraftReviewUi(visible) {
+      saveDraftPanel.hidden = !visible;
+      recordingPauseButton.hidden = visible;
+      recordingStopButton.hidden = visible;
+      saveDraftButton.disabled = false;
+      cancelDraftButton.disabled = false;
+      if (!visible) return;
+
+      const defaultTitle = pendingRecording
+        ? pendingRecording.title || createDefaultRecordTitle(new Date(pendingRecording.createdAt))
+        : createDefaultRecordTitle();
+
+      const transcript = pendingRecording ? pendingRecording.transcript || "" : "";
+      draftTitleInput.value = defaultTitle;
+      draftTitleInput.placeholder = defaultTitle;
+      if (draftTranscriptInput) {
+        draftTranscriptInput.value = transcript;
+      }
+      if (reviewTimer) {
+        reviewTimer.textContent = pendingRecording ? formatDuration(pendingRecording.duration) : "00:00";
+      }
+      const reviewDateStrip = $("#reviewDateStrip");
+      if (reviewDateStrip && pendingRecording) {
+        reviewDateStrip.textContent = formatCommaDate(dateKeyToDate(pendingRecording.date));
+      }
+      if (reviewTranscriptPreview) {
+        reviewTranscriptPreview.textContent = transcript || "아직 적힌 내용이 없습니다.";
+      }
+      requestAnimationFrame(() => {
+        draftTitleInput.focus();
+        draftTitleInput.select();
+      });
+    }
+
+    async function savePendingRecording() {
+      if (isSavingPendingRecording) return;
+      if (!pendingRecording) return;
+      isSavingPendingRecording = true;
+
+      const defaultTitle = pendingRecording.title || createDefaultRecordTitle(new Date(pendingRecording.createdAt));
+      const record = {
+        ...pendingRecording,
+        title: draftTitleInput.value.trim() || defaultTitle,
+        transcript: draftTranscriptInput.value.trim(),
+        audioBlob: null,
+        hasLocalAudio: false,
+        updatedAt: Date.now()
+      };
+
+      saveDraftButton.disabled = true;
+      cancelDraftButton.disabled = true;
+      setRecordingUi(false, "saving");
+      setStatus("저장 중", false);
+
+      try {
+        await saveRecordAndSync(record);
+      } catch (error) {
+        console.error(error);
+        saveDraftButton.disabled = false;
+        cancelDraftButton.disabled = false;
+        isSavingPendingRecording = false;
+        setRecordingUi(false, "review");
+        setStatus("저장 오류", false);
+        return;
+      }
+
+      pendingRecording = null;
+      setDraftReviewUi(false);
+      selectedDate = dateKeyToDate(record.date);
+      viewDate = selectedDate;
+      setStatus("저장됨", false);
+      setRecordingUi(false);
+      if (diaryDetailPanel) diaryDetailPanel.classList.remove("open");
+      setAppView(previousView || "today");
+      setTimeout(() => {
+        if (!isRecording) setStatus("대기 중", false);
+      }, 1400);
+      isSavingPendingRecording = false;
+    }
+
+    function cancelPendingRecording() {
+      const returnDate = pendingRecording ? dateKeyToDate(pendingRecording.date) : startOfDay(selectedDate);
+      isSavingPendingRecording = false;
+      pendingRecording = null;
+      setDraftReviewUi(false);
+      setRecordingUi(false);
+      setStatus("취소됨", false);
+      updateTranscript();
+      selectedDate = returnDate;
+      viewDate = returnDate;
+      if (diaryDetailPanel) diaryDetailPanel.classList.remove("open");
+      setAppView(previousView || "today");
+      setTimeout(() => {
+        if (!isRecording) setStatus("대기 중", false);
+      }, 1200);
+    }
+
+    function clearSpeechRecognitionTimers() {
+      clearTimeout(recognitionRestartTimer);
+      clearTimeout(speechHelpTimer);
+      recognitionRestartTimer = null;
+      speechHelpTimer = null;
+    }
+
+    function showSpeechRecognitionNotice(message) {
+      speechNotice.textContent = message;
+      speechNotice.classList.add("visible");
+    }
+
+    function normalizeSpeechText(text) {
+      return (text || "").replace(/\s+/g, " ").trim();
+    }
+
+    function appendSpeechText(base, addition) {
+      const current = normalizeSpeechText(base);
+      const next = normalizeSpeechText(addition);
+      if (!current) return next;
+      if (!next) return current;
+      if (current.endsWith(next)) return current;
+      if (next.startsWith(current)) return next;
+
+      const maxOverlap = Math.min(current.length, next.length);
+      for (let length = maxOverlap; length > 1; length -= 1) {
+        if (current.slice(-length) === next.slice(0, length)) {
+          return normalizeSpeechText(`${current}${next.slice(length)}`);
+        }
+      }
+
+      return `${current} ${next}`;
+    }
+
+    function collapseSpeechSegments(segments) {
+      return segments.reduce((merged, segment) => appendSpeechText(merged, segment), "");
+    }
+
+    function startSpeechRecognition() {
+      if (!speechSupported) {
+        showSpeechRecognitionNotice("이 브라우저에서는 음성 텍스트 변환이 지원되지 않습니다.");
+        return;
+      }
+
+      clearSpeechRecognitionTimers();
+      speechNotice.classList.remove("visible");
+      recognitionBaseTranscript = finalTranscript.trim();
+      recognition = new SpeechRecognition();
+      recognition.lang = "ko-KR";
+      recognition.interimResults = true;
+      recognition.continuous = true;
+      recognition.maxAlternatives = 1;
+
+      recognition.onstart = () => {
+        speechHelpTimer = setTimeout(() => {
+          if (isRecording && !finalTranscript.trim() && !interimTranscript.trim()) {
+            showSpeechRecognitionNotice("마이크는 켜졌지만 아직 텍스트가 들어오지 않았습니다. 휴대폰에서는 Chrome의 Google 음성 인식이 잠시 늦거나 막힐 수 있어요. 계속 말해보고, 안 되면 기록 마치기 후 내용 칸에 직접 적을 수 있습니다.");
+          }
+        }, SPEECH_HELP_DELAY_MS);
+      };
+
+      recognition.onresult = (event) => {
+        clearTimeout(speechHelpTimer);
+        speechHelpTimer = null;
+        const sessionFinalSegments = [];
+        const interimSegments = [];
+        interimTranscript = "";
+        for (let i = 0; i < event.results.length; i += 1) {
+          const text = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            sessionFinalSegments.push(text);
+          } else {
+            interimSegments.push(text);
+          }
+        }
+        const sessionFinalTranscript = collapseSpeechSegments(sessionFinalSegments);
+        interimTranscript = collapseSpeechSegments(interimSegments);
+        finalTranscript = appendSpeechText(recognitionBaseTranscript, sessionFinalTranscript);
+        updateTranscript();
+      };
+
+      recognition.onerror = (event) => {
+        interimTranscript = "";
+        updateTranscript();
+
+        const errorType = event?.error || "";
+        if (errorType === "not-allowed" || errorType === "service-not-allowed") {
+          recognition.onend = null;
+          showSpeechRecognitionNotice("음성 텍스트 변환 권한이 막혔습니다. Chrome 사이트 설정에서 마이크를 허용하고, 가능하면 https 주소로 다시 열어주세요.");
+          return;
+        }
+
+        if (errorType === "network") {
+          showSpeechRecognitionNotice("음성 텍스트 변환 서버에 연결하지 못했습니다. 모바일 데이터나 와이파이 연결을 확인해주세요.");
+          return;
+        }
+
+        if (errorType === "no-speech") {
+          showSpeechRecognitionNotice("아직 인식된 말이 없습니다. 조금 더 가까이, 또렷하게 말해보세요.");
+        }
+      };
+
+      recognition.onend = () => {
+        if (!isRecording || isPaused) return;
+        recognitionRestartTimer = setTimeout(() => {
+          if (!isRecording || isPaused || !recognition) return;
+          try {
+            recognitionBaseTranscript = finalTranscript.trim();
+            recognition.start();
+          } catch (error) {
+            showSpeechRecognitionNotice("음성 텍스트 변환이 잠시 멈췄습니다. 기록 마치기 후 내용 칸에서 직접 이어 적을 수 있습니다.");
+          }
+        }, SPEECH_RESTART_DELAY_MS);
+      };
+
+      try {
+        recognition.start();
+      } catch (error) {
+        showSpeechRecognitionNotice("음성 텍스트 변환을 시작하지 못했습니다. 페이지를 새로고침한 뒤 다시 시도해주세요.");
+      }
+    }
+
+    function updateTranscript() {
+      const finalText = finalTranscript.trim();
+      const interimText = interimTranscript.trim();
+
+      if (!finalText && !interimText) {
+        transcriptBox.classList.add("empty");
+        transcriptBox.textContent = isRecording ? "듣고 있습니다..." : "기록 버튼을 누르면 음성 텍스트 변환이 시작됩니다.";
+        return;
+      }
+
+      transcriptBox.classList.remove("empty");
+      transcriptBox.innerHTML = "";
+
+      if (finalText) {
+        transcriptBox.append(document.createTextNode(finalText));
+      }
+
+      if (interimText) {
+        let visibleInterimText = interimText;
+        if (finalText && interimText.startsWith(finalText)) {
+          visibleInterimText = interimText.slice(finalText.length).trim();
+        }
+        if (!visibleInterimText) return;
+        if (finalText) transcriptBox.append(document.createTextNode(" "));
+        const interim = document.createElement("span");
+        interim.className = "interim";
+        interim.textContent = visibleInterimText;
+        transcriptBox.appendChild(interim);
+      }
+    }
+
+    function startTimer() {
+      updateTimer();
+      timerId = setInterval(updateTimer, 300);
+    }
+
+    function stopTimer() {
+      clearInterval(timerId);
+      updateTimer();
+    }
+
+    function updateTimer() {
+      if (!recordingStart) {
+        timer.textContent = "00:00";
+        return;
+      }
+      const activeDuration = Date.now() - recordingStart - pausedDuration - (isPaused && pausedAt ? Date.now() - pausedAt : 0);
+      timer.textContent = formatDuration(activeDuration / 1000);
+    }
+
+    function setRecordingUi(recording, state = recording ? "recording" : "idle") {
+      micButton.classList.toggle("recording", state === "recording");
+      micButton.classList.toggle("saving", state === "saving");
+      micButton.disabled = state === "saving";
+      micButton.setAttribute("aria-label", state === "saving" ? "저장 중" : recording ? "기록 마치기" : "기록하기");
+      if (micLabel) {
+        micLabel.textContent = state === "saving" ? "저장 중" : recording ? "기록 중" : "기록하기";
+      }
+      setPausedUi(false);
+      if (recordingStopButton) {
+        recordingStopButton.disabled = !recording;
+        recordingStopButton.textContent = recording ? "기록 마치기" : "저장 중";
+      }
+      if (recordingPauseButton) {
+        recordingPauseButton.disabled = !recording;
+      }
+      if (!recording && recordingStateText) {
+        if (state === "saving") {
+          recordingStateText.textContent = "저장 중";
+        } else if (state === "review") {
+          recordingStateText.textContent = "제목 확인";
+        }
+      }
+    }
+
+    function setPausedUi(paused) {
+      if (recordingPauseButton) {
+        recordingPauseButton.textContent = paused ? "다시 시작하기" : "잠시 멈추기";
+      }
+      if (recordingState) {
+        recordingState.classList.toggle("paused", paused);
+      }
+      if (recordingStateText) {
+        recordingStateText.textContent = paused ? "잠시 멈춤" : "기록 중";
+      }
+    }
+
+    function setStatus(text, recording) {
+      if (statusText) statusText.textContent = text;
+      if (statusPill) statusPill.classList.toggle("recording", recording);
+    }
+
+    function renderFontOptions() {
+      // deprecated: font options are now rendered by initCustomSelect
+    }
+
+    /**
+     * initCustomSelect — 범용 커스텀 셀렉트 초기화
+     * @param {string} wrapId   — .cst-select-wrap 요소 ID
+     * @param {string} btnId    — trigger button ID
+     * @param {string} labelId  — label span ID
+     * @param {{ value: string, label: string, hint?: string }[]} options
+     * @param {string} initialValue
+     * @param {(value: string) => void} onChange
+     */
+    function initCustomSelect({ wrapId, btnId, labelId, options, initialValue, onChange }) {
+      const wrap = document.getElementById(wrapId);
+      const btn  = document.getElementById(btnId);
+      const labelEl = document.getElementById(labelId);
+      if (!wrap || !btn || !labelEl) return;
+
+      let currentValue = initialValue;
+      let popup = null;
+
+      function getLabelFor(val) {
+        const found = options.find(o => o.value === val);
+        return found ? found.label : val;
+      }
+
+      function setDisplay(val) {
+        currentValue = val;
+        labelEl.textContent = getLabelFor(val);
+      }
+
+      function buildPopup() {
+        const el = document.createElement("div");
+        el.className = "cst-select-popup";
+        el.setAttribute("role", "listbox");
+        options.forEach(opt => {
+          const item = document.createElement("button");
+          item.type = "button";
+          item.className = "cst-select-opt";
+          item.setAttribute("role", "option");
+          item.setAttribute("aria-selected", opt.value === currentValue ? "true" : "false");
+          item.dataset.value = opt.value;
+          // hint text if provided (e.g. font preview)
+          if (opt.hint) {
+            item.style.fontFamily = opt.hint;
+          }
+          item.textContent = opt.label;
+          item.addEventListener("click", () => {
+            setDisplay(opt.value);
+            closePopup();
+            onChange(opt.value);
+          });
+          el.appendChild(item);
+        });
+        return el;
+      }
+
+      function openPopup() {
+        if (popup) { closePopup(); return; }
+        popup = buildPopup();
+        wrap.appendChild(popup);
+        btn.setAttribute("aria-expanded", "true");
+      }
+
+      function closePopup() {
+        if (popup) { popup.remove(); popup = null; }
+        btn.setAttribute("aria-expanded", "false");
+      }
+
+      btn.addEventListener("click", e => { e.stopPropagation(); openPopup(); });
+      document.addEventListener("click", e => { if (popup && !wrap.contains(e.target)) closePopup(); });
+      document.addEventListener("keydown", e => { if (e.key === "Escape" && popup) closePopup(); });
+
+      // initialize display
+      setDisplay(currentValue);
+
+      // expose set method for external updates
+      wrap._setValue = (val) => setDisplay(val);
+    }
+
+    // Font choice using initCustomSelect
+    async function ensureFontLoaded(fontKey) {
+      const font = FONT_OPTIONS[fontKey];
+      if (!font || !font.source || !font.family || !("FontFace" in window) || !document.fonts || loadedFontKeys.has(fontKey)) {
+        return;
+      }
+
+      try {
+        const alreadyLoaded = Array.from(document.fonts).some((face) => face.family === font.family && face.status === "loaded");
+        if (!alreadyLoaded) {
+          const face = new FontFace(font.family, `url("${font.source}") format("truetype")`, {
+            weight: "400",
+            style: "normal"
+          });
+          const loadedFace = await face.load();
+          document.fonts.add(loadedFace);
+        }
+        await document.fonts.load(`18px "${font.family}"`);
+        loadedFontKeys.add(fontKey);
+      } catch (error) {
+        console.warn("Font load failed", fontKey, error);
+      }
+    }
+
+    function applyFontChoice(fontKey) {
+      const safeFontKey = FONT_OPTIONS[fontKey] ? fontKey : "myoeunddobak";
+      document.documentElement.style.setProperty("--font-hand", FONT_OPTIONS[safeFontKey].css);
+      localStorage.setItem(FONT_STORAGE_KEY, safeFontKey);
+      ensureFontLoaded(safeFontKey).then(() => {
+        document.documentElement.style.setProperty("--font-hand", FONT_OPTIONS[safeFontKey].css);
+      });
+    }
+
+    function initFontChoice() {
+      const savedFont = localStorage.getItem(FONT_STORAGE_KEY) || "myoeunddobak";
+      const fontOptions = Object.entries(FONT_OPTIONS)
+        .sort(([, a], [, b]) => a.label.localeCompare(b.label, "ko-KR", { sensitivity: "base" }))
+        .map(([key, font]) => ({ value: key, label: font.label, hint: font.css }));
+
+      initCustomSelect({
+        wrapId: "fontSelectWrap",
+        btnId: "fontSelectBtn",
+        labelId: "fontSelectLabel",
+        options: fontOptions,
+        initialValue: savedFont,
+        onChange: (val) => applyFontChoice(val)
+      });
+      applyFontChoice(savedFont);
+    }
+
+    const THEME_STORAGE_KEY = "speak-your-insight-theme";
+
+    function applyTheme(theme) {
+      document.body.classList.remove("theme-white", "theme-dark");
+      if (theme === "white") document.body.classList.add("theme-white");
+      else if (theme === "dark") document.body.classList.add("theme-dark");
+    }
+
+    function initThemeChoice() {
+      const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || "default";
+      applyTheme(savedTheme);
+      initCustomSelect({
+        wrapId: "themeSelectWrap",
+        btnId: "themeSelectBtn",
+        labelId: "themeSelectLabel",
+        options: [
+          { value: "default", label: "회백색 종이" },
+          { value: "white",   label: "흰 종이" },
+          { value: "dark",    label: "검은 종이" }
+        ],
+        initialValue: savedTheme,
+        onChange: (val) => {
+          localStorage.setItem(THEME_STORAGE_KEY, val);
+          applyTheme(val);
+        }
+      });
+    }
+
+    function initStickerChoice() {
+      const savedSticker = localStorage.getItem("speak-your-insight-sticker") || "mix";
+      initCustomSelect({
+        wrapId: "stickerSelectWrap",
+        btnId: "stickerSelectBtn",
+        labelId: "stickerSelectLabel",
+        options: [
+          { value: "mix",    label: "알록달록 믹스" },
+          { value: "clover", label: "네잎클로버만" },
+          { value: "smile",  label: "스마일만" },
+          { value: "heart",  label: "하트만" }
+        ],
+        initialValue: savedSticker,
+        onChange: (val) => {
+          localStorage.setItem("speak-your-insight-sticker", val);
+          renderAll();
+        }
+      });
+    }
+
+
+    function initUserProfile() {
+      // 1. 프로필 아바타 & 닉네임 로드 (비어 있을 경우 체크용 임시 가상 프로필 자동 주입)
+      let savedNickname = localStorage.getItem(PROFILE_NICKNAME_KEY);
+      let savedAvatar = localStorage.getItem(AVATAR_STORAGE_KEY);
+
+      if (!savedNickname) {
+        savedNickname = "인사이트 메이트 🌿";
+        localStorage.setItem(PROFILE_NICKNAME_KEY, savedNickname);
+      }
+
+      if (!savedAvatar) {
+        // 귀엽고 세련된 친환경 컨셉의 가상 캐릭터 프로필 SVG 데이터
+        savedAvatar = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%23E8F5E9"/><circle cx="50" cy="38" r="16" fill="%2381C784"/><path d="M50 38 Q 45 43 50 48" fill="none" stroke="%231b5e20" stroke-width="2.5" stroke-linecap="round"/><path d="M22 82 C22 66 34 58 50 58 C66 58 78 66 78 82" fill="%2381C784"/><circle cx="45" cy="35" r="2" fill="%231b5e20"/><circle cx="55" cy="35" r="2" fill="%231b5e20"/></svg>`;
+        localStorage.setItem(AVATAR_STORAGE_KEY, savedAvatar);
+      }
+
+      if (profileNicknameInput) {
+        profileNicknameInput.value = savedNickname;
+      }
+
+      if (savedAvatar && profileAvatarPreview) {
+        profileAvatarPreview.innerHTML = `<img src="${savedAvatar}" alt="사용자 아바타" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`;
+      }
+
+      // 2. 아바타 클릭 시 갤러리/카메라 활성화
+      if (profileAvatarContainer && profileAvatarInput) {
+        profileAvatarContainer.addEventListener("click", () => {
+          profileAvatarInput.click();
+        });
+      }
+
+      // 3. 이미지 업로드 시 스마트 중앙 정사각형 크롭 & Canvas 고효율 압축 변환
+      if (profileAvatarInput) {
+        profileAvatarInput.addEventListener("change", (e) => {
+          const file = e.target.files?.[0];
+          if (!file) return;
+
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+              const canvas = document.createElement("canvas");
+              const size = 120; // 120x120 크기로 제한하여 퍼포먼스 극대화
+              canvas.width = size;
+              canvas.height = size;
+              
+              const ctx = canvas.getContext("2d");
+              const minSide = Math.min(img.width, img.height);
+              const sx = (img.width - minSide) / 2;
+              const sy = (img.height - minSide) / 2;
+              
+              ctx.drawImage(img, sx, sy, minSide, minSide, 0, 0, size, size);
+              
+              const base64Data = canvas.toDataURL("image/jpeg", 0.85); // 85% 압축률
+              pendingAvatarDataUrl = base64Data;
+              
+              // 로컬 미리보기 갱신
+              if (profileAvatarPreview) {
+                profileAvatarPreview.innerHTML = `<img src="${base64Data}" alt="사용자 아바타" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`;
+              }
+            };
+            img.src = event.target.result;
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      // 4. 프로필 정보 영구 로컬 저장 및 화면 즉시 업데이트
+      if (profileSaveBtn) {
+        profileSaveBtn.addEventListener("click", () => {
+          saveUserProfile();
+        });
+      }
+    }
+
+    function saveUserProfile() {
+      const name = profileNicknameInput.value.trim();
+      localStorage.setItem(PROFILE_NICKNAME_KEY, name);
+
+      if (pendingAvatarDataUrl) {
+        localStorage.setItem(AVATAR_STORAGE_KEY, pendingAvatarDataUrl);
+        pendingAvatarDataUrl = ""; // 임시 변수 초기화
+      }
+
+      setStatus("프로필 저장됨", false);
+      renderAll(); // 오늘 탭의 글로벌 헤더 웰컴 문구 & 아바타 즉시 리렌더링
+
+      setTimeout(() => {
+        if (!isRecording) setStatus("대기 중", false);
+      }, 1200);
+    }
+
+    // ── Custom Period Picker Popup ──────────────────────────────────────────
+    (function initPeriodPicker() {
+      const pickerBtn = document.getElementById("periodPickerBtn");
+      const container = document.getElementById("periodSelectorContainer");
+      if (!pickerBtn || !container) return;
+
+      let pickerYear = viewDate.getFullYear(); // year shown in popup
+      let popup = null;
+
+      const MONTHS = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
+      const NOW = new Date();
+
+      function buildPopup() {
+        const el = document.createElement("div");
+        el.className = "period-picker-popup";
+        el.setAttribute("role", "dialog");
+        el.setAttribute("aria-modal", "false");
+
+        // Year nav
+        const yearNav = document.createElement("div");
+        yearNav.className = "picker-year-nav";
+
+        const prevYearBtn = document.createElement("button");
+        prevYearBtn.type = "button";
+        prevYearBtn.className = "picker-year-arrow";
+        prevYearBtn.setAttribute("aria-label", "이전 년도");
+        prevYearBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><polyline points="15 18 9 12 15 6"/></svg>';
+        prevYearBtn.addEventListener("click", () => {
+          pickerYear -= 1;
+          refreshPopup();
+        });
+
+        const yearLabel = document.createElement("span");
+        yearLabel.className = "picker-year-label";
+        yearLabel.textContent = `${pickerYear}년`;
+
+        const nextYearBtn = document.createElement("button");
+        nextYearBtn.type = "button";
+        nextYearBtn.className = "picker-year-arrow";
+        nextYearBtn.setAttribute("aria-label", "다음 년도");
+        nextYearBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><polyline points="9 18 15 12 9 6"/></svg>';
+        nextYearBtn.addEventListener("click", () => {
+          pickerYear += 1;
+          refreshPopup();
+        });
+
+        yearNav.append(prevYearBtn, yearLabel, nextYearBtn);
+        el.appendChild(yearNav);
+
+        // Month grid
+        const grid = document.createElement("div");
+        grid.className = "picker-month-grid";
+        MONTHS.forEach((name, idx) => {
+          const cell = document.createElement("button");
+          cell.type = "button";
+          cell.className = "picker-month-cell";
+          cell.textContent = name;
+          cell.dataset.month = idx;
+          const isCurMonth = pickerYear === NOW.getFullYear() && idx === NOW.getMonth();
+          if (isCurMonth) cell.classList.add("is-current-month");
+          if (pickerYear === viewDate.getFullYear() && idx === viewDate.getMonth()) {
+            cell.classList.add("is-selected");
+          }
+          cell.addEventListener("click", () => {
+            viewDate = new Date(pickerYear, idx, 1);
+            closePicker();
+            updatePeriodLabelDisplay();
+            renderCalendar();
+          });
+          grid.appendChild(cell);
+        });
+        el.appendChild(grid);
+
+        return el;
+      }
+
+      function refreshPopup() {
+        if (!popup) return;
+        const newPopup = buildPopup();
+        container.replaceChild(newPopup, popup);
+        popup = newPopup;
+      }
+
+      function openPicker() {
+        if (popup) { closePicker(); return; }
+        pickerYear = viewDate.getFullYear();
+        popup = buildPopup();
+        container.appendChild(popup);
+        pickerBtn.setAttribute("aria-expanded", "true");
+      }
+
+      function closePicker() {
+        if (popup) { popup.remove(); popup = null; }
+        pickerBtn.setAttribute("aria-expanded", "false");
+      }
+
+      pickerBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openPicker();
+      });
+
+      document.addEventListener("click", (e) => {
+        if (popup && !container.contains(e.target)) closePicker();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && popup) closePicker();
+      });
+    })();
+
+
+    // calendar-view-dropdown event listeners
+    const viewToggleButton = document.getElementById("viewToggleButton");
+    const viewDropdownMenu = document.getElementById("viewDropdownMenu");
+    const optMonthView = document.getElementById("optMonthView");
+    const optListView = document.getElementById("optListView");
+    const viewToggleLabel = document.getElementById("viewToggleLabel");
+
+    if (viewToggleButton && viewDropdownMenu) {
+      viewToggleButton.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isExpanded = viewToggleButton.getAttribute("aria-expanded") === "true";
+        viewToggleButton.setAttribute("aria-expanded", !isExpanded);
+        viewDropdownMenu.hidden = isExpanded;
+      });
+
+      const setCalendarMode = (mode) => {
+        calendarMode = mode; // "month" or "list"
+        const isList = mode === "list";
+        
+        optMonthView.classList.toggle("active", !isList);
+        optListView.classList.toggle("active", isList);
+        if (viewToggleLabel) {
+          viewToggleLabel.textContent = isList ? "목록 보기" : "월간 보기";
+        }
+        
+        viewToggleButton.setAttribute("aria-expanded", "false");
+        viewDropdownMenu.hidden = true;
+        
+        renderCalendar();
+      };
+
+      if (optMonthView) {
+        optMonthView.addEventListener("click", (e) => {
+          e.stopPropagation();
+          setCalendarMode("month");
+        });
+      }
+
+      if (optListView) {
+        optListView.addEventListener("click", (e) => {
+          e.stopPropagation();
+          setCalendarMode("list");
+        });
+      }
+
+      // Close dropdown on outside click
+      document.addEventListener("click", (e) => {
+        if (!viewToggleButton.contains(e.target) && !viewDropdownMenu.contains(e.target)) {
+          viewToggleButton.setAttribute("aria-expanded", "false");
+          viewDropdownMenu.hidden = true;
+        }
+      });
+    }
+
+
+    todayButton.addEventListener("click", () => {
+      setAppView("today", { scrollBehavior: "auto" });
+    });
+
+    calendarButton.addEventListener("click", () => {
+      setAppView("records");
+    });
+
+    settingsButton.addEventListener("click", () => {
+      setAppView("settings");
+    });
+
+    // Cozy hand-drawn diary stats popup/tooltip handler
+    statsButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      let tooltip = document.getElementById("statsTooltip");
+      if (tooltip) {
+        tooltip.classList.toggle("visible");
+        if (tooltip.classList.contains("visible")) {
+          updateStatsContent();
+        }
+        return;
+      }
+      
+      tooltip = document.createElement("div");
+      tooltip.id = "statsTooltip";
+      tooltip.className = "stats-tooltip card paper-lines";
+      document.body.appendChild(tooltip);
+      
+      function updateStatsContent() {
+        const totalEntries = records ? records.length : 0;
+        let totalWords = 0;
+        if (records) {
+          records.forEach(r => {
+            if (r.transcript) {
+              totalWords += r.transcript.trim().split(/\s+/).filter(w => w.length > 0).length;
+            }
+          });
+        }
+        
+        tooltip.innerHTML = `
+          <div class="stats-tooltip-header">
+            <h3>✎ 생각의 흔적</h3>
+          </div>
+          <div class="stats-tooltip-body">
+            <p>📅 <strong>기록한 생각:</strong> ${totalEntries}개</p>
+            <p>✍️ <strong>기록한 단어:</strong> ${totalWords}개</p>
+            <p>✨ <strong>오늘의 통계:</strong> 참 잘했어요!</p>
+          </div>
+        `;
+      }
+      
+      updateStatsContent();
+      
+      const rect = statsButton.getBoundingClientRect();
+      tooltip.style.left = `${rect.left + rect.width / 2 - 115}px`;
+      tooltip.style.bottom = `${window.innerHeight - rect.top + 12}px`;
+      
+      // Force layout and trigger animation
+      tooltip.offsetHeight;
+      tooltip.classList.add("visible");
+    });
+    
+    document.addEventListener("click", () => {
+      const tooltip = document.getElementById("statsTooltip");
+      if (tooltip) {
+        tooltip.classList.remove("visible");
+      }
+    });
+
+    // Close diary detail panel
+    if (diaryDetailClose) {
+      diaryDetailClose.addEventListener("click", () => {
+        diaryDetailPanel.classList.remove("open");
+        // Deselect all calendar cells
+        calendarGrid.querySelectorAll(".day-cell.selected").forEach((c) => c.classList.remove("selected"));
+      });
+    }
+
+    exportFileButton.addEventListener("click", () => {
+      exportRecordsToFile();
+    });
+
+    importFileButton.addEventListener("click", () => {
+      importFileInput.click();
+    });
+
+    importFileInput.addEventListener("change", () => {
+      importRecordsFromFile(importFileInput.files?.[0]);
+    });
+
+
+    function showConfirmRecordModal() {
+      if (!confirmRecordModal || !confirmRecordDateText) return;
+      confirmRecordDateText.textContent = formatKoreanDate(startOfDay(selectedDate));
+      confirmRecordModal.hidden = false;
+    }
+
+    function hideConfirmRecordModal() {
+      if (confirmRecordModal) {
+        confirmRecordModal.hidden = true;
+      }
+    }
+
+    if (confirmRecordCancelBtn) {
+      confirmRecordCancelBtn.addEventListener("click", () => {
+        hideConfirmRecordModal();
+      });
+    }
+
+    if (confirmRecordStartBtn) {
+      confirmRecordStartBtn.addEventListener("click", () => {
+        hideConfirmRecordModal();
+        startRecording();
+      });
+    }
+
+    if (confirmRecordModal) {
+      confirmRecordModal.addEventListener("click", (e) => {
+        if (e.target === confirmRecordModal) {
+          hideConfirmRecordModal();
+        }
+      });
+    }
+
+    micButton.addEventListener("click", () => {
+      if (isRecording) {
+        stopRecording();
+      } else {
+        if (currentView === "records") {
+          showConfirmRecordModal();
+        } else {
+          startRecording();
+        }
+      }
+    });
+
+    recordingStopButton.addEventListener("click", () => {
+      stopRecording();
+    });
+
+    recordingPauseButton.addEventListener("click", () => {
+      togglePauseRecording();
+    });
+
+    saveDraftButton.addEventListener("click", () => {
+      savePendingRecording();
+    });
+
+    cancelDraftButton.addEventListener("click", () => {
+      cancelPendingRecording();
+    });
+
+    if (liveCardCloseButton) {
+      liveCardCloseButton.addEventListener("click", () => {
+        // Stop all recording activity immediately
+        isRecording = false;
+        isPaused = false;
+        recordingStopHandled = true;
+        clearTimeout(recordingStopFallbackTimer);
+        recordingStopFallbackTimer = null;
+        stopTimer();
+        clearSpeechRecognitionTimers();
+
+        if (recognition) {
+          recognition.onend = null;
+          try { recognition.stop(); } catch (e) {}
+        }
+
+        if (mediaRecorder) {
+          mediaRecorder.removeEventListener("stop", handleRecordingStop);
+          if (mediaRecorder.state !== "inactive") {
+            try { mediaRecorder.stop(); } catch (e) {}
+          }
+        }
+        cleanupActiveStream();
+
+        // Reset recording UI state
+        pendingRecording = null;
+        isSavingPendingRecording = false;
+        setDraftReviewUi(false);
+        setRecordingUi(false);
+        updateTranscript();
+
+        // Force navigate away from recording
+        const target = previousView || "today";
+        previousView = null;
+        setAppView(target, { scrollBehavior: "auto" });
+        setTimeout(() => {
+          if (!isRecording) setStatus("대기 중", false);
+        }, 500);
+      });
+    }
+
+    editCancelButton.addEventListener("click", () => {
+      closeEditPanel();
+    });
+
+    editSaveButton.addEventListener("click", () => {
+      saveEditingRecord();
+    });
+
+    editDeleteButton.addEventListener("click", () => {
+      deleteEditingRecord();
+    });
+
+    editPanel.addEventListener("click", (event) => {
+      if (event.target === editPanel) closeEditPanel();
+    });
+
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !editPanel.hidden) closeEditPanel();
+    });
+
+    draftTitleInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        savePendingRecording();
+      }
+    });
+
+    async function init() {
+      initFontChoice();
+      initThemeChoice();
+      initStickerChoice();
+      initUserProfile();
+      renderDateStrip();
+      setAppView("today");
+
+      if (!("MediaRecorder" in window) && !speechSupported) {
+        micNotice.textContent = "이 브라우저에서는 음성 기록과 음성 텍스트 변환이 모두 지원되지 않습니다.";
+        micNotice.classList.add("visible");
+        micButton.disabled = true;
+      } else if (!IS_SECURE_APP_CONTEXT) {
+        micNotice.textContent = "휴대폰 Chrome 녹음은 HTTPS 배포 주소 또는 localhost에서만 안정적으로 작동합니다.";
+        micNotice.classList.add("visible");
+      } else if (!("MediaRecorder" in window)) {
+        micNotice.textContent = "이 브라우저에서는 오디오 저장이 지원되지 않아 텍스트 기록만 작동합니다.";
+        micNotice.classList.add("visible");
+      } else if (!("mediaDevices" in navigator) || !("getUserMedia" in navigator.mediaDevices)) {
+        micNotice.textContent = "이 브라우저에서는 오디오 기록이 제한될 수 있습니다. 음성 텍스트 변환이 지원되면 텍스트 기록만 작동합니다.";
+        micNotice.classList.add("visible");
+      }
+
+      if (!speechSupported) {
+        speechNotice.classList.add("visible");
+      }
+
+      if (loadPreviewRecords()) return;
+
+      db = await openDatabase();
+      await refreshRecords();
+      setAppView("today", { scrollBehavior: "auto" });
+    }
+
+    window.addEventListener("load", () => {
+      if (!isRecording) setAppView("today", { scrollBehavior: "auto" });
+    }, { once: true });
+
+    window.addEventListener("pageshow", () => {
+      if (!isRecording) setAppView("today", { scrollBehavior: "auto" });
+    });
+
+    init().catch((error) => {
+      console.error(error);
+      setStatus("초기화 오류", false);
+    });
+  </script>
+</body>
+</html>
