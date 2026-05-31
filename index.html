@@ -1304,38 +1304,50 @@
     /* Sticky Bottom Bar */
     .sticky-bottom-bar {
       position: fixed;
-      bottom: 0;
+      bottom: calc(20px + env(safe-area-inset-bottom, 0px));
       left: 50%;
       transform: translateX(-50%);
-      width: min(100%, var(--app-width));
-      background: var(--notebook);
-      border-top: 1.5px solid var(--sketch-line);
-      padding: 10px var(--page-gutter) calc(10px + env(safe-area-inset-bottom, 0px));
+      width: calc(min(100%, var(--app-width)) - 2 * var(--page-gutter));
+      max-width: calc(100vw - 32px);
+      height: 54px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(17, 17, 17, 0.07);
+      border-radius: 26px 22px 27px 23px / 22px 27px 22px 26px;
+      padding: 6px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
       z-index: 200;
-      box-shadow: 0 -4px 16px rgba(17, 17, 17, 0.05);
+      box-shadow:
+        0 12px 28px -17px rgba(17, 17, 17, 0.26),
+        0 3px 10px -8px rgba(17, 17, 17, 0.12);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     body.theme-dark .sticky-bottom-bar {
-      background: #000000;
-      border-top-color: rgba(255, 255, 255, 0.12);
-      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.45);
+      background: rgba(20, 20, 20, 0.9);
+      border-color: rgba(255, 255, 255, 0.09);
+      box-shadow:
+        0 14px 34px -16px rgba(0, 0, 0, 0.58),
+        0 4px 12px -8px rgba(0, 0, 0, 0.28);
     }
     .sticky-bottom-bar .bottom-bar-btn {
       min-height: 38px;
       padding: 0 14px;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
       border-radius: 999px 880px 940px 910px / 760px 980px 800px 930px;
       border: 1.4px solid var(--ink);
       background: transparent;
       color: var(--ink);
       cursor: pointer;
+      transition: all 0.2s ease;
     }
     .sticky-bottom-bar .bottom-bar-btn:hover {
       background: rgba(17, 17, 17, 0.05);
+      transform: translateY(-1px);
     }
     body.theme-dark .sticky-bottom-bar .bottom-bar-btn {
       border-color: var(--text-soft);
@@ -1348,6 +1360,21 @@
       display: flex;
       align-items: center;
       gap: 8px;
+    }
+
+    @media (max-width: 380px) {
+      .sticky-bottom-bar {
+        gap: 6px;
+        padding: 6px 10px;
+      }
+      .sticky-bottom-bar .bottom-bar-btn {
+        padding: 0 8px;
+        font-size: 13px;
+        min-height: 34px;
+      }
+      .sticky-bottom-bar .bottom-bar-actions {
+        gap: 4px;
+      }
     }
 
     /* Photo Settings Bottom Drawer Sheet */
@@ -1381,7 +1408,7 @@
       box-shadow: 0 -8px 32px rgba(17, 17, 17, 0.12);
       animation: drawer-slide-up 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       box-sizing: border-box;
-      margin-bottom: 90px; /* Floating above the floating sticky bottom bar */
+      margin-bottom: 80px; /* Floating close above the floating bottom bar */
     }
     body.theme-dark .photo-drawer-content {
       background: #1A1A1A;
@@ -1393,29 +1420,7 @@
       to { transform: translateY(0); }
     }
     .photo-drawer-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      border-bottom: 1.5px dashed var(--sketch-line-soft);
-      padding-bottom: 8px;
-    }
-    .photo-drawer-header h3 {
-      margin: 0;
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--ink);
-    }
-    body.theme-dark .photo-drawer-header h3 {
-      color: var(--text-soft);
-    }
-    .photo-drawer-close {
-      background: transparent;
-      border: none;
-      font-size: 24px;
-      line-height: 1;
-      color: var(--muted);
-      cursor: pointer;
+      display: none !important;
     }
     .photo-drawer-body .photo-tools {
       border-top: none !important;
@@ -1423,26 +1428,61 @@
       margin-top: 0 !important;
     }
     .photo-drawer-actions {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 14px;
-      padding-top: 10px;
-      border-top: 1.5px dashed var(--sketch-line-soft);
+      display: none !important;
     }
+
+    /* Inline Confirm/Cancel Actions inside tool row */
+    .photo-tool-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+    .photo-drawer-inline-actions {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .photo-drawer-cancel,
     .photo-drawer-ok {
-      min-height: 34px;
-      padding: 0 16px;
+      min-height: 32px;
+      padding: 0 12px;
       font-size: 14px;
       font-weight: 700;
       border-radius: 999px 880px 940px 910px / 760px 980px 800px 930px;
+      cursor: pointer;
+      font-family: var(--font-hand);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+    .photo-drawer-cancel {
+      border: 1.2px dashed var(--sketch-line);
+      background: transparent;
+      color: var(--muted);
+    }
+    .photo-drawer-cancel:hover {
+      background: rgba(17, 17, 17, 0.04);
+      color: var(--text);
+    }
+    body.theme-dark .photo-drawer-cancel:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .photo-drawer-ok {
       background: var(--ink);
       color: #fff;
-      cursor: pointer;
-      border: 1px solid var(--ink);
+      border: 1.2px solid var(--ink);
+    }
+    .photo-drawer-ok:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
     }
     body.theme-dark .photo-drawer-ok {
       background: var(--text-soft);
-      color: #000;
+      color: var(--notebook);
       border-color: var(--text-soft);
     }
 
@@ -1784,8 +1824,15 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: 18px;
       padding: 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--notebook);
+      padding-top: 10px;
+      margin-top: -10px;
+      padding-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .calendar-actions {
@@ -4088,8 +4135,15 @@
       align-items: center;
       justify-content: space-between;
       width: 100%;
-      margin-bottom: 16px;
       box-sizing: border-box;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--notebook);
+      padding-top: 10px;
+      margin-top: -10px;
+      padding-bottom: 10px;
+      margin-bottom: 6px;
     }
 
     .user-avatar-btn {
@@ -4462,6 +4516,10 @@
             <div class="photo-tool-row">
               <button class="photo-add-button" id="draftPhotoAddButton" type="button">사진 붙이기</button>
               <span class="photo-help" id="draftPhotoHelp">최대 3장</span>
+              <div class="photo-drawer-inline-actions">
+                <button type="button" class="photo-drawer-cancel" id="draftPhotoCancelBtn">취소</button>
+                <button type="button" class="photo-drawer-ok" id="draftPhotoOkBtn">확인</button>
+              </div>
             </div>
             <input id="draftPhotoInput" type="file" accept="image/*" multiple hidden />
             <div class="photo-option-grid" id="draftPhotoOptionGrid" hidden>
@@ -4687,6 +4745,10 @@
           <div class="photo-tool-row">
             <button class="photo-add-button" id="editPhotoAddButton" type="button">사진 붙이기</button>
             <span class="photo-help" id="editPhotoHelp">최대 3장</span>
+            <div class="photo-drawer-inline-actions">
+              <button type="button" class="photo-drawer-cancel" id="editPhotoCancelBtn">취소</button>
+              <button type="button" class="photo-drawer-ok" id="editPhotoOkBtn">확인</button>
+            </div>
           </div>
           <input id="editPhotoInput" type="file" accept="image/*" multiple hidden />
           <div class="photo-option-grid" id="editPhotoOptionGrid" hidden>
@@ -8343,11 +8405,28 @@
     if (editPhotoSettingsBtn) {
       editPhotoSettingsBtn.addEventListener("click", () => openPhotoSettingsDrawer("edit"));
     }
+    const draftPhotoCancelBtn = $("#draftPhotoCancelBtn");
+    const draftPhotoOkBtn = $("#draftPhotoOkBtn");
+    const editPhotoCancelBtn = $("#editPhotoCancelBtn");
+    const editPhotoOkBtn = $("#editPhotoOkBtn");
+
     if (photoDrawerCloseBtn) {
       photoDrawerCloseBtn.addEventListener("click", closePhotoSettingsDrawer);
     }
     if (photoDrawerOkBtn) {
       photoDrawerOkBtn.addEventListener("click", closePhotoSettingsDrawer);
+    }
+    if (draftPhotoCancelBtn) {
+      draftPhotoCancelBtn.addEventListener("click", closePhotoSettingsDrawer);
+    }
+    if (draftPhotoOkBtn) {
+      draftPhotoOkBtn.addEventListener("click", closePhotoSettingsDrawer);
+    }
+    if (editPhotoCancelBtn) {
+      editPhotoCancelBtn.addEventListener("click", closePhotoSettingsDrawer);
+    }
+    if (editPhotoOkBtn) {
+      editPhotoOkBtn.addEventListener("click", closePhotoSettingsDrawer);
     }
 
     // Fullscreen blurred image Lightbox overlay logic
