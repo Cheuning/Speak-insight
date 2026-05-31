@@ -4532,8 +4532,8 @@
     let records = [];
     let pendingAvatarDataUrl = "";
     let selectedDate = startOfDay(new Date());
-    let expandedListRecordId = null;
-    let expandedDetailRecordId = null;
+    const expandedListRecordIds = new Set();
+    const expandedDetailRecordIds = new Set();
     let detailEditPickMode = false;
     let draftPhotoState = createEmptyPhotoState();
     let editPhotoState = createEmptyPhotoState();
@@ -5385,7 +5385,7 @@
           dayRecords.forEach((record, index) => {
             const entry = document.createElement("div");
             entry.className = "list-entry-capsule";
-            const isExpanded = expandedListRecordId === record.id;
+            const isExpanded = expandedListRecordIds.has(record.id);
             entry.classList.toggle("is-expanded", isExpanded);
 
             const timeStr = formatTime(record.createdAt);
@@ -5472,7 +5472,11 @@
             entry.addEventListener("click", (e) => {
               e.stopPropagation();
               selectedDate = date;
-              expandedListRecordId = expandedListRecordId === record.id ? null : record.id;
+              if (expandedListRecordIds.has(record.id)) {
+                expandedListRecordIds.delete(record.id);
+              } else {
+                expandedListRecordIds.add(record.id);
+              }
               renderCalendar();
             });
 
@@ -5711,7 +5715,7 @@
           // ── Records (timeline) view item ──
           const item = document.createElement("article");
           item.className = "timeline-item";
-          const isDetailExpanded = expandedDetailRecordId === record.id;
+          const isDetailExpanded = expandedDetailRecordIds.has(record.id);
           item.classList.toggle("is-expanded", isDetailExpanded);
 
           // Left Column (Time Label)
@@ -5788,7 +5792,11 @@
               openEditPanel(record);
               return;
             }
-            expandedDetailRecordId = expandedDetailRecordId === record.id ? null : record.id;
+            if (expandedDetailRecordIds.has(record.id)) {
+              expandedDetailRecordIds.delete(record.id);
+            } else {
+              expandedDetailRecordIds.add(record.id);
+            }
             renderRecords();
           });
 
