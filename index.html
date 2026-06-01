@@ -206,7 +206,7 @@
       background: var(--notebook);
       border-inline: 1px solid var(--sketch-line-soft);
       box-shadow: 0 0 44px rgba(17, 17, 17, 0.035);
-      overflow-x: clip;
+      overflow-x: hidden;
       overflow-y: visible;
     }
 
@@ -963,9 +963,9 @@
     .photo-option-grid {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      margin-top: 0;
-      padding: 12px;
+      gap: 10px;
+      margin-top: 8px;
+      padding: 14px;
       background: rgba(17, 17, 17, 0.02);
       border-radius: 14px 11px 13px 12px / 12px 13px 11px 14px;
       border: 1px dashed rgba(17, 17, 17, 0.08);
@@ -1018,14 +1018,6 @@
       background: var(--ink);
       color: #fff;
       border-color: var(--ink);
-    }
-
-    .photo-chip.disabled,
-    .photo-chip:disabled {
-      opacity: 0.36;
-      cursor: not-allowed;
-      background: rgba(17, 17, 17, 0.04);
-      color: var(--muted);
     }
 
     body.theme-dark .photo-chip {
@@ -1081,10 +1073,8 @@
       grid-template-columns: 1fr 1fr;
     }
     .photo-gallery.layout-collage.count-3 {
-      width: 100% !important;
-      grid-template-columns: minmax(0, 2.35fr) minmax(0, 1fr);
+      grid-template-columns: 2fr 1.2fr;
       grid-template-rows: 1fr 1fr;
-      gap: 8px;
     }
     .photo-gallery.layout-collage.count-3 .photo-frame:first-child {
       grid-row: span 2;
@@ -1103,34 +1093,11 @@
       max-height: 200px;
     }
     .photo-gallery.layout-collage.count-3 .photo-frame img {
-      max-height: none;
+      max-height: 240px;
     }
     .photo-gallery.layout-collage.count-3 .photo-frame:first-child img {
-      aspect-ratio: 4 / 5;
-      max-height: none;
-    }
-
-    .photo-gallery.style-tape .photo-frame::before {
-      content: "";
-      position: absolute;
-      top: -11px;
-      left: 50%;
-      width: 56px;
-      height: 18px;
-      transform: translateX(-50%) rotate(-6deg);
-      background: rgba(238, 226, 199, 0.78);
-      border: 1px solid rgba(17, 17, 17, 0.08);
-      box-shadow: 0 1px 3px rgba(17, 17, 17, 0.08);
-      z-index: 30;
-      pointer-events: none;
-    }
-
-    .photo-gallery.style-polaroid .photo-frame {
-      padding: 8px 8px 28px;
-      background: rgba(255, 255, 255, 0.92);
-      box-shadow: 0 5px 14px rgba(17, 17, 17, 0.10);
-      border-radius: 7px 9px 8px 6px;
-      box-sizing: border-box;
+      aspect-ratio: 1 / 1.2;
+      max-height: 240px;
     }
 
     /* C. 가로 스크롤형 (horizontalScroll) */
@@ -1259,11 +1226,11 @@
       object-fit: cover !important;
     }
 
-    /* Edit panel close button */
+    /* Edit panel close button (top-left X) */
     .edit-close-button {
       position: absolute;
       top: 12px;
-      right: 12px;
+      left: 12px;
       background: none;
       border: none;
       font-size: 32px;
@@ -1285,7 +1252,10 @@
 
     /* Large inline editor photo gallery styling */
     .editor-large-gallery {
-      display: none !important;
+      width: 100% !important;
+      margin: 12px 0 !important;
+      padding: 0 !important;
+      border: none !important;
     }
 
     /* Small row photo preview inside the editor input card */
@@ -1293,16 +1263,13 @@
       display: flex !important;
       flex-direction: row !important;
       overflow-x: auto !important;
-      justify-content: center !important;
-      gap: 8px !important;
-      width: min(100%, 310px) !important;
-      margin: 10px auto 12px !important;
-      padding: 8px !important;
-      border: 1px dashed rgba(17, 17, 17, 0.14) !important;
-      border-radius: 18px 15px 16px 14px / 15px 18px 14px 16px !important;
-      background: rgba(255, 255, 255, 0.74) !important;
+      gap: 10px !important;
+      width: 100% !important;
+      margin: 8px 0 12px !important;
+      padding: 6px 0 !important;
+      border: none !important;
+      background: transparent !important;
       scrollbar-width: none !important;
-      box-sizing: border-box !important;
     }
     .photo-preview-list::-webkit-scrollbar {
       display: none !important;
@@ -1313,15 +1280,9 @@
       height: 75px !important;
       cursor: pointer !important;
       border-radius: 6px !important;
-      overflow: visible !important;
+      overflow: hidden !important;
       border: 1.2px solid var(--sketch-line) !important;
       background: rgba(255, 255, 255, 0.6) !important;
-    }
-
-    .photo-preview-list.layout-horizontalScroll .photo-frame {
-      flex: 0 0 auto !important;
-      width: 75px !important;
-      height: 75px !important;
     }
     body.theme-dark .photo-preview-list .photo-frame {
       background: rgba(255, 255, 255, 0.05) !important;
@@ -1340,63 +1301,41 @@
       font-size: 11px !important;
     }
 
-    .photo-frame.is-cropped {
-      overflow: visible !important;
-    }
-
-    .photo-frame.is-cropped img {
-      width: 100% !important;
-      height: 100% !important;
-      object-fit: cover !important;
-    }
-
     /* Sticky Bottom Bar */
     .sticky-bottom-bar {
       position: fixed;
-      bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+      bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      width: calc(min(100%, var(--app-width)) - 2 * var(--page-gutter));
-      max-width: calc(100vw - 32px);
-      height: 54px;
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(17, 17, 17, 0.07);
-      border-radius: 26px 22px 27px 23px / 22px 27px 22px 26px;
-      padding: 6px 16px;
+      width: min(100%, var(--app-width));
+      background: var(--notebook);
+      border-top: 1.5px solid var(--sketch-line);
+      padding: 10px var(--page-gutter) calc(10px + env(safe-area-inset-bottom, 0px));
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
       z-index: 200;
-      box-shadow:
-        0 12px 28px -17px rgba(17, 17, 17, 0.26),
-        0 3px 10px -8px rgba(17, 17, 17, 0.12);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 -4px 16px rgba(17, 17, 17, 0.05);
     }
     body.theme-dark .sticky-bottom-bar {
-      background: rgba(20, 20, 20, 0.9);
-      border-color: rgba(255, 255, 255, 0.09);
-      box-shadow:
-        0 14px 34px -16px rgba(0, 0, 0, 0.58),
-        0 4px 12px -8px rgba(0, 0, 0, 0.28);
+      background: #000000;
+      border-top-color: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.45);
     }
     .sticky-bottom-bar .bottom-bar-btn {
       min-height: 38px;
       padding: 0 14px;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 700;
       border-radius: 999px 880px 940px 910px / 760px 980px 800px 930px;
       border: 1.4px solid var(--ink);
       background: transparent;
       color: var(--ink);
       cursor: pointer;
-      transition: all 0.2s ease;
     }
     .sticky-bottom-bar .bottom-bar-btn:hover {
       background: rgba(17, 17, 17, 0.05);
-      transform: translateY(-1px);
     }
     body.theme-dark .sticky-bottom-bar .bottom-bar-btn {
       border-color: var(--text-soft);
@@ -1411,21 +1350,6 @@
       gap: 8px;
     }
 
-    @media (max-width: 380px) {
-      .sticky-bottom-bar {
-        gap: 6px;
-        padding: 6px 10px;
-      }
-      .sticky-bottom-bar .bottom-bar-btn {
-        padding: 0 8px;
-        font-size: 13px;
-        min-height: 34px;
-      }
-      .sticky-bottom-bar .bottom-bar-actions {
-        gap: 4px;
-      }
-    }
-
     /* Photo Settings Bottom Drawer Sheet */
     .photo-drawer-backdrop {
       position: fixed;
@@ -1435,17 +1359,11 @@
       -webkit-backdrop-filter: none !important;
       z-index: 10000;
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-end;
+      align-items: flex-end;
+      justify-content: center;
       opacity: 0;
       animation: drawer-fade-in 0.25s ease forwards;
       pointer-events: none;
-    }
-
-    .photo-drawer-backdrop > .photo-preview-list {
-      pointer-events: auto;
-      margin-bottom: 10px !important;
     }
     .photo-drawer-backdrop[hidden] {
       display: none !important;
@@ -1459,11 +1377,11 @@
       background: var(--surface-soft);
       border: 1.3px solid var(--sketch-line);
       border-radius: 16px !important;
-      padding: 12px;
+      padding: 16px 20px;
       box-shadow: 0 -8px 32px rgba(17, 17, 17, 0.12);
       animation: drawer-slide-up 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       box-sizing: border-box;
-      margin-bottom: 80px; /* Floating close above the floating bottom bar */
+      margin-bottom: 90px; /* Floating above the floating sticky bottom bar */
     }
     body.theme-dark .photo-drawer-content {
       background: #1A1A1A;
@@ -1475,70 +1393,56 @@
       to { transform: translateY(0); }
     }
     .photo-drawer-header {
-      display: none !important;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      border-bottom: 1.5px dashed var(--sketch-line-soft);
+      padding-bottom: 8px;
+    }
+    .photo-drawer-header h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    body.theme-dark .photo-drawer-header h3 {
+      color: var(--text-soft);
+    }
+    .photo-drawer-close {
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      line-height: 1;
+      color: var(--muted);
+      cursor: pointer;
     }
     .photo-drawer-body .photo-tools {
       border-top: none !important;
       padding-top: 0 !important;
-      margin: 0 !important;
-      gap: 14px !important;
+      margin-top: 0 !important;
     }
     .photo-drawer-actions {
-      display: none !important;
-    }
-
-    /* Inline Confirm/Cancel Actions inside tool row */
-    .photo-tool-row {
       display: flex;
-      align-items: center;
-      gap: 10px;
-      width: 100%;
+      justify-content: flex-end;
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1.5px dashed var(--sketch-line-soft);
     }
-    .photo-drawer-inline-actions {
-      margin-left: auto;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .photo-drawer-cancel,
     .photo-drawer-ok {
-      min-height: 32px;
-      padding: 0 12px;
+      min-height: 34px;
+      padding: 0 16px;
       font-size: 14px;
       font-weight: 700;
       border-radius: 999px 880px 940px 910px / 760px 980px 800px 930px;
-      cursor: pointer;
-      font-family: var(--font-hand);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-      outline: none;
-    }
-    .photo-drawer-cancel {
-      border: 1.2px dashed var(--sketch-line);
-      background: transparent;
-      color: var(--muted);
-    }
-    .photo-drawer-cancel:hover {
-      background: rgba(17, 17, 17, 0.04);
-      color: var(--text);
-    }
-    body.theme-dark .photo-drawer-cancel:hover {
-      background: rgba(255, 255, 255, 0.06);
-    }
-    .photo-drawer-ok {
       background: var(--ink);
       color: #fff;
-      border: 1.2px solid var(--ink);
-    }
-    .photo-drawer-ok:hover {
-      background: var(--accent-hover);
-      transform: translateY(-1px);
+      cursor: pointer;
+      border: 1px solid var(--ink);
     }
     body.theme-dark .photo-drawer-ok {
       background: var(--text-soft);
-      color: var(--notebook);
+      color: #000;
       border-color: var(--text-soft);
     }
 
@@ -1848,7 +1752,6 @@
       border: none;
       border-radius: 0;
       box-shadow: none;
-      overflow: visible;
     }
 
     .app[data-view="today"] .calendar-card {
@@ -1881,19 +1784,8 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
+      margin-bottom: 18px;
       padding: 0;
-      position: sticky;
-      top: 0;
-      z-index: 220;
-      background: var(--notebook);
-      padding-top: 10px;
-      margin-top: -10px;
-      padding-bottom: 10px;
-      margin-bottom: 8px;
-    }
-
-    .app:not([data-view="records"]) .calendar-controls {
-      display: none;
     }
 
     .calendar-actions {
@@ -2968,18 +2860,6 @@
       padding: 0;
     }
 
-    .today-sticky-header {
-      position: sticky;
-      top: 0;
-      z-index: 240;
-      background: var(--notebook);
-      padding-top: 10px;
-      margin-top: -10px;
-      padding-bottom: 12px;
-      margin-bottom: 12px;
-      box-shadow: 0 10px 18px var(--notebook);
-    }
-
     .today-entry-layout::after {
       display: none;
     }
@@ -3580,8 +3460,7 @@
       overflow: hidden;
     }
 
-    .timeline-item.is-expanded .timeline-read-text,
-    .list-entry-capsule.is-expanded .timeline-read-text {
+    .timeline-item.is-expanded .timeline-read-text {
       display: block;
       -webkit-line-clamp: unset;
       overflow: visible;
@@ -3693,7 +3572,7 @@
     .edit-panel {
       position: fixed;
       inset: 0;
-      z-index: 1000; /* 고정 헤더와 하단 탭바까지 모두 덮음 */
+      z-index: 150; /* 하단 탭바 등 모든 앱 요소를 완전히 덮음 */
       background: var(--notebook); /* 전체 화면 뷰 */
       display: flex;
       flex-direction: column;
@@ -3722,7 +3601,7 @@
     }
 
     .edit-panel-title {
-      align-self: flex-start;
+      align-self: center;
       background: #000000;
       color: #ffffff;
       font-size: 13px !important;
@@ -3730,10 +3609,10 @@
       font-family: var(--font-hand);
       padding: 4px 10px !important;
       border-radius: 4px;
-      margin: 0 0 4px 0 !important;
+      margin: 0 auto 4px auto !important;
       border-bottom: none !important;
       display: inline-block;
-      text-align: left;
+      text-align: center;
       line-height: 1.2;
       letter-spacing: 0.05em;
     }
@@ -4209,9 +4088,8 @@
       align-items: center;
       justify-content: space-between;
       width: 100%;
+      margin-bottom: 16px;
       box-sizing: border-box;
-      padding-bottom: 10px;
-      margin-bottom: 6px;
     }
 
     .user-avatar-btn {
@@ -4260,11 +4138,10 @@
     /* ── 오늘 탭 두 번째 행: 주간 히트맵 스티커 판 ── */
     .today-heatmap-row {
       width: 100%;
-      margin-bottom: 0;
-      padding-bottom: 12px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
       border-bottom: 1.5px dashed var(--sketch-line-soft);
       box-sizing: border-box;
-      padding-top: 2px;
     }
 
     /* ── 설정 탭 내 프로필 변경 카드 UI ── */
@@ -4401,6 +4278,7 @@
       }
 
       .today-heatmap-row {
+        margin-bottom: 20px;
         padding-bottom: 12px;
       }
 
@@ -4584,10 +4462,6 @@
             <div class="photo-tool-row">
               <button class="photo-add-button" id="draftPhotoAddButton" type="button">사진 붙이기</button>
               <span class="photo-help" id="draftPhotoHelp">최대 3장</span>
-              <div class="photo-drawer-inline-actions">
-                <button type="button" class="photo-drawer-cancel" id="draftPhotoCancelBtn">취소</button>
-                <button type="button" class="photo-drawer-ok" id="draftPhotoOkBtn">확인</button>
-              </div>
             </div>
             <input id="draftPhotoInput" type="file" accept="image/*" multiple hidden />
             <div class="photo-option-grid" id="draftPhotoOptionGrid" hidden>
@@ -4813,10 +4687,6 @@
           <div class="photo-tool-row">
             <button class="photo-add-button" id="editPhotoAddButton" type="button">사진 붙이기</button>
             <span class="photo-help" id="editPhotoHelp">최대 3장</span>
-            <div class="photo-drawer-inline-actions">
-              <button type="button" class="photo-drawer-cancel" id="editPhotoCancelBtn">취소</button>
-              <button type="button" class="photo-drawer-ok" id="editPhotoOkBtn">확인</button>
-            </div>
           </div>
           <input id="editPhotoInput" type="file" accept="image/*" multiple hidden />
           <div class="photo-option-grid" id="editPhotoOptionGrid" hidden>
@@ -4873,7 +4743,7 @@
 
   <!-- Photo framing adjustment modal -->
   <div class="custom-modal" id="photoFramingModal" hidden>
-    <div class="custom-modal-content card" style="width: calc(100% - 28px); max-width: 420px; padding: 16px; border-radius: var(--radius);">
+    <div class="custom-modal-content card" style="max-width: 340px; padding: 18px; border-radius: var(--radius);">
       <div class="custom-modal-header" style="margin-bottom: 8px;">
         <h3 id="photoFramingTitle" style="font-size: 17px; font-weight: 700; margin: 0;">사진 구도 조절</h3>
       </div>
@@ -4881,15 +4751,8 @@
         <p style="font-size: 13px; color: var(--muted); text-align: center; margin: 0; line-height: 1.4;">사진을 드래그해서 위치를 이동하고,<br>슬라이더로 크기를 조절해 주세요.</p>
         
         <!-- Framing container -->
-        <div id="framingContainer" style="width: 320px; height: 320px; max-width: 100%; overflow: hidden; position: relative; border: 1.5px solid var(--sketch-line); border-radius: 8px; background: #eee;">
+        <div id="framingContainer" style="width: 240px; height: 240px; overflow: hidden; position: relative; border: 1.5px solid var(--sketch-line); border-radius: 8px; background: #eee;">
           <img id="framingImg" src="" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; cursor: move; user-select: none;" />
-        </div>
-
-        <div class="framing-ratio-group" id="framingRatioGroup" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; width: 100%;">
-          <button type="button" class="photo-chip" data-ratio="original">원본</button>
-          <button type="button" class="photo-chip" data-ratio="square">1:1</button>
-          <button type="button" class="photo-chip" data-ratio="portrait43">세로 4:3</button>
-          <button type="button" class="photo-chip" data-ratio="landscape43">가로 4:3</button>
         </div>
         
         <!-- Zoom slider -->
@@ -5050,7 +4913,6 @@
     const framingContainer = $("#framingContainer");
     const framingImg = $("#framingImg");
     const framingZoomSlider = $("#framingZoomSlider");
-    const framingRatioGroup = $("#framingRatioGroup");
     const framingCancelBtn = $("#framingCancelBtn");
     const framingSaveBtn = $("#framingSaveBtn");
     const authButton = $("#authButton");
@@ -5080,12 +4942,6 @@
     const diaryDetailDateText = $("#diaryDetailDateText");
     const diaryDetailClose = $("#diaryDetailClose");
     const detailEraserButton = $("#detailEraserButton");
-    const calendarCard = $(".calendar-card");
-    const calendarControls = $(".calendar-controls");
-
-    if (calendarCard && calendarControls && calendarControls.parentElement === calendarCard) {
-      calendarCard.before(calendarControls);
-    }
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     const speechSupported = Boolean(SpeechRecognition);
@@ -5099,7 +4955,6 @@
     let detailEditPickMode = false;
     let draftPhotoState = createEmptyPhotoState();
     let editPhotoState = createEmptyPhotoState();
-    let activePhotoDrawerKind = null;
     let viewDate = startOfDay(new Date());
     let calendarMode = "month";
     let currentView = "today";
@@ -5662,26 +5517,16 @@
               name: photo.name || "photo",
               type: photo.type || "image/jpeg",
               createdAt: photo.createdAt || Date.now(),
-              size: photo.size || "medium",
-              width: Number(photo.width) || 0,
-              height: Number(photo.height) || 0,
-              scale: Number(photo.scale) || 1,
-              offsetX: Number(photo.offsetX) || 0,
-              offsetY: Number(photo.offsetY) || 0,
-              cropRatio: normalizePhotoCropRatio(photo.cropRatio)
+              size: photo.size || "medium"
             }))
         : [];
-    }
-
-    function normalizePhotoCropRatio(ratio) {
-      return ["original", "square", "portrait43", "landscape43"].includes(ratio) ? ratio : "original";
     }
 
     function getPhotoLayoutOptions() {
       return [
         { value: "vertical", label: "세로형" },
         { value: "collage", label: "콜라주형" },
-        { value: "horizontalScroll", label: "가로형" }
+        { value: "horizontalScroll", label: "가로 스크롤형" }
       ];
     }
 
@@ -5695,31 +5540,7 @@
     }
 
     function normalizePhotoStyle(style) {
-      const tokens = String(style || "basic")
-        .split(/[|\s]+/)
-        .filter((token) => ["tape", "polaroid"].includes(token));
-      return tokens.length ? Array.from(new Set(tokens)).sort().join("|") : "basic";
-    }
-
-    function hasPhotoStyle(style, token) {
-      return normalizePhotoStyle(style).split("|").includes(token);
-    }
-
-    function togglePhotoStyle(style, token) {
-      if (token === "basic") return "basic";
-      const tokens = new Set(normalizePhotoStyle(style).split("|").filter((item) => item !== "basic"));
-      if (tokens.has(token)) {
-        tokens.delete(token);
-      } else {
-        tokens.add(token);
-      }
-      return tokens.size ? Array.from(tokens).sort().join("|") : "basic";
-    }
-
-    function getPhotoStyleClasses(style) {
-      const normalized = normalizePhotoStyle(style);
-      if (normalized === "basic") return "style-basic";
-      return normalized.split("|").map((token) => `style-${token}`).join(" ");
+      return ["basic", "tape", "polaroid"].includes(style) ? style : "basic";
     }
 
     function normalizeRecord(record) {
@@ -5982,22 +5803,7 @@
             const header = document.createElement("div");
             header.className = "list-entry-header";
 
-            // 메타 그룹 (번호 동그라미 뱃지 + 시간 가로 정렬)
-            const metaGroup = document.createElement("div");
-            metaGroup.className = "list-entry-meta-group";
-
-            const timeEl = document.createElement("span");
-            timeEl.className = "list-entry-time";
-            timeEl.textContent = timeStr;
-
-            const titleEl = document.createElement("h3");
-            titleEl.className = "list-entry-title";
-            titleEl.textContent = title;
-
-            metaGroup.append(titleEl, timeEl);
-            header.appendChild(metaGroup);
-
-            // 세로 3점(⋮) 액션 버튼
+            // 세로 3점(⋮) 액션 버튼 (좌측 배치)
             const dotsBtn = document.createElement("button");
             dotsBtn.type = "button";
             dotsBtn.className = "list-entry-dots";
@@ -6016,6 +5822,22 @@
             });
             header.appendChild(dotsBtn);
 
+            // 메타 그룹 (시간 + 제목 세로 정렬, 우측 배치)
+            const metaGroup = document.createElement("div");
+            metaGroup.className = "list-entry-meta-group";
+
+            const timeEl = document.createElement("span");
+            timeEl.className = "list-entry-time";
+            timeEl.textContent = timeStr;
+
+            const titleEl = document.createElement("h3");
+            titleEl.className = "list-entry-title";
+            titleEl.textContent = title;
+
+            // 위 시간, 아래 제목으로 수정
+            metaGroup.append(timeEl, titleEl);
+            header.appendChild(metaGroup);
+
             entry.appendChild(header);
 
             // 5-2. 선택된 날짜는 본문을 펼쳐 목록 안에서 바로 읽을 수 있게 표시
@@ -6028,6 +5850,29 @@
               renderDiaryBody(diaryBodyContainer, record, false);
               body.appendChild(diaryBodyContainer);
 
+              const actions = document.createElement("div");
+              actions.className = "list-entry-actions";
+
+              const discard = document.createElement("button");
+              discard.type = "button";
+              discard.className = "list-entry-action";
+              discard.textContent = "지우기";
+              discard.addEventListener("click", (e) => {
+                e.stopPropagation();
+                openEditPanel(record);
+              });
+
+              const editBtn = document.createElement("button");
+              editBtn.type = "button";
+              editBtn.className = "list-entry-action primary";
+              editBtn.textContent = "수정";
+              editBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                openEditPanel(record);
+              });
+
+              actions.append(discard, editBtn);
+              body.appendChild(actions);
             }
 
             entry.appendChild(body);
@@ -6134,11 +5979,6 @@
         const heatmapEl = createWeeklyHeatmapElement();
         heatmapRow.appendChild(heatmapEl);
 
-        const stickyHeader = document.createElement("div");
-        stickyHeader.className = "today-sticky-header";
-        stickyHeader.append(dateAvatarRow, heatmapRow);
-        todayRecordsList.appendChild(stickyHeader);
-
         if (!dayRecords.length) {
           const empty = document.createElement("div");
           empty.className = "today-entry-layout empty-state";
@@ -6160,7 +6000,7 @@
 지금의 생각부터 편하게 기록해보세요.`;
 
           welcome.append(welcomeTitle, welcomeText);
-          empty.append(welcome);
+          empty.append(dateAvatarRow, heatmapRow, welcome);
           todayRecordsList.appendChild(empty);
           return;
         }
@@ -6171,7 +6011,7 @@
         const firstRecordSlot = document.createElement("div");
         firstRecordSlot.className = "today-first-record-slot";
 
-        entryLayout.append(firstRecordSlot);
+        entryLayout.append(dateAvatarRow, heatmapRow, firstRecordSlot);
         todayRecordsList.appendChild(entryLayout);
 
         renderRecordItems(dayRecords.slice(0, 1), firstRecordSlot);
@@ -6464,10 +6304,13 @@
       editPhotoState = photoStateFromRecord(record);
       renderPhotoEditor("edit");
       editPanel.hidden = false;
+      requestAnimationFrame(() => {
+        editTitleInput.focus();
+        editTitleInput.select();
+      });
     }
 
     function closeEditPanel() {
-      closePhotoSettingsDrawer();
       editingRecordId = null;
       editPanel.hidden = true;
       editTitleInput.value = "";
@@ -6612,25 +6455,6 @@
       };
     }
 
-    function getPhotoCropDimensions(photo) {
-      const ratio = normalizePhotoCropRatio(photo.cropRatio);
-      if (ratio === "square") return [1, 1];
-      if (ratio === "portrait43") return [3, 4];
-      if (ratio === "landscape43") return [4, 3];
-      const width = Number(photo.width) || 1;
-      const height = Number(photo.height) || 1;
-      return [width, height];
-    }
-
-    function applyPhotoFrameCrop(frame, img, photo) {
-      const [width, height] = getPhotoCropDimensions(photo);
-      frame.classList.add("is-cropped");
-      frame.style.aspectRatio = `${width} / ${height}`;
-      img.style.transform = `scale(${photo.scale || 1}) translate(${photo.offsetX || 0}px, ${photo.offsetY || 0}px)`;
-      img.style.transformOrigin = "center center";
-      img.style.transition = "none";
-    }
-
     function fileToCompressedPhoto(file) {
       return new Promise((resolve, reject) => {
         if (!file || !file.type || !file.type.startsWith("image/")) {
@@ -6659,13 +6483,7 @@
               dataUrl: canvas.toDataURL(type, 0.82),
               name: file.name || "photo",
               type,
-              createdAt: Date.now(),
-              width,
-              height,
-              scale: 1,
-              offsetX: 0,
-              offsetY: 0,
-              cropRatio: "original"
+              createdAt: Date.now()
             });
           };
           image.src = reader.result;
@@ -6724,16 +6542,23 @@
       state.photos = normalizePhotos(state.photos);
       const count = state.photos.length;
 
-      const bottomBar = isDraft
-        ? draftPhotoSettingsBtn?.closest(".sticky-bottom-bar")
-        : editPhotoSettingsBtn?.closest(".sticky-bottom-bar");
-      const drawerContent = photoSettingsDrawer?.querySelector(".photo-drawer-content");
-      if (!photoSettingsDrawer.hidden && activePhotoDrawerKind === kind && drawerContent) {
-        photoSettingsDrawer.insertBefore(preview, drawerContent);
-      } else if (bottomBar?.parentNode) {
-        bottomBar.parentNode.insertBefore(preview, bottomBar);
+      // Dynamic Inline Placement for both Small Previews and Large Inline Gallery
+      const textContainer = isDraft ? $(".review-textarea-container") : $("#editTranscriptInput");
+      if (textContainer && textContainer.parentNode) {
+        if (state.position === "beforeText") {
+          textContainer.parentNode.insertBefore(preview, textContainer);
+          if (largeGallery) textContainer.parentNode.insertBefore(largeGallery, textContainer);
+        } else {
+          const next = textContainer.nextSibling;
+          if (next) {
+            textContainer.parentNode.insertBefore(preview, next);
+            if (largeGallery) textContainer.parentNode.insertBefore(largeGallery, next);
+          } else {
+            textContainer.parentNode.appendChild(preview);
+            if (largeGallery) textContainer.parentNode.appendChild(largeGallery);
+          }
+        }
       }
-      if (largeGallery) largeGallery.innerHTML = "";
 
       if (count === 0) {
         if (optionGrid) optionGrid.hidden = true;
@@ -6756,17 +6581,11 @@
       state.layout = normalizePhotoLayout(count, state.layout);
       state.position = normalizePhotoPosition(state.position);
       state.style = normalizePhotoStyle(state.style);
-      if ((state.layout === "collage" || state.layout === "horizontalScroll") && state.position === "betweenParagraphs") {
-        state.position = "beforeText";
-      }
 
       // 1. 위치 칩 상태 갱신
       if (positionGroup) {
         positionGroup.querySelectorAll(".photo-chip").forEach((btn) => {
           const val = btn.getAttribute("data-value") || btn.dataset.value;
-          const disabled = (state.layout === "collage" || state.layout === "horizontalScroll") && val === "betweenParagraphs";
-          btn.disabled = disabled;
-          btn.classList.toggle("disabled", disabled);
           btn.classList.toggle("active", val === state.position);
         });
       }
@@ -6775,7 +6594,7 @@
       if (styleGroup) {
         styleGroup.querySelectorAll(".photo-chip").forEach((btn) => {
           const val = btn.getAttribute("data-value") || btn.dataset.value;
-          btn.classList.toggle("active", val === "basic" ? state.style === "basic" : hasPhotoStyle(state.style, val));
+          btn.classList.toggle("active", val === state.style);
         });
       }
 
@@ -6793,9 +6612,6 @@
           btn.textContent = opt.label;
           btn.addEventListener("click", () => {
             state.layout = opt.value;
-            if ((state.layout === "collage" || state.layout === "horizontalScroll") && state.position === "betweenParagraphs") {
-              state.position = "beforeText";
-            }
             renderPhotoEditor(kind);
           });
           layoutGroup.appendChild(btn);
@@ -6804,7 +6620,7 @@
 
       // 4. 소형 가로 행 미리보기 렌더링 (순서 재배치용)
       preview.innerHTML = "";
-      preview.className = `photo-preview-list photo-gallery layout-${state.layout} ${getPhotoStyleClasses(state.style)} count-${count}`;
+      preview.className = `photo-preview-list photo-gallery layout-${state.layout} style-${state.style} count-${count}`;
 
       let dragStartIndex = null;
 
@@ -6817,7 +6633,6 @@
         const img = document.createElement("img");
         img.src = photo.dataUrl;
         img.alt = photo.name || "붙인 사진";
-        applyPhotoFrameCrop(frame, img, photo);
 
         const remove = document.createElement("button");
         remove.type = "button";
@@ -6832,10 +6647,6 @@
         });
 
         frame.append(img, remove);
-        frame.addEventListener("click", (e) => {
-          if (e.target.closest(".photo-remove-btn")) return;
-          openPhotoFramingModal(photo, kind);
-        });
 
         // Native Drag-and-Drop
         frame.addEventListener("dragstart", (e) => {
@@ -6890,8 +6701,38 @@
         preview.appendChild(frame);
       });
 
+      // 5. 본문용 고해상도 인라인 갤러리 렌더링 (실제 구도 조절용)
       if (largeGallery) {
         largeGallery.innerHTML = "";
+        largeGallery.className = `editor-large-gallery photo-gallery layout-${state.layout} style-${state.style} count-${count}`;
+        
+        state.photos.forEach((photo) => {
+          const frame = document.createElement("figure");
+          frame.className = `photo-frame size-large`;
+          frame.style.position = "relative";
+          frame.style.overflow = "hidden";
+          
+          const img = document.createElement("img");
+          img.src = photo.dataUrl;
+          img.alt = "조정할 사진";
+          img.style.cursor = "pointer";
+          
+          // Apply scale and translation transform!
+          const scale = photo.scale || 1;
+          const offsetX = photo.offsetX || 0;
+          const offsetY = photo.offsetY || 0;
+          img.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`;
+          img.style.transformOrigin = "center center";
+          img.style.transition = "none";
+          
+          // Click to open high-fidelity framing crop modal!
+          frame.addEventListener("click", () => {
+            openPhotoFramingModal(photo, kind);
+          });
+          
+          frame.appendChild(img);
+          largeGallery.appendChild(frame);
+        });
       }
 
       // Update the live preview
@@ -6922,14 +6763,22 @@
       const gallery = document.createElement("div");
       const layout = normalizePhotoLayout(photos.length, record.photoLayout);
       const style = normalizePhotoStyle(record.photoStyle);
-      gallery.className = `photo-gallery layout-${layout} ${getPhotoStyleClasses(style)} count-${photos.length}`;
+      gallery.className = `photo-gallery layout-${layout} style-${style}`;
       photos.forEach((photo) => {
         const frame = document.createElement("figure");
         frame.className = `photo-frame size-${photo.size || "medium"}`;
+        frame.style.overflow = "hidden";
         const img = document.createElement("img");
         img.src = photo.dataUrl;
         img.alt = photo.name || "기록 사진";
-        applyPhotoFrameCrop(frame, img, photo);
+        
+        // Apply saved scale and translation offset transform!
+        const scale = photo.scale || 1;
+        const offsetX = photo.offsetX || 0;
+        const offsetY = photo.offsetY || 0;
+        img.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`;
+        img.style.transformOrigin = "center center";
+        img.style.transition = "none";
         
         frame.appendChild(img);
         gallery.appendChild(frame);
@@ -7462,7 +7311,6 @@
       }
 
       pendingRecording = null;
-      closePhotoSettingsDrawer();
       setDraftReviewUi(false);
       selectedDate = dateKeyToDate(record.date);
       viewDate = selectedDate;
@@ -8146,9 +7994,6 @@
 
 
     todayButton.addEventListener("click", () => {
-      selectedDate = startOfDay(new Date());
-      viewDate = selectedDate;
-      if (diaryDetailPanel) diaryDetailPanel.classList.remove("open");
       setAppView("today", { scrollBehavior: "auto" });
     });
 
@@ -8346,7 +8191,7 @@
       draftPhotoStyleGroup.querySelectorAll(".photo-chip").forEach((btn) => {
         btn.addEventListener("click", () => {
           const val = btn.getAttribute("data-value") || btn.dataset.value;
-          draftPhotoState.style = togglePhotoStyle(draftPhotoState.style, val);
+          draftPhotoState.style = normalizePhotoStyle(val);
           renderPhotoEditor("draft");
         });
       });
@@ -8355,7 +8200,7 @@
       editPhotoStyleGroup.querySelectorAll(".photo-chip").forEach((btn) => {
         btn.addEventListener("click", () => {
           const val = btn.getAttribute("data-value") || btn.dataset.value;
-          editPhotoState.style = togglePhotoStyle(editPhotoState.style, val);
+          editPhotoState.style = normalizePhotoStyle(val);
           renderPhotoEditor("edit");
         });
       });
@@ -8367,7 +8212,6 @@
     let framingZoom = 1;
     let framingOffsetX = 0;
     let framingOffsetY = 0;
-    let framingRatio = "original";
     let isFramingDragging = false;
     let framingStartX = 0;
     let framingStartY = 0;
@@ -8378,7 +8222,6 @@
       framingZoom = photo.scale || 1;
       framingOffsetX = photo.offsetX || 0;
       framingOffsetY = photo.offsetY || 0;
-      framingRatio = normalizePhotoCropRatio(photo.cropRatio);
       
       if (framingImg) {
         framingImg.src = photo.dataUrl;
@@ -8387,37 +8230,10 @@
         framingZoomSlider.value = framingZoom;
       }
       
-      updateFramingRatioButtons();
-      updateFramingContainerSize();
       updateFramingTransform();
       if (photoFramingModal) {
         photoFramingModal.hidden = false;
       }
-    }
-
-    function updateFramingRatioButtons() {
-      if (!framingRatioGroup) return;
-      framingRatioGroup.querySelectorAll(".photo-chip").forEach((btn) => {
-        btn.classList.toggle("active", btn.dataset.ratio === framingRatio);
-      });
-    }
-
-    function updateFramingContainerSize() {
-      if (!framingContainer || !framingActivePhoto) return;
-      const [ratioWidth, ratioHeight] = getPhotoCropDimensions({
-        ...framingActivePhoto,
-        cropRatio: framingRatio
-      });
-      const maxWidth = Math.min(window.innerWidth - 56, 320);
-      const maxHeight = Math.min(window.innerHeight - 280, 380);
-      let width = maxWidth;
-      let height = Math.round(width * (ratioHeight / ratioWidth));
-      if (height > maxHeight) {
-        height = maxHeight;
-        width = Math.round(height * (ratioWidth / ratioHeight));
-      }
-      framingContainer.style.width = `${width}px`;
-      framingContainer.style.height = `${height}px`;
     }
 
     function updateFramingTransform() {
@@ -8431,17 +8247,6 @@
       framingZoomSlider.addEventListener("input", (e) => {
         framingZoom = parseFloat(e.target.value);
         updateFramingTransform();
-      });
-    }
-
-    if (framingRatioGroup) {
-      framingRatioGroup.querySelectorAll(".photo-chip").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          framingRatio = normalizePhotoCropRatio(btn.dataset.ratio);
-          updateFramingRatioButtons();
-          updateFramingContainerSize();
-          updateFramingTransform();
-        });
       });
     }
 
@@ -8504,7 +8309,6 @@
           framingActivePhoto.scale = framingZoom;
           framingActivePhoto.offsetX = framingOffsetX;
           framingActivePhoto.offsetY = framingOffsetY;
-          framingActivePhoto.cropRatio = framingRatio;
         }
         if (photoFramingModal) {
           photoFramingModal.hidden = true;
@@ -8515,11 +8319,6 @@
 
     // 사진 설정 bottom sheet drawer 개폐 로직
     function openPhotoSettingsDrawer(kind) {
-      if (!photoSettingsDrawer.hidden && activePhotoDrawerKind === kind) {
-        closePhotoSettingsDrawer();
-        return;
-      }
-
       const isDraft = kind === "draft";
       const tools = isDraft ? $("#draftPhotoTools") : $("#editPhotoTools");
       
@@ -8532,16 +8331,11 @@
       const optionGrid = isDraft ? $("#draftPhotoOptionGrid") : $("#editPhotoOptionGrid");
       if (optionGrid) optionGrid.hidden = false;
       
-      activePhotoDrawerKind = kind;
       photoSettingsDrawer.hidden = false;
-      renderPhotoEditor(kind);
     }
 
     function closePhotoSettingsDrawer() {
-      const closingKind = activePhotoDrawerKind;
       photoSettingsDrawer.hidden = true;
-      activePhotoDrawerKind = null;
-      if (closingKind) renderPhotoEditor(closingKind);
     }
 
     if (draftPhotoSettingsBtn) {
@@ -8550,31 +8344,21 @@
     if (editPhotoSettingsBtn) {
       editPhotoSettingsBtn.addEventListener("click", () => openPhotoSettingsDrawer("edit"));
     }
-    const draftPhotoCancelBtn = $("#draftPhotoCancelBtn");
-    const draftPhotoOkBtn = $("#draftPhotoOkBtn");
-    const editPhotoCancelBtn = $("#editPhotoCancelBtn");
-    const editPhotoOkBtn = $("#editPhotoOkBtn");
-
     if (photoDrawerCloseBtn) {
       photoDrawerCloseBtn.addEventListener("click", closePhotoSettingsDrawer);
     }
     if (photoDrawerOkBtn) {
       photoDrawerOkBtn.addEventListener("click", closePhotoSettingsDrawer);
     }
-    if (draftPhotoCancelBtn) {
-      draftPhotoCancelBtn.addEventListener("click", closePhotoSettingsDrawer);
-    }
-    if (draftPhotoOkBtn) {
-      draftPhotoOkBtn.addEventListener("click", closePhotoSettingsDrawer);
-    }
-    if (editPhotoCancelBtn) {
-      editPhotoCancelBtn.addEventListener("click", closePhotoSettingsDrawer);
-    }
-    if (editPhotoOkBtn) {
-      editPhotoOkBtn.addEventListener("click", closePhotoSettingsDrawer);
-    }
 
-    // Fullscreen image preview is intentionally disabled for now.
+    // Fullscreen blurred image Lightbox overlay logic
+    document.addEventListener("click", (e) => {
+      const clickedImg = e.target.closest(".photo-gallery:not(.photo-preview-list) .photo-frame img");
+      if (clickedImg) {
+        lightboxImg.src = clickedImg.src;
+        imageLightbox.hidden = false;
+      }
+    });
 
     if (imageLightbox) {
       imageLightbox.addEventListener("click", () => {
