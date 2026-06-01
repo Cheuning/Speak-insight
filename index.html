@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
@@ -48,8 +48,8 @@
 
     :root {
       /* Phase 1: 색감 — 세련된 회백색 계열로 변경 */
-      --bg: #EFF0F2;
-      --notebook: #F6F7F9;
+      --bg: #FAF8F1;
+      --notebook: #FAF8F1;
       --cal-card: #FFFFFF;          /* 캘린더 카드 전용 */
       --surface: #ffffff;
       --surface-soft: #EFF0F2;
@@ -92,8 +92,8 @@
 
     /* 배경색 테마 오버라이드 */
     body.theme-white {
-      --bg: #FFFFFF;
-      --notebook: #FFFFFF;
+      --bg: #FAF8F1;
+      --notebook: #FAF8F1;
       --cal-card: #FFFFFF;
       --surface-soft: #F9FAFB;
       --text: #111111;
@@ -277,7 +277,7 @@
       min-height: 38px;
       padding: 0 13px;
       border-radius: 999px 920px 980px 900px;
-      background: var(--ink);
+      background: rgba(17, 17, 17, 0.06);
       color: #fff;
       font-weight: 700;
       font-size: 17px;
@@ -444,8 +444,8 @@
       flex-direction: column;
       min-height: calc(100vh - 112px);
       padding: var(--space-3) var(--space-3);
-      background: transparent;
-      border: none;
+      background: rgba(17, 17, 17, 0.06);
+      border: 1.2px solid rgba(17, 17, 17, 0.08);
       box-shadow: none;
     }
 
@@ -802,7 +802,7 @@
     .modal-btn-start {
       border: 1.4px solid var(--ink);
       border-radius: 14px 17px 13px 16px / 16px 13px 15px 12px;
-      background: var(--ink);
+      background: rgba(17, 17, 17, 0.06);
       color: #fff;
     }
 
@@ -844,7 +844,7 @@
     }
 
     .recording-stop-button {
-      background: var(--ink);
+      background: #1F4014;
       color: #fff;
     }
 
@@ -891,7 +891,7 @@
     }
 
     .save-draft-input::placeholder {
-      color: var(--muted-light);
+      color: var(--ink);
       font-style: italic;
     }
 
@@ -1015,7 +1015,7 @@
     }
 
     .photo-chip.active {
-      background: var(--ink);
+      background: rgba(17, 17, 17, 0.06);
       color: #fff;
       border-color: var(--ink);
     }
@@ -1435,7 +1435,7 @@
       font-size: 14px;
       font-weight: 700;
       border-radius: 999px 880px 940px 910px / 760px 980px 800px 930px;
-      background: var(--ink);
+      background: rgba(17, 17, 17, 0.06);
       color: #fff;
       cursor: pointer;
       border: 1px solid var(--ink);
@@ -2150,7 +2150,7 @@
     .view-toggle-btn {
       min-height: 32px;
       padding: 6px 14px;
-      background: var(--ink); /* Black pill button */
+      background: #1F4014; /* Black pill button */
       color: #ffffff !important;
       border: none;
       border-radius: 999px;
@@ -2189,7 +2189,7 @@
       top: calc(100% + 6px);
       right: 0;
       z-index: 150;
-      background: var(--cal-card);
+      background: #FFF098;
       border: 1.2px solid var(--sketch-line);
       border-radius: 16px;
       box-shadow: 0 10px 25px -5px rgba(17, 17, 17, 0.12);
@@ -2241,8 +2241,8 @@
     }
 
     .dropdown-opt:hover {
-      background: var(--surface-soft);
-      color: var(--text);
+      background: transparent;
+      color: var(--text-soft);
     }
 
     body.theme-dark .dropdown-opt:hover {
@@ -2250,7 +2250,7 @@
     }
 
     .dropdown-opt.active {
-      background: var(--ink);
+      background: #1F4014;
       color: #ffffff !important;
     }
 
@@ -2331,7 +2331,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(17, 17, 17, 0.04); /* 기본 일기가 없는 날 옅은 회색 서클 */
+      background: #FFFFFF;
       color: var(--text);
       border: none;
       border-radius: 50%;
@@ -2577,12 +2577,12 @@
       border-radius: 50%;
       transition: background-color 0.2s, color 0.2s;
       flex-shrink: 0;
-      margin-top: -2px; /* 세밀하게 세로 오프셋 조율 */
+      margin-top: 0; /* 세밀하게 세로 오프셋 조율 */
     }
 
     .list-entry-dots:hover {
-      background-color: var(--surface-soft);
-      color: var(--text);
+      background-color: rgba(17, 17, 17, 0.08);
+      color: var(--ink);
     }
 
     .list-entry-dots svg {
@@ -2743,8 +2743,9 @@
       width: 20px;
       height: 20px;
       border-radius: 50%;
-      background: #FFE57F; /* Soft warm yellow */
-      border: 1.2px solid var(--ink);
+      background: #1F4014; /* Soft warm yellow */
+      border: 1.2px solid #1F4014;
+      color: #FFFFFF;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -2754,8 +2755,9 @@
     }
 
     body.theme-dark .diary-check-badge {
-      background: #FFD54F;
-      border-color: var(--text-soft);
+      background: #1F4014;
+      border-color: #1F4014;
+      color: #FFFFFF;
     }
 
     .records-meta {
@@ -3018,7 +3020,7 @@
       width: 9px;
       height: 9px;
       border-radius: 50%;
-      background: var(--ink);
+      background: #1F4014;
       border: 2px solid var(--bg);
       z-index: 5;
     }
@@ -3105,16 +3107,16 @@
       align-items: center;
       justify-content: center;
       border-radius: 52% 48% 55% 45% / 44% 56% 46% 54%;
-      color: var(--muted);
-      background: transparent;
-      border: 1.2px solid var(--sketch-line);
+      color: var(--ink);
+      background: rgba(17, 17, 17, 0.06);
+      border: 1.2px solid rgba(17, 17, 17, 0.08);
       cursor: pointer;
       transition: color 0.18s, background 0.18s;
     }
 
     .more-button:hover {
       color: var(--ink);
-      background: var(--surface-soft);
+      background: rgba(17, 17, 17, 0.08);
     }
 
     .more-button svg {
@@ -3317,7 +3319,7 @@
       bottom: -14px;
       left: 50%;
       width: 1.6px;
-      background: var(--ink);
+      background: rgba(17, 17, 17, 0.06);
       transform: translateX(-50%);
       z-index: 1;
     }
@@ -3334,7 +3336,7 @@
       width: 12px;
       height: 12px;
       border-radius: 50%;
-      background: var(--ink);
+      background: rgba(17, 17, 17, 0.06);
       transform: translateX(-50%);
       z-index: 2;
     }
@@ -3347,7 +3349,7 @@
       gap: 9px;
       margin: 0;
       padding: 17px 18px 18px;
-      background: rgba(17, 17, 17, 0.055);
+      background: #FFFFFF;
       border: 1.3px solid rgba(17, 17, 17, 0.18);
       border-radius: 8px 9px 8px 10px / 9px 8px 10px 8px;
       box-shadow: none;
@@ -3547,8 +3549,8 @@
       min-height: 38px;
       padding: 0 14px;
       border-radius: 999px 880px 940px 910px / 760px 980px 800px 930px;
-      color: #fff;
-      background: var(--ink);
+      color: #171717;
+      background: #FFD273;
       border: 1.4px solid var(--ink);
       font-weight: 700;
       font-size: 17px;
@@ -3702,7 +3704,7 @@
     }
 
     .edit-save-button:hover {
-      background: var(--accent-hover);
+      background: #FFD273;
       transform: translateY(-2px);
       box-shadow: 0 6px 16px rgba(17, 17, 17, 0.15);
     }
@@ -3818,7 +3820,7 @@
 
     .nav-item.active {
       color: #fff;
-      background: var(--ink);
+      background: #1F4014;
       box-shadow: 0 8px 18px -10px rgba(17, 17, 17, 0.45);
     }
 
@@ -3906,8 +3908,8 @@
       align-items: center;
       justify-content: center;
       border-radius: 50%;
-      color: #fff;
-      background: var(--ink);
+      color: #171717;
+      background: #FFD273;
       border: 6px solid var(--notebook);
       box-shadow:
         0 12px 24px -14px rgba(17, 17, 17, 0.55),
@@ -3922,7 +3924,7 @@
 
     .mic-button:hover {
       transform: scale(1.08) translateY(-2px);
-      background: var(--accent-hover);
+      background: #FFD273;
       box-shadow:
         0 14px 28px -14px rgba(17, 17, 17, 0.62),
         0 4px 10px -6px rgba(17, 17, 17, 0.24);
@@ -4005,7 +4007,7 @@
       width: 34px;
       height: 34px;
       border-radius: 50%;
-      background: rgba(17, 17, 17, 0.05); /* 기본 회색 동그라미 */
+      background: #FFFFFF;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -4604,7 +4606,7 @@
       <!-- Inline diary detail — expands below grid when a date is clicked -->
       <div class="diary-detail-panel" id="diaryDetailPanel">
         <div class="diary-detail-header" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; border-bottom: 0; padding-bottom: 0;">
-          <div class="diary-detail-date" style="display: inline-flex; align-items: center; gap: 8px; font-size: 16px; color: var(--notebook); background: var(--ink); border-radius: 999px 920px 960px 900px / 850px 980px 880px 940px; margin-bottom: 0; border: none; padding: 7px 14px 8px; box-shadow: 0 8px 18px rgba(17, 17, 17, 0.12);">
+          <div class="diary-detail-date" style="display: inline-flex; align-items: center; gap: 8px; font-size: 16px; color: #FFFFFF; background: #1F4014; border-radius: 999px 920px 960px 900px / 850px 980px 880px 940px; margin-bottom: 0; border: none; padding: 7px 14px 8px; box-shadow: none;">
             <span id="diaryDetailDateText"></span>
           </div>
           <button class="detail-eraser-button" id="detailEraserButton" type="button" aria-label="수정할 기록 선택" aria-pressed="false">
@@ -8488,3 +8490,5 @@
   </script>
 </body>
 </html>
+
+
