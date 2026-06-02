@@ -2392,6 +2392,11 @@
             line-height: 1.35;
         }
 
+        .cst-select-opt.font-preview-option {
+            font-size: 17px;
+            font-weight: 400;
+        }
+
         .cst-select-opt:hover {
             background: rgba(17, 17, 17, 0.05);
             color: var(--ink);
@@ -3613,9 +3618,12 @@
             font-size: 16px !important;
             line-height: 34px !important;
             white-space: pre-wrap !important;
-            background-image: linear-gradient(to bottom, transparent 33px, var(--paper-line) 33px) !important;
-            background-size: 100% 34px !important;
-            background-repeat: repeat !important;
+            background-image: none !important;
+            text-decoration-line: underline;
+            text-decoration-color: var(--paper-line);
+            text-decoration-thickness: 1px;
+            text-underline-offset: 5px;
+            text-decoration-skip-ink: none;
             background-color: transparent !important;
             transform: translateY(4px) !important;
         }
@@ -3672,12 +3680,19 @@
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .timeline-item:nth-child(6n + 1) { --folder-tone: #111317; }
-    .timeline-item:nth-child(6n + 2) { --folder-tone: #2a2d33; }
-    .timeline-item:nth-child(6n + 3) { --folder-tone: #1b1e24; }
-    .timeline-item:nth-child(6n + 4) { --folder-tone: #343840; }
-    .timeline-item:nth-child(6n + 5) { --folder-tone: #20242b; }
-    .timeline-item:nth-child(6n + 6) { --folder-tone: #3c414b; }
+    .timeline-item:nth-child(13n + 1) { --folder-tone: #edf3fc; }
+    .timeline-item:nth-child(13n + 2) { --folder-tone: #dce8f8; }
+    .timeline-item:nth-child(13n + 3) { --folder-tone: #cbdaf2; }
+    .timeline-item:nth-child(13n + 4) { --folder-tone: #FFF7D6; }
+    .timeline-item:nth-child(13n + 5) { --folder-tone: #F8E8B0; }
+    .timeline-item:nth-child(13n + 6) { --folder-tone: #F7D7B8; }
+    .timeline-item:nth-child(13n + 7) { --folder-tone: #F4CFCB; }
+    .timeline-item:nth-child(13n + 8) { --folder-tone: #EFD8E8; }
+    .timeline-item:nth-child(13n + 9) { --folder-tone: #DDD6F3; }
+    .timeline-item:nth-child(13n + 10) { --folder-tone: #D9E8C8; }
+    .timeline-item:nth-child(13n + 11) { --folder-tone: #D6EAD8; }
+    .timeline-item:nth-child(13n + 12) { --folder-tone: #E8E1D5; }
+    .timeline-item:nth-child(13n + 13) { --folder-tone: #D8CCC0; }
 
     .timeline-item.is-expanded .timeline-right {
       transform: none;
@@ -3719,7 +3734,10 @@
     }
 
     .timeline-item .timeline-read-title,
-    .timeline-item .timeline-card-time,
+    .timeline-item .timeline-card-time {
+      color: #000000 !important;
+    }
+
     .timeline-item .timeline-read-text {
       color: #ffffff !important;
     }
@@ -3804,7 +3822,7 @@
 
         .timeline-read-title {
             margin: 0;
-      color: #ffffff;
+      color: #000000;
       font-size: 19px;
             font-weight: 400;
             line-height: 1.32;
@@ -3822,7 +3840,7 @@
         }
 
         .timeline-card-time {
-      color: #ffffff;
+      color: #000000;
       font-size: 14px;
             line-height: 1.25;
             white-space: nowrap;
@@ -3849,6 +3867,10 @@
             display: block;
             -webkit-line-clamp: unset;
             overflow: visible;
+            line-height: 34px;
+            background-image: linear-gradient(to bottom, transparent 33px, var(--paper-line) 33px) !important;
+            background-size: 100% 34px !important;
+            background-repeat: repeat !important;
         }
 
         .timeline-middle {
@@ -4030,7 +4052,7 @@
             border: none !important;
             background-color: transparent !important;
       background-image: none !important; /* 줄선 완전 제거 */
-            padding: 4px 0 0 !important;
+            padding: 8px 0 0 !important;
             font-size: 19px !important;
             line-height: 1.6 !important;
             color: var(--text) !important;
@@ -5504,6 +5526,7 @@
         const IS_PREVIEW_MODE = Boolean(PREVIEW_MODE);
         const IS_FILE_URL = window.location.protocol === "file:";
         const IS_SECURE_APP_CONTEXT = window.isSecureContext || window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+        const SPEECH_PROVIDER_MODULE_PATH = "./speechProvider.js";
         const FONT_OPTIONS = {
             pretendard: {
                 label: "프리텐다드",
@@ -5545,6 +5568,7 @@
         const $ = (selector) => document.querySelector(selector);
         const app = $(".app");
         const sectionLabel = $("#sectionLabel");
+        const calendarCard = document.querySelector(".calendar-card");
         const calendarGrid = $("#calendarGrid");
         const periodLabel = $("#periodLabel");
         const recordsList = $("#recordsList");
@@ -5639,8 +5663,8 @@
         const diaryDetailClose = $("#diaryDetailClose");
         const detailEraserButton = $("#detailEraserButton");
 
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const speechSupported = Boolean(SpeechRecognition);
+        const WebSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const speechSupported = Boolean(WebSpeechRecognition || window.Capacitor?.isNativePlatform?.());
 
         let db;
         let records = [];
@@ -5650,6 +5674,8 @@
         let selectedDate = startOfDay(new Date());
         const expandedListRecordIds = new Set();
         const expandedDetailRecordIds = new Set();
+        const detailAutoExpandedDateKeys = new Set();
+        const collapsedSingleDetailRecordIds = new Set();
         let detailEditPickMode = false;
         let draftPhotoState = createEmptyPhotoState();
         let editPhotoState = createEmptyPhotoState();
@@ -5667,6 +5693,7 @@
         let pausedDuration = 0;
         let timerId;
         let recognition;
+        let speechProviderModulePromise = null;
         let recognitionRestartTimer;
         let speechHelpTimer;
         let finalTranscript = "";
@@ -6380,6 +6407,15 @@
             }
         }
 
+        function shiftCalendarMonth(delta) {
+            viewDate = startOfDay(new Date(viewDate.getFullYear(), viewDate.getMonth() + delta, 1));
+            if (diaryDetailPanel) {
+                diaryDetailPanel.classList.remove("open");
+            }
+            expandedDetailRecordIds.clear();
+            renderCalendar();
+        }
+
         function renderCalendar() {
             const calendarCard = document.querySelector(".calendar-card");
             const isListMode = calendarMode === "list";
@@ -6444,6 +6480,10 @@
 
                     button.classList.add("selected");
                     selectedDate = startOfDay(date);
+                    const nextDateKey = toDateKey(selectedDate);
+                    detailAutoExpandedDateKeys.delete(nextDateKey);
+                    expandedDetailRecordIds.clear();
+                    collapsedSingleDetailRecordIds.clear();
                     // Update diary detail date label (3차 개편: 날짜는 비우고 renderRecords에서 첫 일기 뱃지+시간 주입)
                     diaryDetailDateText.innerHTML = "";
                     diaryDetailPanel.classList.add("open");
@@ -6629,6 +6669,10 @@
         // 상세 패널 유틸화
         function triggerDetailView(date) {
             selectedDate = startOfDay(date);
+            const nextDateKey = toDateKey(selectedDate);
+            detailAutoExpandedDateKeys.delete(nextDateKey);
+            expandedDetailRecordIds.clear();
+            collapsedSingleDetailRecordIds.clear();
             // 3차 개편: 날짜는 비우고 renderRecords에서 첫 일기 뱃지+시간 주입
             diaryDetailDateText.innerHTML = "";
             diaryDetailPanel.classList.add("open");
@@ -6737,7 +6781,7 @@
                 if (dayRecords.length > 1) {
                     const restRecords = document.createElement("div");
                     restRecords.className = "today-rest-records";
-                    todayRecordsList.appendChild(restRecords);
+                    entryLayout.appendChild(restRecords);
                     renderRecordItems(dayRecords.slice(1), restRecords, 1);
                 }
 
@@ -6745,6 +6789,11 @@
                 // ── Calendar view: render into diary-detail-panel's recordsList ──
                 recordsList.innerHTML = "";
                 recordsList.classList.toggle("has-records", Boolean(dayRecords.length));
+
+                if (dayRecords.length > 1 && !detailAutoExpandedDateKeys.has(dateKey) && !expandedDetailRecordIds.size) {
+                    expandedDetailRecordIds.add(dayRecords[dayRecords.length - 1].id);
+                    detailAutoExpandedDateKeys.add(dateKey);
+                }
 
                 const stackTitle = document.createElement("div");
                 stackTitle.className = "detail-stack-title";
@@ -6903,12 +6952,12 @@
           item.className = "timeline-item";
           item.style.setProperty("--stack-index", String(startIndex + index));
           
-          // 앞뒤 폴더 구분을 위해 명도(Lightness) 차이가 최소 6% 이상 나도록 엄선된 어두운 색상 목록 (8% ~ 25%)
-          const darkTones = ["#111317", "#2a2d33", "#1b1e24", "#343840", "#20242b", "#3c414b"];
-          const toneColor = darkTones[(startIndex + index) % darkTones.length];
+          const folderTones = ["#edf3fc", "#dce8f8", "#cbdaf2", "#FFF7D6", "#F8E8B0", "#F7D7B8", "#F4CFCB", "#EFD8E8", "#DDD6F3", "#D9E8C8", "#D6EAD8", "#E8E1D5", "#D8CCC0"];
+          const toneSeed = `${record.id || ""}-${record.createdAt || ""}-${startIndex + index}`;
+          const toneColor = folderTones[Math.abs(hashCode(toneSeed)) % folderTones.length];
           item.style.setProperty("--folder-tone", toneColor);
                     const isSingleDetailRecord = dayRecords.length === 1 && startIndex === 0;
-                    const isDetailExpanded = isSingleDetailRecord || expandedDetailRecordIds.has(record.id);
+                    const isDetailExpanded = (isSingleDetailRecord && !collapsedSingleDetailRecordIds.has(record.id)) || expandedDetailRecordIds.has(record.id);
                     item.classList.toggle("is-expanded", isDetailExpanded);
 
                     // Right Column (Content Cards)
@@ -6921,7 +6970,15 @@
               return;
             }
             if (event.target.closest(".record-read")) return;
-            if (isSingleDetailRecord) return;
+            if (isSingleDetailRecord) {
+              if (collapsedSingleDetailRecordIds.has(record.id)) {
+                collapsedSingleDetailRecordIds.delete(record.id);
+              } else {
+                collapsedSingleDetailRecordIds.add(record.id);
+              }
+              renderRecords();
+              return;
+            }
             if (expandedDetailRecordIds.has(record.id)) {
               expandedDetailRecordIds.delete(record.id);
             } else {
@@ -7830,15 +7887,7 @@
             setRecordingUi(false, "saving");
             setStatus("저장 중", false);
             clearSpeechRecognitionTimers();
-
-            if (recognition) {
-                recognition.onend = null;
-                try {
-                    recognition.stop();
-                } catch (error) {
-                    console.warn("Speech recognition stop failed", error);
-                }
-            }
+            stopActiveSpeechRecognition();
 
             if (mediaRecorder && mediaRecorder.state !== "inactive") {
                 try {
@@ -7873,17 +7922,7 @@
                 }
             }
 
-            // Keep speech recognition session alive during pause to prevent browser mic prompts
-            /*
-            if (recognition) {
-                recognition.onend = null;
-                try {
-                    recognition.stop();
-                } catch (error) {
-                    console.warn("Speech recognition pause failed", error);
-                }
-            }
-            */
+            // Keep speech recognition session alive during pause to prevent browser mic prompts.
 
             setPausedUi(true);
             setStatus("잠시 멈춤", false);
@@ -8153,6 +8192,21 @@
             speechNotice.classList.add("visible");
         }
 
+        function stopActiveSpeechRecognition() {
+            if (!recognition) return;
+
+            const activeRecognition = recognition;
+            recognition = null;
+
+            try {
+                Promise.resolve(activeRecognition.stop?.()).catch((error) => {
+                    console.warn("Speech recognition stop failed", error);
+                });
+            } catch (error) {
+                console.warn("Speech recognition stop failed", error);
+            }
+        }
+
         function normalizeSpeechText(text) {
             return (text || "").replace(/\s+/g, " ").trim();
         }
@@ -8179,7 +8233,49 @@
             return segments.reduce((merged, segment) => appendSpeechText(merged, segment), "");
         }
 
-        function startSpeechRecognition() {
+        function normalizeSpeechSegments(segments) {
+            if (Array.isArray(segments)) return segments;
+            if (!segments) return [];
+            return [segments];
+        }
+
+        async function loadSpeechProviderModule() {
+            if (!speechProviderModulePromise) {
+                speechProviderModulePromise = import(SPEECH_PROVIDER_MODULE_PATH).catch((error) => {
+                    console.warn("Speech provider module failed to load", error);
+                    return null;
+                });
+            }
+
+            return speechProviderModulePromise;
+        }
+
+        function handleSpeechRecognitionError(event) {
+            interimTranscript = "";
+            updateTranscript();
+
+            const errorType = event?.error || "";
+            if (errorType === "not-allowed" || errorType === "service-not-allowed") {
+                showSpeechRecognitionNotice("음성 텍스트 변환 권한이 막혔습니다. Chrome 사이트 설정에서 마이크를 허용하고, 가능하면 https 주소로 다시 열어주세요.");
+                return;
+            }
+
+            if (errorType === "network") {
+                showSpeechRecognitionNotice("음성 텍스트 변환 서버에 연결하지 못했습니다. 모바일 데이터나 와이파이 연결을 확인해주세요.");
+                return;
+            }
+
+            if (errorType === "no-speech") {
+                showSpeechRecognitionNotice("아직 인식된 말이 없습니다. 조금 더 가까이, 또렷하게 말해보세요.");
+                return;
+            }
+
+            if (errorType === "not-supported" || errorType === "native-unavailable") {
+                showSpeechRecognitionNotice("이 환경에서는 음성 텍스트 변환이 지원되지 않습니다. 음성 기록과 직접 입력은 계속 사용할 수 있습니다.");
+            }
+        }
+
+        async function startSpeechRecognition() {
             if (!speechSupported) {
                 showSpeechRecognitionNotice("이 브라우저에서는 음성 텍스트 변환이 지원되지 않습니다.");
                 return;
@@ -8188,77 +8284,60 @@
             clearSpeechRecognitionTimers();
             speechNotice.classList.remove("visible");
             recognitionBaseTranscript = finalTranscript.trim();
-            recognition = new SpeechRecognition();
-            recognition.lang = "ko-KR";
-            recognition.interimResults = true;
-            recognition.continuous = true;
-            recognition.maxAlternatives = 1;
-
-            recognition.onstart = () => {
-                speechHelpTimer = setTimeout(() => {
-                    if (isRecording && !finalTranscript.trim() && !interimTranscript.trim()) {
-                        showSpeechRecognitionNotice("마이크는 켜졌지만 아직 텍스트가 들어오지 않았습니다. 휴대폰에서는 Chrome의 Google 음성 인식이 잠시 늦거나 막힐 수 있어요. 계속 말해보고, 안 되면 기록 마치기 후 내용 칸에 직접 적을 수 있습니다.");
-                    }
-                }, SPEECH_HELP_DELAY_MS);
-            };
-
-            recognition.onresult = (event) => {
-                if (isPaused) return; // Ignore segments when paused
-                clearTimeout(speechHelpTimer);
-                speechHelpTimer = null;
-                const sessionFinalSegments = [];
-                const interimSegments = [];
-                interimTranscript = "";
-                for (let i = 0; i < event.results.length; i += 1) {
-                    const text = event.results[i][0].transcript;
-                    if (event.results[i].isFinal) {
-                        sessionFinalSegments.push(text);
-                    } else {
-                        interimSegments.push(text);
-                    }
-                }
-                const sessionFinalTranscript = collapseSpeechSegments(sessionFinalSegments);
-                interimTranscript = collapseSpeechSegments(interimSegments);
-                finalTranscript = appendSpeechText(recognitionBaseTranscript, sessionFinalTranscript);
-                updateTranscript();
-            };
-
-            recognition.onerror = (event) => {
-                interimTranscript = "";
-                updateTranscript();
-
-                const errorType = event?.error || "";
-                if (errorType === "not-allowed" || errorType === "service-not-allowed") {
-                    recognition.onend = null;
-                    showSpeechRecognitionNotice("음성 텍스트 변환 권한이 막혔습니다. Chrome 사이트 설정에서 마이크를 허용하고, 가능하면 https 주소로 다시 열어주세요.");
-                    return;
-                }
-
-                if (errorType === "network") {
-                    showSpeechRecognitionNotice("음성 텍스트 변환 서버에 연결하지 못했습니다. 모바일 데이터나 와이파이 연결을 확인해주세요.");
-                    return;
-                }
-
-                if (errorType === "no-speech") {
-                    showSpeechRecognitionNotice("아직 인식된 말이 없습니다. 조금 더 가까이, 또렷하게 말해보세요.");
-                }
-            };
-
-            recognition.onend = () => {
-                if (!isRecording) return; // Keep running when paused
-                recognitionRestartTimer = setTimeout(() => {
-                    if (!isRecording || !recognition) return;
-                    try {
-                        recognitionBaseTranscript = finalTranscript.trim();
-                        recognition.start();
-                    } catch (error) {
-                        showSpeechRecognitionNotice("음성 텍스트 변환이 잠시 멈췄습니다. 기록 마치기 후 내용 칸에서 직접 이어 적을 수 있습니다.");
-                    }
-                }, SPEECH_RESTART_DELAY_MS);
-            };
+            let sessionFinalTranscript = "";
 
             try {
-                recognition.start();
+                const speechProvider = await loadSpeechProviderModule();
+                if (!speechProvider?.startSpeechRecognition) {
+                    showSpeechRecognitionNotice("음성 텍스트 변환 구조를 불러오지 못했습니다. 음성 기록과 직접 입력은 계속 사용할 수 있습니다.");
+                    return;
+                }
+
+                recognition = await speechProvider.startSpeechRecognition({
+                    lang: "ko-KR",
+                    continuous: true,
+                    interimResults: true,
+                    maxAlternatives: 1,
+                    onStart: () => {
+                        speechHelpTimer = setTimeout(() => {
+                            if (isRecording && !finalTranscript.trim() && !interimTranscript.trim()) {
+                                showSpeechRecognitionNotice("마이크는 켜졌지만 아직 텍스트가 들어오지 않았습니다. 휴대폰에서는 Chrome의 Google 음성 인식이 잠시 늦거나 막힐 수 있어요. 계속 말해보고, 안 되면 기록 마치기 후 내용 칸에 직접 적을 수 있습니다.");
+                            }
+                        }, SPEECH_HELP_DELAY_MS);
+                    },
+                    onFinal: (segments) => {
+                        if (isPaused) return;
+                        clearTimeout(speechHelpTimer);
+                        speechHelpTimer = null;
+                        sessionFinalTranscript = appendSpeechText(
+                            sessionFinalTranscript,
+                            collapseSpeechSegments(normalizeSpeechSegments(segments))
+                        );
+                        finalTranscript = appendSpeechText(recognitionBaseTranscript, sessionFinalTranscript);
+                        updateTranscript();
+                    },
+                    onPartial: (segments) => {
+                        if (isPaused) return;
+                        clearTimeout(speechHelpTimer);
+                        speechHelpTimer = null;
+                        interimTranscript = collapseSpeechSegments(normalizeSpeechSegments(segments));
+                        updateTranscript();
+                    },
+                    onError: handleSpeechRecognitionError,
+                    onEnd: () => {
+                        if (!isRecording) return;
+                        recognitionRestartTimer = setTimeout(async () => {
+                            if (!isRecording || !recognition) return;
+                            try {
+                                recognitionBaseTranscript = finalTranscript.trim();
+                                sessionFinalTranscript = "";
+                                await recognition.restart?.();
+                            } catch (error) {
+                                showSpeechRecognitionNotice("음성 텍스트 변환이 잠시 멈췄습니다. 기록 마치기 후 내용 칸에서 직접 이어 적을 수 있습니다.");
+                            }
+                        }, SPEECH_RESTART_DELAY_MS);
+                    }
+                });
             } catch (error) {
                 showSpeechRecognitionNotice("음성 텍스트 변환을 시작하지 못했습니다. 페이지를 새로고침한 뒤 다시 시도해주세요.");
             }
@@ -8372,11 +8451,11 @@
          * @param {string} wrapId   — .cst-select-wrap 요소 ID
          * @param {string} btnId    — trigger button ID
          * @param {string} labelId  — label span ID
-         * @param {{ value: string, label: string, hint?: string }[]} options
+         * @param {{ value: string, label: string, hint?: string, className?: string }[]} options
          * @param {string} initialValue
          * @param {(value: string) => void} onChange
          */
-        function initCustomSelect({ wrapId, btnId, labelId, options, initialValue, onChange }) {
+        function initCustomSelect({ wrapId, btnId, labelId, options, initialValue, onChange, onBeforeOpen }) {
             const wrap = document.getElementById(wrapId);
             const btn = document.getElementById(btnId);
             const labelEl = document.getElementById(labelId);
@@ -8403,6 +8482,7 @@
                     const item = document.createElement("button");
                     item.type = "button";
                     item.className = "cst-select-opt";
+                    if (opt.className) item.classList.add(opt.className);
                     item.setAttribute("role", "option");
                     item.setAttribute("aria-selected", opt.value === currentValue ? "true" : "false");
                     item.dataset.value = opt.value;
@@ -8421,8 +8501,9 @@
                 return el;
             }
 
-            function openPopup() {
+            async function openPopup() {
                 if (popup) { closePopup(); return; }
+                if (onBeforeOpen) await onBeforeOpen();
                 popup = buildPopup();
                 wrap.appendChild(popup);
                 btn.setAttribute("aria-expanded", "true");
@@ -8481,7 +8562,7 @@
             const savedFont = localStorage.getItem(FONT_STORAGE_KEY) || "myoeunddobak";
             const fontOptions = Object.entries(FONT_OPTIONS)
                 .sort(([, a], [, b]) => a.label.localeCompare(b.label, "ko-KR", { sensitivity: "base" }))
-                .map(([key, font]) => ({ value: key, label: font.label, hint: font.css }));
+                .map(([key, font]) => ({ value: key, label: font.label, hint: font.css, className: "font-preview-option" }));
 
             initCustomSelect({
                 wrapId: "fontSelectWrap",
@@ -8489,7 +8570,8 @@
                 labelId: "fontSelectLabel",
                 options: fontOptions,
                 initialValue: savedFont,
-                onChange: (val) => applyFontChoice(val)
+                onChange: (val) => applyFontChoice(val),
+                onBeforeOpen: () => Promise.all(Object.keys(FONT_OPTIONS).map((key) => ensureFontLoaded(key)))
             });
             applyFontChoice(savedFont);
         }
@@ -8743,7 +8825,15 @@
                 let startX = 0;
                 let startY = 0;
 
+                function clampAvatarCropPosition() {
+                    const maxX = Math.max(0, (imgW * scale - containerSize) / 2);
+                    const maxY = Math.max(0, (imgH * scale - containerSize) / 2);
+                    translateX = Math.min(maxX, Math.max(-maxX, translateX));
+                    translateY = Math.min(maxY, Math.max(-maxY, translateY));
+                }
+
                 function updateTransform() {
+                    clampAvatarCropPosition();
                     imgEl.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
                 }
 
@@ -8782,10 +8872,11 @@
 
                 window.addEventListener("touchmove", (e) => {
                     if (!isDragging || e.touches.length !== 1) return;
+                    e.preventDefault();
                     translateX = e.touches[0].clientX - startX;
                     translateY = e.touches[0].clientY - startY;
                     updateTransform();
-                });
+                }, { passive: false });
 
                 window.addEventListener("touchend", () => {
                     isDragging = false;
@@ -9037,6 +9128,28 @@
                     viewDropdownMenu.hidden = true;
                 }
             });
+        }
+
+        if (calendarCard) {
+            let calendarSwipeStartX = 0;
+            let calendarSwipeStartY = 0;
+
+            calendarCard.addEventListener("touchstart", (event) => {
+                if (currentView !== "records" || event.touches.length !== 1) return;
+                calendarSwipeStartX = event.touches[0].clientX;
+                calendarSwipeStartY = event.touches[0].clientY;
+            }, { passive: true });
+
+            calendarCard.addEventListener("touchend", (event) => {
+                if (currentView !== "records" || !event.changedTouches.length) return;
+                const endX = event.changedTouches[0].clientX;
+                const endY = event.changedTouches[0].clientY;
+                const deltaX = endX - calendarSwipeStartX;
+                const deltaY = endY - calendarSwipeStartY;
+
+                if (Math.abs(deltaX) < 60 || Math.abs(deltaX) < Math.abs(deltaY) * 1.4) return;
+                shiftCalendarMonth(deltaX > 0 ? -1 : 1);
+            }, { passive: true });
         }
 
 
@@ -9488,11 +9601,7 @@
                 recordingStopFallbackTimer = null;
                 stopTimer();
                 clearSpeechRecognitionTimers();
-
-                if (recognition) {
-                    recognition.onend = null;
-                    try { recognition.stop(); } catch (e) { }
-                }
+                stopActiveSpeechRecognition();
 
                 if (mediaRecorder) {
                     mediaRecorder.removeEventListener("stop", handleRecordingStop);
